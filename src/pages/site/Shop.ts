@@ -3,7 +3,7 @@ export class Shop {
     constructor(
 
     ) {
-
+        this.render();
     }
 
     render(): void {
