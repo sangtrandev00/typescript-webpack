@@ -27,10 +27,13 @@ export function CustomComponent(selector: string, template: string) {
         this.render = function () {
           const targetElement = document.querySelector(selector);
 
+          console.log("targetElement: ", targetElement);
           if (targetElement) {
             targetElement.innerHTML = template;
           }
         };
+
+        this.render();
       }
     };
   };

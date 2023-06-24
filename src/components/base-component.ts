@@ -1,13 +1,10 @@
 
-// export class Component {
-//     hostElement: HTMLElement;
-//     constructor(hostElementId: string) {
-//         this.hostElement = document.getElementById(hostElementId)! as HTMLElement;
+export default abstract class Component <T extends HTMLElement > {
+    hostEl: T;
+    constructor(hostElId: string) {
+        this.hostEl = document.getElementById(hostElId)! as T;
         
-//     }
+    }
 
-//     attach(templateHTML: string) {
-//         this.hostElement.innerHTML = this.hostElement.innerHTML = templateHTML;
-//     }
-// }
+}
 

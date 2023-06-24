@@ -1,24 +1,30 @@
-interface Productable {
-  id?: string;
-  name: string;
-  oldPrice: number;
-  discount?: number;
-  images: string;
-  shortDesc: string;
-  fullDesc: string;
-  stockQty: number;
-  categoryId?: string;
-}
+// import axios from "axios";
+// import ProductsApi from "../api/productsApi";
+import ShopApi from "../api/shopApi";
+import { Productable } from "../interface/Product";
 
 export class Product implements Productable {
+
   constructor(
+    public _id: string,
+    public categoryId: string,
+    public discount: number,
+    public fullDesc: string,
+    public images: string,
     public name: string,
     public oldPrice: number,
-    public discount: number,
-    public images: string,
     public shortDesc: string,
-    public fullDesc: string,
     public stockQty: number,
-    public categoryId: string,
-  ) {}
+    public thumbnail: string,
+  ) {
+  }
+
+  async getAll() {
+    const response = await ShopApi.getProducts({_limit: 12});
+    console.log(response);
+  
+  }
+
 }
+
+

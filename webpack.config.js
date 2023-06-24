@@ -1,17 +1,18 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  // mode: 'development', // For production ???
+  mode: 'development', // For production ???
   entry: './src/app.ts',
   devServer: {
     historyApiFallback: true, // Enable HTML5 History API fallback
     static: [
       {
-        directory: path.join(__dirname, 'dist'),
+        directory: path.join(__dirname),
       },
     ],
-    port: process.env.PORT || 3000,
+    port: 3000,
   },
   output: {
     filename: 'bundle.js',
@@ -22,7 +23,10 @@ module.exports = {
   module: {
     rules: [
       { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
-      // { parser: { system: false } }, // Add this line
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {
@@ -32,7 +36,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve('./index.html'),
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/**/*.ts', // Specify the TypeScript files to be copied
+          to: '', // Leave it empty to preserve the directory structure
+        },
+      ],
+    }),
   ],
 };
-
-// __dirname: global variable.

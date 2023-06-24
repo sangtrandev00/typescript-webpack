@@ -1,7 +1,15 @@
+import ProductsApi from '../api/productsApi';
 import { Product } from '../models/Product';
-import { State } from './root-state';
 
-export class ProductState extends State<Product> {
+type Listener<T> = (items: T[]) => void;
+ class State<T> {
+  protected listeners: Listener<T>[] = [];
+
+  addListener(listener: Listener<T>) {
+    this.listeners.push(listener);
+  }
+}
+ export class ProductState extends State<Product>{
   private products: Product[] = [];
   private static instance: ProductState;
 
@@ -17,7 +25,7 @@ export class ProductState extends State<Product> {
     return this.instance;
   }
 
-  async addProduct(
+   addProduct(
     name: string,
     oldPrice: number,
     discount: number,
@@ -27,32 +35,51 @@ export class ProductState extends State<Product> {
     stockQty: number,
     categoryId: string,
   ) {
-    const newProduct = new Product(
-      name,
-      oldPrice,
-      discount,
-      images,
-      shortDesc,
-      fullDesc,
-      stockQty,
-      categoryId,
-    );
 
-    // Call API here
-    // const {product, message} = await fetch(`https://api.digitalocean.com/product`, {
-    //     method: 'POST',
-    //     body: JSON.stringify(newProduct)
-    // })
+    (async() => {
 
-    this.products.push(newProduct);
-    this.updateListeners();
+        const thumbnail = "https://placehold.co/100x100"; // Define logic here later!
+
+        const productData = {
+            name,
+            oldPrice,
+            discount,
+            images,
+            shortDesc,
+            fullDesc,
+            stockQty,
+            categoryId,
+        };
+        const response = await ProductsApi.add(productData);
+
+        const {product} = response.data; 
+
+        const newProduct = new Product(
+            product._id,
+            categoryId,
+            discount,
+            fullDesc,
+            images,
+            name,
+            oldPrice,
+            shortDesc,
+            stockQty,
+            thumbnail,
+          );
+
+          this.products.push(newProduct);
+          this.updateListeners();
+
+    })()
+
+ 
   }
 
-  async updateProduct() {
+    updateProduct() {
 
   }
 
-  async deleteProduct() {
+    deleteProduct() {
     
   }
 
@@ -60,5 +87,10 @@ export class ProductState extends State<Product> {
     for (const listenerFn of this.listeners) {
       listenerFn(this.products.slice());
     }
+
+    console.log(this.listeners);
+
   }
 }
+
+export default ProductState.getInstance();

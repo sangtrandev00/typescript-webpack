@@ -6,17 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechSpace SPA - Sang Tran Dev</title>
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="./src/assets/css/table-data.css">
+    <link rel="stylesheet" href="./src/assets/css/app.css">
+    <link rel="stylesheet" href="./src/assets/css/admin-custom.css">
+    <script src="dist/bundle.js" type="module"></script>
 </head>
 
 <body>
-    <div id="app">
-        <div id="header"></div>
+    <!-- Site -->
+    <div id="app" class="md:container md:mx-auto xl:px-20 max-[600px]:mx-2 sm:overflow-hidden md:overflow-auto">
+        <div id="top-header"></div>
+        <div class="mt-10" id="header"></div>
         <div id="main"></div>
         <div id="footer"></div>
     </div>
+    <!-- Admin -->
+    <div id="admin-app">
+        <div class="antialiased bg-gray-50 dark:bg-gray-900">
+
+            <div id="admin-header">
+
+            </div>
+            <div id="admin-sidebar">
+
+            </div>
+            <div id="admin-content">
+
+            </div>
+
+        </div>
+
+    </div>
     <div id="modal"></div>
-    <div id="toast-wrapper"></div>
+    <div id="toast-wrapper" class="fixed z-50 top-10 right-10"></div>
 </body>
 
 </html>

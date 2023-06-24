@@ -1,106 +1,120 @@
+import "flowbite";
+
+import { initTE, Modal, Ripple, Toast, Tab, Carousel, Sidenav, Collapse, Dropdown,Select, Input } from "tw-elements";
+
+import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
-import { autobind } from "./decorators/autobind";
-import { Detail } from "./pages/site/Detail";
-import { Homepage } from "./pages/site/Homepage";
-import { Shop } from "./pages/site/Shop";
-import { Router } from "./router/router";
+import TopHeader  from "./components/layout/TopHeader";
+import Router from "./router/router";
+import AdminHeader from "./components/layout/AdminHeader";
+import AdminSidebar from "./components/layout/AdminSideBar";
+import AdminRouter from "./router/adminRouter";
+import AdminModal from "./components/AdminModal";
 
-export class App {
+export default class App {
 
+    modalWrapperEl: HTMLDivElement;
+    loginHeaderBtnEl: HTMLLinkElement;
+    userAuthenticateEl: HTMLDivElement;
+    siteAppEl: HTMLDivElement;
+    adminAppEl: HTMLDivElement;
+    _token: string | null;
+    _userId: string | null;
     constructor() {
 
-        this.createBrowserRouter();
-        new Header();
-        this.renderContent();
-        this.configure();
-        window.onpopstate = () => this.renderContent();
-        // header.configure();
-
+      this.siteAppEl = document.getElementById('app') ! as HTMLDivElement;
+      this.adminAppEl = document.getElementById('admin-app') ! as HTMLDivElement;
+      this._token = localStorage.getItem("token");
+      this._userId = localStorage.getItem("userId");
+      this.modalWrapperEl = document.getElementById('modal-wrapper') ! as HTMLDivElement;
+      this.loginHeaderBtnEl = document.getElementById('loginHeaderBtn') ! as HTMLLinkElement;
+      this.userAuthenticateEl = document.getElementById('userAuthenticate') ! as HTMLDivElement;
+      
+      const url = new URL(location.href);
+      const pathName = url.pathname;
+      
+      console.log(pathName);
+      console.log(pathName.startsWith("/admin"));
+      if(pathName.startsWith("/admin")) {
+        this.initAdmin();
+      }else {
+        this.initSite();
+      }
+      initTE({ Modal, Ripple, Toast, Tab, Carousel, Sidenav, Collapse, Dropdown, Select, Input }, true);
+   
     }
 
 
-    private createBrowserRouter() {
-
-        const router = new Router();
-    
-        router.addRoute('/', Homepage);
-        router.addRoute('/shop', Shop);
-        router.addRoute('/detail', Detail);
-        console.log(router.getAllRoutes);
-
-    }
-
-    private renderContent() : void {
-        const url = new URL(location.href);
-        const path = url.pathname;
-        // Main Component - Change content here
-        switch (path) {
-            case '/':
-              // Render homepage content
-              const homepage = new Homepage();
-              homepage.render();
-              break;
-            case '/shop':
-              // Render shop page content
-              const shop = new Shop();
-              shop.render();
-              break;
-            case '/detail':
-              // Render detail page content
-              const detail = new Detail();
-              detail.render();
-              break;
-            default:
-              console.error('Route not found');
+    // // Function to attach event listener
+    initCart() {
+        if (!localStorage.getItem("cart")) {
+            const cart = {
+              cartList: [],
+              totalPrice: 0,
+            };
+            localStorage.setItem("cart", JSON.stringify(cart));
           }
-
-        // Footer Component
-        // new Footer();
-    }
-
-    @autobind
-    private navigateHandler(event: Event): void {
-      event.preventDefault();
-    
-      const linkEl = event.target! as HTMLLinkElement;
-
-      if(linkEl.tagName === 'A') {
-
-        const route = linkEl.getAttribute('href');
-    
-        history.pushState(null, '', route);
-    
-        // Add listener here!!!
         
-        this.renderContent()
-      }
-
+          if (!sessionStorage.getItem("views")) {
+            const views = {
+            };
+            sessionStorage.setItem("views", JSON.stringify(views));
+          }
     }
-    
-    // Function to attach event listener
-    private configure(): void {
-        const headerNavEl = document.querySelector(".header__navigation") ! as HTMLUListElement;
-        if(headerNavEl) {
-          headerNavEl.addEventListener('click', this.navigateHandler);
-        }
-      }
 
+    // initAuth() {
 
-    // private renderHomePage() {
-    //   const homepage = new Homepage();
-    //    homepage.render();
-    // }
-    
-    // private renderShop() {
-    //   const shop = new Shop();
-    //   shop.render();
+    //     (async () => {
+
+    //         if (this._token) {
+    //             const response = await ShopApi.getUserById(this._userId || "");
+    //             const { user } = response.data;
+
+    //           if(!user) return;
+                
+    //             const isCorrectedToken = this._token === user.loginToken;
+    //             const isExpired = new Date(user.loginTokenExpiration).getTime() - Date.now() < 0;
+            
+    //             const isAuthenticated = this._token && isCorrectedToken && !isExpired;
+            
+    //             if (isAuthenticated) {
+    //               this.userAuthenticateEl.classList.remove("hidden");
+    //               this.loginHeaderBtnEl.classList.add("hidden");
+    //             }
+
+    //           }
+
+    //     })()
+        
     // }
 
-    // private renderDetail() {
-    //   const detail = new Detail();
-    //   detail.render();
-    // }
+    initSite() {
+      this.adminAppEl.remove();
+
+      this.initCart();
+      // this.initAuth();
+      new TopHeader();
+      new Header();
+      new Router(); // Router content here!!!
+      new Footer();
+      window.onpopstate = () => new Router();
+    }
+
+    initAdmin() {
+      this.siteAppEl.remove();
+      // Init adminHeader
+      new AdminHeader();
+      new AdminSidebar();
+      new AdminRouter();
+      new AdminModal();
+      // Init adminSideBar
+      // Init Admin content
+     
+    }
+
 
 }
 
 new App();
+
+
