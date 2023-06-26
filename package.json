@@ -25,6 +25,13 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^38.0.1",
+    "@ckeditor/ckeditor5-build-classic": "^38.0.1",
+    "@ckeditor/ckeditor5-dev-utils": "^38.0.1",
+    "@ckeditor/ckeditor5-editor-classic": "^38.0.1",
+    "@ckeditor/ckeditor5-essentials": "^38.0.1",
+    "@ckeditor/ckeditor5-paragraph": "^38.0.1",
+    "@ckeditor/ckeditor5-theme-lark": "^38.0.1",
     "@types/page": "^1.11.6",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",

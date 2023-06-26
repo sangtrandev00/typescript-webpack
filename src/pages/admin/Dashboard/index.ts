@@ -1,5 +1,6 @@
 // import ToastMessage from "../../../components/AdminToast";
-import Component from "../../../components/base-component";
+// import Component from "../../../components/base-component";
+import Orders from "../Orders";
 
 const templateHTML = `
     <main class="p-4 md:ml-64 h-auto pt-20">
@@ -121,75 +122,124 @@ const templateHTML = `
         </div>
         <!-- Card Item End -->
         <!-- Card Item Start -->
-        <div id="orders-status-el"
-            class="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark px-4">
-            <div
-                class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
-
-            </div>
-
-            <div class="mt-4 flex items-end justify-between">
-                <div class="flex items-center justify-between w-full">
-                    <a href="54534k5jkljkfdfsdfsd"
-                        class="zoom-order-status flex justify-between w-12 items-center bg-slate-400 px-2 py-1 rounded-[4px]"
-                        id="unconfirmedOrders" class="text-title-md font-bold text-black dark:text-white">
-                        3.456
-                    </a>
-                    <span class="text-sm font-medium">Unconfirmed Orders <i
-                            class="fa-solid fa-cart-shopping text-warning-600"></i></span>
-                </div>
-
-            </div>
-            <div class="mt-4 flex items-end justify-between">
-                <div class="flex items-center justify-between w-full">
-                    <a href="54534k5jkljkfdfsdfsd"
-                        class="zoom-order-status flex justify-between w-12 items-center bg-slate-400 px-2 py-1 rounded-[4px]"
-                        id="confirmedOrders" class="text-title-md font-bold text-black dark:text-white">
-                        3.456
-                    </a>
-                    <span class="text-sm font-medium">Confirmed Orders <i
-                            class="fa-solid fa-cart-shopping text-primary-600"></i></span>
-                </div>
-
-            </div>
-            <div class="mt-4 flex items-end justify-between">
-                <div class="flex items-center justify-between w-full">
-                    <a href="54534k5jkljkfdfsdfsd"
-                        class="zoom-order-status flex justify-between w-12 items-center bg-slate-400 px-2 py-1 rounded-[4px]"
-                        id="shippingOrders" class="text-title-md font-bold text-black dark:text-white">
-                        3.456
-                    </a>
-                    <span class="text-sm font-medium">Shipping Orders <i
-                            class="fa-solid fa-cart-shopping text-secondary-600"></i></span>
-                </div>
-
-            </div>
-            <div class="mt-4 flex items-end justify-between">
-                <div class="flex items-center justify-between w-full">
-                    <a href="54534k5jkljkfdfsdfsd"
-                        class="zoom-order-status flex justify-between w-12 items-center bg-slate-400 px-2 py-1 rounded-[4px]"
-                        id="successOrders" class="text-title-md font-bold text-black dark:text-white">
-                        3.456
-                    </a>
-                    <span class="text-sm font-medium">Success Orders <i
-                            class="fa-solid fa-cart-shopping text-success-600"></i></span>
-                </div>
-
-            </div>
-            <div class="mt-4 flex items-end justify-between">
-                <div class="flex items-center justify-between w-full">
-                    <a href="54534k5jkljkfdfsdfsd"
-                        class="zoom-order-status flex justify-between w-12 items-center bg-slate-400 px-2 py-1 rounded-[4px]"
-                        id="failedOrders" class="text-title-md font-bold text-black dark:text-white">
-                        3.456
-                    </a>
-                    <span class="text-sm font-medium">Failed Orders <i
-                            class="fa-solid fa-cart-shopping text-danger-600"></i></span>
-                </div>
-
-            </div>
-        </div>
+  
         <!-- Card Item End -->
+    </div>
+
+    <div id="orders-status-el"
+        class="mt-4 rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark px-4">
+        <!--Tabs navigation-->
+        <ul
+          class="mb-5 flex list-none flex-row flex-wrap border-b-0 pl-0"
+          role="tablist"
+          data-te-nav-ref>
+          <li role="presentation" class="flex-auto text-center">
+            <a
+              href="#tabs-orders-status-1"
+              class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+              data-te-toggle="pill"
+              data-te-target="#tabs-orders-status-1"
+              data-te-nav-active
+              role="tab"
+              aria-controls="tabs-orders-status-1"
+              aria-selected="true"
+              >Unconfirmed</a
+            >
+          </li>
+          <li role="presentation" class="flex-auto text-center">
+            <a
+              href="#tabs-orders-status-2"
+              class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+              data-te-toggle="pill"
+              data-te-target="#tabs-orders-status-2"
+              role="tab"
+              aria-controls="tabs-orders-status-2"
+              aria-selected="false"
+              >Confirmed</a
+            >
+          </li>
+          <li role="presentation" class="flex-auto text-center">
+            <a
+              href="#tabs-orders-status-3"
+              class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+              data-te-toggle="pill"
+              data-te-target="#tabs-orders-status-3"
+              role="tab"
+              aria-controls="tabs-orders-status-3"
+              aria-selected="false"
+              >Shipping</a
+            >
+          </li>
+          <li role="presentation" class="flex-auto text-center">
+            <a
+              href="#tabs-orders-status-4"
+              class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+              data-te-toggle="pill"
+              data-te-target="#tabs-orders-status-4"
+              role="tab"
+              aria-controls="tabs-orders-status-4"
+              aria-selected="false"
+              >Success</a
+            >
+          </li>
+          <li role="presentation" class="flex-auto text-center">
+            <a
+              href="#tabs-orders-status-5"
+              class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+              data-te-toggle="pill"
+              data-te-target="#tabs-orders-status-5"
+              role="tab"
+              aria-controls="tabs-orders-status-5"
+              aria-selected="false"
+              >Failed</a
+            >
+          </li>
+       
+        </ul>
+        
+        <!--Tabs content-->
+        <div class="mb-6">
+          <div
+            class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-orders-status-1"
+            role="tabpanel"
+            aria-labelledby="tabs-home-tab01"
+            data-te-tab-active>
+            <table id="table-orders"></table>
+          </div>
+          <div
+            class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-orders-status-2"
+            role="tabpanel"
+            aria-labelledby="tabs-profile-tab01">
+            Tab 2 content
+          </div>
+          <div
+            class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-orders-status-3"
+            role="tabpanel"
+            aria-labelledby="tabs-profile-tab01">
+            Tab 3 content
+          </div>
+          <div
+            class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-orders-status-4"
+            role="tabpanel"
+            aria-labelledby="tabs-profile-tab01">
+            Tab 4 content
+          </div>
+
+          <div
+            class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-orders-status-5"
+            role="tabpanel"
+            aria-labelledby="tabs-profile-tab01">
+            Tab 5 content
+          </div>
+     
+        </div>
+
+
     </div>
 
     <div class="mt-8 shadow border p-10">
@@ -358,10 +408,17 @@ const templateHTML = `
     </main>
 `;
 
-export default class Dashboard extends Component<HTMLDivElement>{
-    constructor() {
-        super('admin-content');
-        this.hostEl.innerHTML = templateHTML;
+export default class Dashboard extends Orders{
+    hostEl: HTMLDivElement;
+    tableEl: HTMLTableElement;
 
+    constructor() {
+        super();
+        this.hostEl = document.getElementById('admin-content') as HTMLDivElement;
+        this.hostEl.innerHTML = templateHTML;
+        this.tableEl = document.getElementById('table-orders') as HTMLTableElement;
+        console.log(this.tableEl);
     }
+
+
 }

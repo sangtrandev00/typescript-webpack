@@ -40,7 +40,7 @@ class CategoriesApi {
     });
   }
 
-  static add(data: object){
+  static add(data: any): Promise<AxiosResponse<any, any>> {
     const url = "/admin/category";
     return axiosClient.post(url, data, {
       headers: {
@@ -50,7 +50,7 @@ class CategoriesApi {
     });
   }
 
-  static update(data: object, categoryId: string): Promise<AxiosResponse<any, any>> {
+  static update(data: any, categoryId: string): Promise<AxiosResponse<any, any>> {
     const url = "/admin/category/" + categoryId;
     return axiosClient.put(url, data, {
       headers: {

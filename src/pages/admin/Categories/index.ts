@@ -1,14 +1,12 @@
 import DataTables from "datatables.net-dt";
 import CategoriesApi from "../../../api/categoriesApi";
-import Component from "../../../components/base-component";
 import { BACKEND_URL } from "../../../constant/backend-domain";
 import { CategoryInterface } from "../../../interface/Category";
 import { autobind } from "../../../decorators/autobind";
 import ActionBtn from "../../../components/AdminForm/ActionButton";
-import { Modal } from "flowbite";
 // import ToastMessage from "../../../components/AdminToast";
 import ModalForm from "./components/modalForm";
-import ToastMessage from "../../../components/AdminToast";
+import AdminBaseComponent from "../AdminComponent";
 
 const templateHTML = `
 <!-- Main content wrapper -->
@@ -207,748 +205,6 @@ const templateHTML = `
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody id="">
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple iMac 27&#34;</th>
-                                    <td class="px-4 py-3">PC</td>
-                                    <td class="px-4 py-3">Apple</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$2999</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-imac-27-dropdown-button"
-                                            data-dropdown-toggle="apple-imac-27-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-imac-27-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="apple-imac-27-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400 bg-[rgba(0,0,0,0.5)]">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple iMac 20&#34;</th>
-                                    <td class="px-4 py-3">PC</td>
-                                    <td class="px-4 py-3">Apple</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$1499</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-imac-20-dropdown-button"
-                                            data-dropdown-toggle="apple-imac-20-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-imac-20-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="apple-imac-20-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple iPhone 14</th>
-                                    <td class="px-4 py-3">Phone</td>
-                                    <td class="px-4 py-3">Apple</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$999</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-iphone-14-dropdown-button"
-                                            data-dropdown-toggle="apple-iphone-14-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-iphone-14-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="apple-iphone-14-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple iPad Air</th>
-                                    <td class="px-4 py-3">Tablet</td>
-                                    <td class="px-4 py-3">Apple</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$1199</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-ipad-air-dropdown-button"
-                                            data-dropdown-toggle="apple-ipad-air-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-ipad-air-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="apple-ipad-air-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Xbox Series S</th>
-                                    <td class="px-4 py-3">Gaming/Console</td>
-                                    <td class="px-4 py-3">Microsoft</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$299</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="xbox-series-s-dropdown-button"
-                                            data-dropdown-toggle="xbox-series-s-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="xbox-series-s-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="xbox-series-s-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        PlayStation 5</th>
-                                    <td class="px-4 py-3">Gaming/Console</td>
-                                    <td class="px-4 py-3">Sony</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$799</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="playstation-5-dropdown-button"
-                                            data-dropdown-toggle="playstation-5-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="playstation-5-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="playstation-5-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Xbox Series X</th>
-                                    <td class="px-4 py-3">Gaming/Console</td>
-                                    <td class="px-4 py-3">Microsoft</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$699</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="xbox-series-x-dropdown-button"
-                                            data-dropdown-toggle="xbox-series-x-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="xbox-series-x-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="xbox-series-x-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple Watch SE</th>
-                                    <td class="px-4 py-3">Watch</td>
-                                    <td class="px-4 py-3">Apple</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$399</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-watch-se-dropdown-button"
-                                            data-dropdown-toggle="apple-watch-se-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-watch-se-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="apple-watch-se-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        NIKON D850</th>
-                                    <td class="px-4 py-3">Photo</td>
-                                    <td class="px-4 py-3">Nikon</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$599</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="nikon-d850-dropdown-button"
-                                            data-dropdown-toggle="nikon-d850-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="nikon-d850-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="nikon-d850-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Monitor BenQ EX2710Q</th>
-                                    <td class="px-4 py-3">TV/Monitor</td>
-                                    <td class="px-4 py-3">BenQ</td>
-                                    <td class="px-4 py-3 max-w-[12rem] truncate">What is a product description?
-                                        A product description describes a product.</td>
-                                    <td class="px-4 py-3">$499</td>
-                                    <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="benq-ex2710q-dropdown-button"
-                                            data-dropdown-toggle="benq-ex2710q-dropdown"
-                                            class="inline-flex items-center text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 dark:hover-bg-gray-800 text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor"
-                                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="benq-ex2710q-dropdown"
-                                            class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm"
-                                                aria-labelledby="benq-ex2710q-dropdown-button">
-                                                <li>
-                                                    <button type="button"
-                                                        data-modal-target="updateCategoryModal"
-                                                        data-modal-toggle="updateCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path
-                                                                d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-                                                        </svg>
-                                                        Edit
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="readCategoryModal"
-                                                        data-modal-toggle="readCategoryModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white text-gray-700 dark:text-gray-200">
-                                                        <svg class="w-4 h-4 mr-2"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewbox="0 0 20 20" fill="currentColor"
-                                                            aria-hidden="true">
-                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                        </svg>
-                                                        Preview
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button type="button" data-modal-target="deleteModal"
-                                                        data-modal-toggle="deleteModal"
-                                                        class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-                                                        <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15"
-                                                            fill="none" xmlns="http://www.w3.org/2000/svg"
-                                                            aria-hidden="true">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                fill="currentColor"
-                                                                d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-                                                        </svg>
-                                                        Delete
-                                                    </button>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -960,98 +216,7 @@ const templateHTML = `
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-[rgba(0,0,0,0.5)]">
             
         </div>
-        <!-- Update modal -->
-        <div id="updateCategoryModal" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-2xl max-h-full">
-                <!-- Modal content -->
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                    <!-- Modal header -->
-                    <div
-                        class="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Update Category</h3>
-                        <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-toggle="updateCategoryModal">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                </div>
-            </div>
-        </div>
-        <!-- Read modal -->
-        <div id="readCategoryModal" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-xl max-h-full">
-                <!-- Modal content -->
-                <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-                    <!-- Modal header -->
-                    <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                        <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                            <h3 class="font-semibold ">Apple iMac 27”</h3>
-                            <p class="font-bold">$2999</p>
-                        </div>
-                        <div>
-                            <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-toggle="readCategoryModal">
-                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                    </div>
-                    <dl>
-                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Details</dt>
-                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Standard glass
-                            ,3.8GHz 8-core 10th-generation Intel Core i7 processor, Turbo Boost up to 5.0GHz,
-                            16GB 2666MHz DDR4 memory, Radeon Pro 5500 XT with 8GB of GDDR6 memory, 256GB SSD
-                            storage, Gigabit Ethernet, Magic Mouse 2, Magic Keyboard - US.</dd>
-                        <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Category</dt>
-                        <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">Electronics/PC</dd>
-                    </dl>
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3 sm:space-x-4">
-                            <button type="button"
-                                class="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                <svg aria-hidden="true" class="mr-1 -ml-1 w-5 h-5" fill="currentColor"
-                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                    <path fill-rule="evenodd"
-                                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                Edit
-                            </button>
-                            <button type="button"
-                                class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Preview</button>
-                        </div>
-                        <button type="button"
-                            class="inline-flex items-center text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
-                            <svg aria-hidden="true" class="w-5 h-5 mr-1.5 -ml-1" fill="currentColor"
-                                viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <!-- Delete modal -->
         <div id="deleteModal" tabindex="-1" aria-hidden="true"
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-[rgba(0,0,0,0.5)]">
@@ -1097,46 +262,23 @@ const templateHTML = `
     </main>
 `;
 
-export default class Categories extends Component<HTMLDivElement>{
+export default class Categories extends AdminBaseComponent{
 
-    cateForm: HTMLFormElement;
-    categoriesTable: any;
-    tableCategoriesEl: HTMLTableElement;
-    modalFormEl: HTMLDivElement;
-    toastMsgEl: HTMLDivElement;
-
-    createCategoryBtn: HTMLButtonElement
-    closeFormModalBtn: HTMLButtonElement;
-    closeToastBtn: HTMLButtonElement;
-    triggerModalDeleteBtn: HTMLButtonElement;
-    deleteConfirmBtn: HTMLButtonElement;
-
-    modal: Modal;
-    toastMsg: ToastMessage;
-    _currentId: string = "";
 
     constructor() {
-        super('admin-content');
-        this.hostEl.innerHTML = templateHTML;
+        super(
+        'category',
+        'table-categories', 
+        'createCategoryModal', 
+        'toast-success', 
+        'createCategoryModalButton', 
+        'closeModalForm',
+        'closeToast',
+        'deleteCategoryBtn',
+        'delete-cate-btn',
+        'add-cate-form',
+        );
 
-        this.render();
-        this.tableCategoriesEl = document.getElementById('table-categories') as HTMLTableElement;
-        this.modalFormEl = document.getElementById('createCategoryModal') as HTMLDivElement;
-        this.toastMsgEl = document.getElementById('toast-success') as HTMLDivElement;
-        this.createCategoryBtn = document.getElementById("createCategoryModalButton") as HTMLButtonElement;
-        
-        this.closeFormModalBtn = document.getElementById('closeModalForm') as HTMLButtonElement;
-
-        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
-
-        this.triggerModalDeleteBtn = document.getElementById('deleteCategoryBtn') as HTMLButtonElement;
-        this.deleteConfirmBtn = document.getElementById('delete-cate-btn') as HTMLButtonElement;
-        this.cateForm = document.getElementById('add-cate-form') as HTMLFormElement;
-        // this.updateForm = document.getElementById('update-cate-form') as HTMLFormElement;
-
-        this.modal = new Modal(this.modalFormEl);
-        this.toastMsg = new ToastMessage();
-        this.attach();
     }
 
     render() : void {
@@ -1173,7 +315,7 @@ export default class Categories extends Component<HTMLDivElement>{
              
               });
         
-              this.categoriesTable =  new DataTables("#table-categories", {
+              this.dataTable =  new DataTables("#table-categories", {
                 data: tableHtml,
                 columns: [
                   { title: "ID" },
@@ -1192,14 +334,14 @@ export default class Categories extends Component<HTMLDivElement>{
         renderCategoriesList();
     }
 
-    attach(): void {
-        // this.cateForm.addEventListener('submit', this.submitHandler);
-        this.tableCategoriesEl.addEventListener('click', this.clickHandler);
-        this.createCategoryBtn.addEventListener('click', this.addCategoryHandler);
-        this.deleteConfirmBtn.addEventListener('click', this.deleteCategoryHandler);
-        // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
+    // attach(): void {
+    //     // this.FormEl.addEventListener('submit', this.submitHandler);
+    //     this.tableEl.addEventListener('click', this.clickHandler);
+    //     this.createBtn.addEventListener('click', this.addHandler);
+    //     this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+    //     // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
         
-    }
+    // }
 
     @autobind 
     submitHandler(e: Event) {
@@ -1251,10 +393,7 @@ export default class Categories extends Component<HTMLDivElement>{
 
                 // Handle add toast here!!
 
-                if(this.categoriesTable) {
-                    this.categoriesTable.destroy();
-                }
-
+                this.clearTableData();
                 this.render();
                 this.closeFormModal();                
                 this.showToast('success', 'Success', message);
@@ -1269,50 +408,49 @@ export default class Categories extends Component<HTMLDivElement>{
 
     }
 
-    @autobind
-    clickHandler(e: Event) {
-        e.preventDefault();
+    // @autobind
+    // clickHandler(e: Event) {
+    //     e.preventDefault();
 
-        console.log(e.target);
+    //     console.log(e.target);
 
-        const targetEl = e.target as HTMLElement;
+    //     const targetEl = e.target as HTMLElement;
 
-        const btnEl = targetEl.closest('button')! as HTMLButtonElement;
-        if(btnEl) {
-            this._currentId = btnEl?.getAttribute('category-id') as string ;
-        }
+    //     const btnEl = targetEl.closest('button')! as HTMLButtonElement;
+    //     if(btnEl) {
+    //         this._currentId = btnEl?.getAttribute('category-id') as string ;
+    //     }
 
-        // Edit
-        if (
-            targetEl &&
-            targetEl.matches("button, button i") &&
-            targetEl.classList.contains("update-modal-trigger")
-          ) {
-            this.editCategoryHandler();
-        }
+    //     // Edit
+    //     if (
+    //         targetEl &&
+    //         targetEl.matches("button, button i") &&
+    //         targetEl.classList.contains("update-modal-trigger")
+    //       ) {
+    //         this.editHandler();
+    //     }
 
-        // Delete
-        if (
-            targetEl &&
-            targetEl.classList.contains("delete-modal-trigger") &&
-            targetEl.matches("button, button i")
-          ) {
-            this.toggleDeleteModal();
-          }
+    //     // Delete
+    //     if (
+    //         targetEl &&
+    //         targetEl.classList.contains("delete-modal-trigger") &&
+    //         targetEl.matches("button, button i")
+    //       ) {
+    //         this.toggleDeleteModal();
+    //       }
 
-    }
+    // }
 
 
-    toggleDeleteModal() {
-        this.triggerModalDeleteBtn.click();
-    }
+    // toggleDeleteModal() {
+    //     this.triggerModalDeleteBtn.click();
+    // }
     clearInputs() {
 
     }
 
-
     @autobind
-    deleteCategoryHandler() {
+    deleteHandler() {
 
         (async() => {
             try {
@@ -1334,79 +472,68 @@ export default class Categories extends Component<HTMLDivElement>{
         
     }
 
-    clearTableData() {
-        if(this.categoriesTable) {
-            this.categoriesTable.destroy();
-        }
-    }
+    // showModal(type: string) {
+    //     this.modalFormEl = document.getElementById('CategoryModal') as HTMLDivElement;
+    //     this.modal = new Modal(this.modalFormEl);
+    //     this.modal.show();
+    //     this.closeFormModalBtn = document.getElementById('closeModalForm') as HTMLButtonElement;
+    //     this.closeFormModalBtn.addEventListener('click', this.hideModal);
+    //     this.FormEl = document.getElementById(`${type}-cate-form`) as HTMLFormElement;
+    //     this.FormEl.addEventListener('submit', this.submitHandler);
+    // }
 
-    showModal(type: string) {
-        this.modalFormEl = document.getElementById('CategoryModal') as HTMLDivElement;
-        this.modal = new Modal(this.modalFormEl);
-        this.modal.show();
-        this.closeFormModalBtn = document.getElementById('closeModalForm') as HTMLButtonElement;
-        this.closeFormModalBtn.addEventListener('click', this.hideModal);
-        this.cateForm = document.getElementById(`${type}-cate-form`) as HTMLFormElement;
-        this.cateForm.addEventListener('submit', this.submitHandler);
-    }
+    // showToast(type = "primary", title = 'Add Category', message = 'Add Category Successfully!', minutes = '1 minutes') {
 
-    showToast(type = "primary", title = 'Add Category', message = 'Add Category Successfully!', minutes = '1 minutes') {
+    //     console.log(type, title, message, minutes);
 
-        console.log(type, title, message, minutes);
+    //     this.toastMsg = new ToastMessage(type, title, message , minutes);
+    //     this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+    //     this.closeToastBtn.addEventListener('click', this.hideToast);
+    //     this.toastMsg.show();
+    // }
 
-        this.toastMsg = new ToastMessage(type, title, message , minutes);
-        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
-        this.closeToastBtn.addEventListener('click', this.hideToast);
-        this.toastMsg.show();
-    }
 
     @autobind
-    hideModal() {
-        this.modal.hide();
-    }
-
-    @autobind
-    hideToast() {
-        console.log(this.toastMsg);
-
-        this.toastMsg.hide();
-    }   
-
-    @autobind
-    closeFormModal() {
-        this.modal.hide();
-    }
-
-    @autobind
-    addCategoryHandler() {
+    addHandler() {
         new ModalForm('add');
         this.showModal('add');
     }
 
     @autobind
-    editCategoryHandler() {
+    editHandler() {
         console.log("Edit Category!!!");
         console.log(this._currentId);
+        
         new ModalForm('update');
         this.showModal('update');
 
         const CategoryForm = document.getElementById('update-cate-form') as HTMLFormElement;
 
             (async() => {
-                const response = await CategoriesApi.getById(this._currentId);
-                const {category} = response.data;
+                try {
 
-                const { name, description, cateImage } = category;
-                const elements = CategoryForm.elements as unknown as {
-                    [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-                  };
+                    const response = await CategoriesApi.getById(this._currentId);
+                    const {category} = response.data;
+    
+                    const { name, description, cateImage } = category;
+                    const elements = CategoryForm.elements as unknown as {
+                        [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+                      };
+    
+                   elements["name"].value = name;
+                   elements["description"].textContent = description;
+                   elements["oldImage"].value = cateImage;
 
-               elements["name"].value = name;
-               elements["description"].textContent = description;
-               elements["oldImage"].value = cateImage;
+                } catch (error) {
+                    console.log(error);
+                }
 
             })()
-        }
+    }
+
+    get component() {
+        return templateHTML;
+    }
 
 
 }

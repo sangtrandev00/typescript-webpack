@@ -1,1 +1,5 @@
 node_modules
+**/dist/
+# generate a git ignore with dist folder even subfolder dist
+# VD: folder/dist/
+

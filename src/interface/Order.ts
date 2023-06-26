@@ -1,4 +1,4 @@
-enum OrderStatus {UN_CONFIRMED, CONFIRMED, SHIPPING, SUCCESS, FAILED};
+export enum OrderStatus {ALL="all", UNCONFIRMED = "Waiting to Confirm", CONFIRMED="confirmed", SHIPPING="shipping", SUCCESS="success", FAILED="failed"};
 
 type UserInfo = {
     id?: string;

@@ -20,56 +20,121 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 exports.__esModule = true;
 var flowbite_1 = require("flowbite");
-// import ToastMessage from "../../../components/AdminToast";
-var AdminToast_1 = require("../../components/AdminToast");
 var base_component_1 = require("../../components/base-component");
 var autobind_1 = require("../../decorators/autobind");
+var AdminToast_1 = require("../../components/AdminToast");
+var helper_1 = require("../../util/helper");
 var templateHTML = "\n";
 var AdminBaseComponent = /** @class */ (function (_super) {
     __extends(AdminBaseComponent, _super);
-    function AdminBaseComponent() {
+    function AdminBaseComponent(_type, _tableElId, _modalFormId, _toastId, _createBtnId, _closeFormModalBtnId, _closeToastBtnId, _triggerModalDeleteBtnId, _deleteConfirmBtnId, _formId) {
         var _this = _super.call(this, 'admin-content') || this;
+        _this._type = _type;
+        _this._tableElId = _tableElId;
+        _this._modalFormId = _modalFormId;
+        _this._toastId = _toastId;
+        _this._createBtnId = _createBtnId;
+        _this._closeFormModalBtnId = _closeFormModalBtnId;
+        _this._closeToastBtnId = _closeToastBtnId;
+        _this._triggerModalDeleteBtnId = _triggerModalDeleteBtnId;
+        _this._deleteConfirmBtnId = _deleteConfirmBtnId;
+        _this._formId = _formId;
         _this._currentId = "";
-        _this.hostEl.innerHTML = templateHTML;
+        _this.hostEl.innerHTML = _this.component;
+        _this.clearTableData();
         _this.render();
-        _this.tableEl = document.getElementById('table-categories');
-        _this.modalFormEl = document.getElementById('createCategoryModal');
-        _this.toastMsgEl = document.getElementById('toast-success');
-        _this.createBtn = document.getElementById("createCategoryModalButton");
-        _this.closeFormModalBtn = document.getElementById('closeModalForm');
-        _this.closeToastBtn = document.getElementById('closeToast');
-        _this.triggerModalDeleteBtn = document.getElementById('deleteCategoryBtn');
-        _this.deleteConfirmBtn = document.getElementById('delete-cate-btn');
-        _this.cateForm = document.getElementById('add-cate-form');
+        _this.tableEl = document.getElementById(_this._tableElId);
+        _this.modalFormEl = document.getElementById(_this._modalFormId);
+        _this.toastMsgEl = document.getElementById(_this._toastId);
+        _this.createBtn = document.getElementById(_this._createBtnId);
+        _this.closeFormModalBtn = document.getElementById(_this._closeFormModalBtnId);
+        _this.closeToastBtn = document.getElementById(_this._closeToastBtnId);
+        _this.triggerModalDeleteBtn = document.getElementById(_this._triggerModalDeleteBtnId);
+        _this.deleteConfirmBtn = document.getElementById(_this._deleteConfirmBtnId);
+        _this.FormEl = document.getElementById(_this._formId);
         _this.modal = new flowbite_1.Modal(_this.modalFormEl);
         _this.toastMsg = new AdminToast_1["default"]();
         _this.attach();
         return _this;
     }
+    AdminBaseComponent.prototype.render = function () {
+    };
+    AdminBaseComponent.prototype.attach = function () {
+        // this.FormEl.addEventListener('submit', this.submitHandler);
+        this.tableEl.addEventListener('click', this.clickHandler);
+        console.log(this.createBtn);
+        if (this.createBtn) {
+            this.createBtn.addEventListener('click', this.addHandler);
+        }
+        console.log(this.deleteConfirmBtn);
+        this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+        // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
+    };
+    AdminBaseComponent.prototype.clickHandler = function (e) {
+        e.preventDefault();
+        var targetEl = e.target;
+        var btnEl = targetEl.closest('button');
+        console.log(btnEl);
+        if (btnEl) {
+            this._currentId = btnEl === null || btnEl === void 0 ? void 0 : btnEl.getAttribute(this._type + "-id");
+        }
+        console.log(this._currentId);
+        // Edit
+        if (targetEl &&
+            targetEl.matches("button, button i") &&
+            targetEl.classList.contains("update-modal-trigger")) {
+            this.editHandler();
+        }
+        // Delete
+        if (targetEl &&
+            targetEl.classList.contains("delete-modal-trigger") &&
+            targetEl.matches("button, button i")) {
+            this.toggleDeleteModal();
+        }
+    };
+    ;
+    AdminBaseComponent.prototype.toggleDeleteModal = function () {
+        this.triggerModalDeleteBtn.click();
+    };
+    ;
     AdminBaseComponent.prototype.clearInputs = function () {
     };
     AdminBaseComponent.prototype.clearTableData = function () {
-        if (this.categoriesTable) {
-            this.categoriesTable.destroy();
+        if (this.dataTable) {
+            this.dataTable.destroy();
         }
     };
     AdminBaseComponent.prototype.showModal = function (type) {
-        this.modalFormEl = document.getElementById('CategoryModal');
+        // type = add/update
+        var typeCapitalized = helper_1["default"].capitalize(this._type);
+        console.log(typeCapitalized);
+        this.modalFormEl = document.getElementById(typeCapitalized + "Modal");
         this.modal = new flowbite_1.Modal(this.modalFormEl);
         this.modal.show();
         this.closeFormModalBtn = document.getElementById('closeModalForm');
         this.closeFormModalBtn.addEventListener('click', this.hideModal);
-        this.cateForm = document.getElementById(type + "-cate-form");
-        this.cateForm.addEventListener('submit', this.submitHandler);
+        var formElId = "";
+        if (this._type === "category") {
+            formElId = type + "-cate-form";
+        }
+        else if (this._type === "product") {
+            formElId = type + "-product-form";
+        }
+        else {
+            formElId = type + "-" + this._type + "-form";
+        }
+        this.FormEl = document.getElementById(formElId); // update-product/cate-form
+        this.FormEl.addEventListener('submit', this.submitHandler);
     };
     AdminBaseComponent.prototype.showToast = function (type, title, message, minutes) {
         if (type === void 0) { type = "primary"; }
-        if (title === void 0) { title = 'Add Category'; }
-        if (message === void 0) { message = 'Add Category Successfully!'; }
+        if (title === void 0) { title = "Add " + this._type; }
+        if (message === void 0) { message = "Add " + this._type + " Successfully!"; }
         if (minutes === void 0) { minutes = '1 minutes'; }
         console.log(type, title, message, minutes);
         this.toastMsg = new AdminToast_1["default"](type, title, message, minutes);
         this.closeToastBtn = document.getElementById('closeToast');
+        console.log(this.closeToastBtn);
         this.closeToastBtn.addEventListener('click', this.hideToast);
         this.toastMsg.show();
     };
@@ -78,11 +143,26 @@ var AdminBaseComponent = /** @class */ (function (_super) {
     };
     AdminBaseComponent.prototype.hideToast = function () {
         console.log(this.toastMsg);
+        console.log(this);
+        console.log("hide toast successfully!");
         this.toastMsg.hide();
     };
     AdminBaseComponent.prototype.closeFormModal = function () {
         this.modal.hide();
     };
+    Object.defineProperty(AdminBaseComponent.prototype, "component", {
+        get: function () {
+            return templateHTML;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    __decorate([
+        autobind_1.autobind
+    ], AdminBaseComponent.prototype, "clickHandler");
+    __decorate([
+        autobind_1.autobind
+    ], AdminBaseComponent.prototype, "showToast");
     __decorate([
         autobind_1.autobind
     ], AdminBaseComponent.prototype, "hideModal");

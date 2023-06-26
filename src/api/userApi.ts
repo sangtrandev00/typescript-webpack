@@ -21,7 +21,7 @@ class UsersApi {
     });
   }
 
-  static add(data: any) {
+  static add(data: object) {
     const url = "/admin/user";
     return axiosClient.post(url, data, {
       headers: {
@@ -31,7 +31,7 @@ class UsersApi {
     });
   }
 
-  static update(data: string, userId: string) {
+  static update(data: object, userId: string) {
     const url = "/admin/user/" + userId;
     return axiosClient.put(url, data, {
       headers: {

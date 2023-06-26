@@ -69,7 +69,8 @@ export default class ModalForm extends Component<HTMLDivElement> {
                     </button>
                 </div>
                 <!-- Modal body -->
-                ${(new Form(`${this._type}-cate-form`, `${this._type}`)).component}
+                ${(new Form(`${this._type}-
+                -form`, `${this._type}`)).component}
 
             </div>
         </div>

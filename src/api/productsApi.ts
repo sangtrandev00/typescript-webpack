@@ -1,5 +1,4 @@
 import { ParamInterface } from "../interface/Params";
-import { Productable } from '../interface/Product';
 import axiosClient from "./axiosClient";
 import {AxiosResponse} from 'axios';
 const { adminToken: token } = localStorage;
@@ -38,7 +37,7 @@ class ProductsApi {
     });
   }
 
-  static add(data: Productable) {
+  static add(data: any) {
     const url = "/admin/product";
     return axiosClient.post(url, data, {
       headers: {
@@ -48,7 +47,7 @@ class ProductsApi {
     });
   }
 
-  static update(data: Productable, productId: string) {
+  static update(data: any, productId: string) {
     const url = "/admin/product/" + productId;
     return axiosClient.put(url, data, {
       headers: {

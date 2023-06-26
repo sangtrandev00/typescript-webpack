@@ -1,6 +1,6 @@
+import CategoriesApi from "../api/categoriesApi";
 import ProductsApi from "../api/productsApi";
 import { Cart, CartItem } from "../interface/Cart";
-
 
 export default class Helper {
 
@@ -158,7 +158,44 @@ export default class Helper {
     } else {
         this.textContent("numberCartItems", "0");
     }
-};
+  };
+
+  static capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+  static listCartHandler(cartList: CartItem[], viewCartEl: HTMLDivElement, callback: (prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number) => string) {
+    
+    (async () => {
+
+      let sum = 0;
+    for (const cartItem of cartList) {
+      const { prodId, qty } = cartItem;
+
+      const prodResponse = await ProductsApi.getById(prodId);
+
+      const {
+        product: { oldPrice, discount, name, thumbnail, categoryId },
+      } = prodResponse.data;
+  
+      const cateResponse = await CategoriesApi.getById(categoryId);
+
+      const {
+        category: { name: cateName },
+      } = cateResponse.data;
+
+      const price = oldPrice * (1 - discount / 100);
+      sum += qty * price;
+      const totalItem = price * qty;
+      const cartItemHtml = callback(prodId, name, thumbnail, cateName, qty, price, totalItem);
+  
+      viewCartEl.insertAdjacentHTML("beforeend", cartItemHtml);
+    }
+
+    })()
+   
+  };
+
 }
 
 

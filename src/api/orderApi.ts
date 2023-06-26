@@ -41,7 +41,7 @@ class OrdersApi {
     });
   }
 
-  static updateOrderStatus(data: OrderInterface, orderId: string) {
+  static updateOrderStatus(data: {[key: string] : string }, orderId: string) {
     const url = `/admin/orders/${orderId}`;
     return axiosClient.patch(url, data, {
       headers: {

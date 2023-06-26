@@ -1,4 +1,3 @@
-import { autobind } from "../../decorators/autobind";
 import Component from "../base-component";
 // Initialization for ES Users
 import {
@@ -22,11 +21,13 @@ export default class ToastMessage extends Component<HTMLDivElement>{
         document.addEventListener('DOMContentLoaded', () => {
             
             this.toastMsg = Toast.getInstance(this.toastEl);
+
             // Toast.getInstance(this.toastEl).update({
             //     autohide: true,
             //     deplay: 1000,
 
             // })
+            
             this.toastMsg.hide();
             console.log(this.toastMsg);
 
@@ -39,19 +40,6 @@ export default class ToastMessage extends Component<HTMLDivElement>{
 
     }
 
-    attach() {
-        this.toastEl.addEventListener('hidden.te.toast', this.hiddenEventHandler );
-        this.toastEl.addEventListener('shown.te.toast', this.showEventHandler );
-    }
-
-    @autobind
-    hiddenEventHandler() {
-        console.log("hidden");
-    }
-
-    showEventHandler() {
-        console.log("show");
-    }
 
     show() {
         
@@ -65,7 +53,10 @@ export default class ToastMessage extends Component<HTMLDivElement>{
         this.toastMsg.show();
     }
 
+   
     hide() {
+        
+
         this.toastMsg.hide();
     }
     
@@ -87,7 +78,7 @@ export default class ToastMessage extends Component<HTMLDivElement>{
                     </p>
                     <div class="flex items-center">
                         <p class="text-xs text-primary-700 toast-minutes">${this._minutes} ago</p>
-                        <button type="button" id="close" class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none" data-te-toast-dismiss="" aria-label="Close">
+                        <button type="button" id="closeToast" class="ml-2 box-content rounded-none border-none opacity-80 hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none" data-te-toast-dismiss="" aria-label="Close">
                             <span class="w-[1em] focus:opacity-100 disabled:pointer-events-none disabled:select-none disabled:opacity-25 [&amp;.disabled]:pointer-events-none [&amp;.disabled]:select-none [&amp;.disabled]:opacity-25">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
