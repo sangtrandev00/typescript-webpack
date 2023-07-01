@@ -1,3 +1,4 @@
+import AdminLogin from "../pages/admin/Auth/Login";
 import Categories from "../pages/admin/Categories";
 import Dashboard from "../pages/admin/Dashboard";
 import Orders from "../pages/admin/Orders";
@@ -18,6 +19,10 @@ export default class AdminRouter {
             case '/admin':
               // Render homepage content
               new Dashboard();
+              break;
+            case '/admin-login':
+              // Render homepage content
+              new AdminLogin();
               break;
             case '/admin-categories':
               // Render homepage content

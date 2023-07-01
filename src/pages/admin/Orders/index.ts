@@ -196,17 +196,23 @@ export default class Orders extends Component<HTMLDivElement>{
     _tableId: string = "table-orders";
     _currentId: string = "";
     dataTable: any;
-    modal!: Modal;
+   
     modalEl!: HTMLDivElement;
     viewDetailTableCartEl: HTMLDivElement;
     deleteConfirmBtn: HTMLButtonElement;
+    closeDeleteModalBtn: HTMLButtonElement;
     closeModalBtn: HTMLButtonElement;
     updateOrderForm!: HTMLFormElement;
+    deleteModalEl: HTMLDivElement;
+
+    modal!: Modal;
+    deleteModal?: Modal;
 
     constructor(hostElId: string  = "admin-content") {
         super(
             hostElId
         )
+
         this.hostEl.innerHTML = this.component;
         
         this.hostEl.scrollIntoView({
@@ -218,21 +224,26 @@ export default class Orders extends Component<HTMLDivElement>{
 
         this.tableEl = document.getElementById(this._tableId) as HTMLTableElement;
         this.viewDetailTableCartEl = document.getElementById('view-detail-cart') as HTMLDivElement;
-        this.deleteConfirmBtn = document.querySelector('#deleteOrderBtn') as HTMLButtonElement;
-        this.closeModalBtn = document.querySelector('#closeModalBtn') as HTMLButtonElement;
-        this.updateOrderForm = document.querySelector('#update-order-form') as HTMLFormElement;
+        this.deleteConfirmBtn = document.getElementById('deleteOrderBtn') as HTMLButtonElement;
+        this.closeModalBtn = document.getElementById('closeModalBtn') ! as HTMLButtonElement;
+        this.closeDeleteModalBtn = document.getElementById('closeDeleteModal') ! as HTMLButtonElement
+        this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
+        this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
+        
         this.attach();
 
-    }
+    }       
 
     attach() {
         this.tableEl.addEventListener('click', this.clickHandler);
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
         this.closeModalBtn.addEventListener('click', this.hideModal);
         this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
+        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
+        
     }
 
-        render(orderStatus: OrderStatus = OrderStatus.ALL ) {
+    render(orderStatus: OrderStatus = OrderStatus.ALL ) {
         const renderOrderList = async () => {
             try {
               const response = await OrdersApi.getAll({});
@@ -255,7 +266,7 @@ export default class Orders extends Component<HTMLDivElement>{
                   createdAt,
                 } = order;
           
-                const cartLength = items.reduce((acc, item) => acc + item.qty, 0);
+                const cartLength = items.reduce((acc, item) => acc + (item?.qty as number || 0), 0);
           
                 return [
                   `<p class="truncate-id">${_id}</p>`,
@@ -343,7 +354,7 @@ export default class Orders extends Component<HTMLDivElement>{
             targetEl.classList.contains("delete-modal-trigger") &&
             targetEl.matches("button, button i")
           ) {
-            this.showModal('deleteModal');
+            this.showDeleteModal();
           }
 
     }
@@ -392,6 +403,10 @@ export default class Orders extends Component<HTMLDivElement>{
                 const elements = this.updateOrderForm.elements as unknown as {
                     [key: string]: HTMLInputElement  | HTMLSelectElement
                 };
+
+                console.log(elements["name"]);
+                console.log(elements["email"]);
+                console.log(elements["currStatus"]);
         
                 elements["name"].value = fullName;
                 elements["email"].value = email;
@@ -410,6 +425,8 @@ export default class Orders extends Component<HTMLDivElement>{
         e.preventDefault();
 
         const updateFormEl =  e.target as HTMLFormElement;
+
+        console.log(updateFormEl);
 
         (async () => {
 
@@ -433,6 +450,9 @@ export default class Orders extends Component<HTMLDivElement>{
 
     showModal(modalId: string): void {
         this.modalEl = document.getElementById(modalId) as HTMLDivElement;
+        // this.closeModalBtn = this.modalEl.querySelector('#closeModalBtn') as HTMLButtonElement;
+        // this.closeModalBtn.addEventListener('click', this.hideModal);
+        // console.log(this.closeModalBtn);
         // const OrderDetailModal = document.getElementById(`viewOrderDetailModal`) as HTMLDivElement;
         this.modal = new Modal(this.modalEl);
         this.modal.show();
@@ -454,8 +474,15 @@ export default class Orders extends Component<HTMLDivElement>{
         this.modal.hide();
     }
 
-    hide() {
+    @autobind
+    showDeleteModal() {
+        this.deleteModal = new Modal(this.deleteModalEl);
+        this.deleteModal.show();
+    }
 
+    @autobind
+    hideDeleteModal() {
+        this.deleteModal?.hide();
     }
 
     viewDetail(): void {

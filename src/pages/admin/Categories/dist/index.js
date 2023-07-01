@@ -224,7 +224,7 @@ var Categories = /** @class */ (function (_super) {
                         return [4 /*yield*/, categoriesApi_1["default"]["delete"](this._currentId)];
                     case 1:
                         response = _b.sent();
-                        this.toggleDeleteModal();
+                        this.hideDeleteModal();
                         this.clearTableData();
                         this.render();
                         _a = response.data, message = _a.message, categoryId = _a.categoryId;

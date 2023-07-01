@@ -21,8 +21,11 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
     closeToastBtn: HTMLButtonElement;
     triggerModalDeleteBtn: HTMLButtonElement;
     deleteConfirmBtn: HTMLButtonElement;
+    closeDeleteModalBtn: HTMLButtonElement;
+    deleteModalEl: HTMLDivElement;
 
     modal: Modal;
+    deleteModal?: Modal;
     toastMsg: ToastMessage;
     _currentId: string = "";
 
@@ -37,7 +40,6 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         protected _triggerModalDeleteBtnId: string,
         protected _deleteConfirmBtnId: string,
         protected _formId: string,
-        
 
          ) {
         super('admin-content');
@@ -51,13 +53,15 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         this.createBtn = document.getElementById(this._createBtnId) as HTMLButtonElement;
         
         this.closeFormModalBtn = document.getElementById(this._closeFormModalBtnId) as HTMLButtonElement;
-
+        this.closeDeleteModalBtn = document.getElementById("closeDeleteModal") as HTMLButtonElement;
         this.closeToastBtn = document.getElementById(this._closeToastBtnId) as HTMLButtonElement;
 
         this.triggerModalDeleteBtn = document.getElementById(this._triggerModalDeleteBtnId) as HTMLButtonElement;
         this.deleteConfirmBtn = document.getElementById(this._deleteConfirmBtnId) as HTMLButtonElement;
         this.FormEl = document.getElementById(this._formId) as HTMLFormElement;
 
+        this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
+        
         this.modal = new Modal(this.modalFormEl);
         this.toastMsg = new ToastMessage();
 
@@ -67,7 +71,6 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
     render() : void {
         
     }
-    
 
     attach(): void {
         // this.FormEl.addEventListener('submit', this.submitHandler);
@@ -79,8 +82,10 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         }
 
         console.log(this.deleteConfirmBtn);
+       
 
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
         // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
     }
 
@@ -117,7 +122,7 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
             targetEl.classList.contains("delete-modal-trigger") &&
             targetEl.matches("button, button i")
           ) {
-            this.toggleDeleteModal();
+            this.showDeleteModal();
           }
 
     };
@@ -128,9 +133,21 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
     
     abstract editHandler(): void; 
 
-    toggleDeleteModal() {
-        this.triggerModalDeleteBtn.click();
+    showDeleteModal() {
+
+        // const deleteModalEl = document.getElementById('deleteModal');
+        this.deleteModal = new Modal(this.deleteModalEl);
+        this.deleteModal.show();
     };
+
+    @autobind
+    hideDeleteModal() {
+
+        console.log("hide modal clicked!");
+
+        // this.deleteModal = new Modal(this.deleteModalEl);
+        this.deleteModal?.hide();
+    }
 
     clearInputs() : void  {
 

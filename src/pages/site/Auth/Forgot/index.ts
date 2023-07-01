@@ -1,7 +1,9 @@
 import Input from "../components/Input"
 import Button from "../components/Button"
 import Component from "../../../../components/base-component";
-const EmailInput = new Input("email", "email", "Email Address", "", "Email Address");
+import { autobind } from "../../../../decorators/autobind";
+import AuthApi from "../../../../api/authApi";
+const EmailInput = new Input("email", "email","email", "Email Address", "", "Email Address");
 const ButtonEl = new Button("submit", "RESET");
 
 const templateHTML = `
@@ -42,9 +44,63 @@ const templateHTML = `
 `
 
 export default class Reset extends Component<HTMLDivElement> {
+
+    resetFormEl: HTMLFormElement;
+
     constructor() {
         super('main');
         this.hostEl.innerHTML = templateHTML;
+
+        this.resetFormEl = document.getElementById('reset-form') as HTMLFormElement;
+        this.attach();
+    }
+
+    attach() {
+        this.resetFormEl.addEventListener('submit', this.resetPasswordHandler);
+    }
+
+    @autobind
+    resetPasswordHandler(e:Event) {
+        e.preventDefault();
+
+            const formEls = e.target as unknown as {[key: string]: HTMLInputElement};
+
+            const email = formEls["email"].value;
+
+            const rootUrl = window.location.origin;
+            
+            const resetPassUrl = `${rootUrl}/reset`;
+            (async() => {
+
+            try {
+                const response = await AuthApi.sendEmailReset({ email, resetPassUrl });
+                const {
+                  user: { _id },
+                } = response.data;
+          
+                localStorage.setItem(
+                  "user",
+                  JSON.stringify({
+                    email,
+                    userId: _id,
+                  })
+                );
+
+                alert('Check your email to reset your password!')
+          
+              } catch (error) {
+
+                  //   console.log(error?.response.status);
+                  //   if (error.response.status === 402) {
+                  //     showToast("");
+                  //   }
+                  alert(error);
+                  console.log(error);
+          
+              }
+            
+        })()
+
     }
 
 }

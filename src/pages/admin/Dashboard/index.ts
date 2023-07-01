@@ -1,6 +1,17 @@
 // import ToastMessage from "../../../components/AdminToast";
 // import Component from "../../../components/base-component";
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+import { autobind } from "../../../decorators/autobind";
+import { OrderInterface, OrderStatus } from '../../../interface/Order';
+import {Productable} from '../../../interface/Product';
+import { UserInterface } from './../../../interface/User';
 import Orders from "../Orders";
+import Utilities from "../Orders/components/Utilites";
+import OrdersApi from '../../../api/orderApi';
+import ProductsApi from '../../../api/productsApi';
+import UsersApi from '../../../api/userApi';
+import Helper from '../../../util/helper';
 
 const templateHTML = `
     <main class="p-4 md:ml-64 h-auto pt-20">
@@ -129,11 +140,11 @@ const templateHTML = `
     <div id="orders-status-el"
         class="mt-4 rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark px-4">
         <!--Tabs navigation-->
-        <ul
+        <ul id="orders-tab-list"
           class="mb-5 flex list-none flex-row flex-wrap border-b-0 pl-0"
           role="tablist"
           data-te-nav-ref>
-          <li role="presentation" class="flex-auto text-center">
+          <li role="presentation" data-order-status="${OrderStatus.UNCONFIRMED}" class="flex-auto text-center">
             <a
               href="#tabs-orders-status-1"
               class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
@@ -146,7 +157,7 @@ const templateHTML = `
               >Unconfirmed</a
             >
           </li>
-          <li role="presentation" class="flex-auto text-center">
+          <li role="presentation" data-order-status="${OrderStatus.CONFIRMED}" class="flex-auto text-center">
             <a
               href="#tabs-orders-status-2"
               class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
@@ -158,7 +169,7 @@ const templateHTML = `
               >Confirmed</a
             >
           </li>
-          <li role="presentation" class="flex-auto text-center">
+          <li role="presentation" data-order-status="${OrderStatus.SHIPPING}" class="flex-auto text-center">
             <a
               href="#tabs-orders-status-3"
               class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
@@ -170,7 +181,7 @@ const templateHTML = `
               >Shipping</a
             >
           </li>
-          <li role="presentation" class="flex-auto text-center">
+          <li role="presentation" data-order-status="${OrderStatus.SUCCESS}" class="flex-auto text-center">
             <a
               href="#tabs-orders-status-4"
               class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
@@ -182,7 +193,7 @@ const templateHTML = `
               >Success</a
             >
           </li>
-          <li role="presentation" class="flex-auto text-center">
+          <li role="presentation" data-order-status="${OrderStatus.FAILED}" class="flex-auto text-center">
             <a
               href="#tabs-orders-status-5"
               class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
@@ -205,28 +216,28 @@ const templateHTML = `
             role="tabpanel"
             aria-labelledby="tabs-home-tab01"
             data-te-tab-active>
-            <table id="table-orders"></table>
+            <table id="table-orders-status-1"></table>
           </div>
           <div
             class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
             id="tabs-orders-status-2"
             role="tabpanel"
             aria-labelledby="tabs-profile-tab01">
-            Tab 2 content
+            <table id="table-orders-status-2"></table>
           </div>
           <div
             class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
             id="tabs-orders-status-3"
             role="tabpanel"
             aria-labelledby="tabs-profile-tab01">
-            Tab 3 content
+                <table id="table-orders-status-3"></table>
           </div>
           <div
             class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
             id="tabs-orders-status-4"
             role="tabpanel"
             aria-labelledby="tabs-profile-tab01">
-            Tab 4 content
+                <table id="table-orders-status-4"></table>
           </div>
 
           <div
@@ -234,11 +245,10 @@ const templateHTML = `
             id="tabs-orders-status-5"
             role="tabpanel"
             aria-labelledby="tabs-profile-tab01">
-            Tab 5 content
+                <table id="table-orders-status-5"></table>
           </div>
      
         </div>
-
 
     </div>
 
@@ -261,6 +271,9 @@ const templateHTML = `
         <canvas id="myChart"></canvas>
 
     </div>
+
+    ${Utilities.component}
+
     <!-- Toast message element!!! -->
     <div class="toasts-wrapper fixed top-20 right-4">
         <div class=" pointer-events-auto mx-auto mb-4 hidden w-96 max-w-full rounded-lg bg-primary-100 bg-clip-padding text-sm text-primary-700 shadow-lg shadow-black/5  data-[te-toast-hide]:hidden"
@@ -409,16 +422,293 @@ const templateHTML = `
 `;
 
 export default class Dashboard extends Orders{
+
+    ordersSuccess: OrderInterface[] = [];
+    products: Productable[] = [];
+    users: UserInterface[] = [];
+
+    totalSales: number = 0;
+    totalViews: number = 0;
+    totalProducts: number = 0;
+    totalUsers: number = 0;
+    selectedYear: number = 2023;
+
     hostEl: HTMLDivElement;
-    tableEl: HTMLTableElement;
+    // tableEl: HTMLTableElement;
+    // viewDetailTableCartEl: HTMLDivElement;
+    tabsListEl: HTMLUListElement;
+    selectYearEl: HTMLSelectElement;
+
+    myChart?: Chart;
+    myChartEl: HTMLCanvasElement;
 
     constructor() {
+
         super();
         this.hostEl = document.getElementById('admin-content') as HTMLDivElement;
         this.hostEl.innerHTML = templateHTML;
-        this.tableEl = document.getElementById('table-orders') as HTMLTableElement;
-        console.log(this.tableEl);
+        
+        this.tabsListEl = document.getElementById('orders-tab-list') as HTMLUListElement;
+
+        this.tableEl = document.getElementById('table-orders-status-1') as HTMLTableElement;
+        this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
+        this.viewDetailTableCartEl = document.getElementById('view-detail-cart') as HTMLDivElement;
+        this.deleteConfirmBtn = document.querySelector('#deleteOrderBtn') as HTMLButtonElement;
+        this.myChartEl = document.getElementById('myChart') as HTMLCanvasElement;
+        // Custom attach function here!!!
+        this.selectYearEl = document.getElementById('selectYear') as HTMLSelectElement;
+        console.log(this.myChartEl);
+        console.log(this.selectYearEl)
+        this.attach();
+        this.renderSumarizedData();
+
+        // Init table
+        this._tableId = "table-orders-status-1";
+        this.render(OrderStatus.UNCONFIRMED);
+
+        this.renderChart();
     }
 
+    // Re init
+    attach() {
+        super.attach();
+        // this.tableEl.addEventListener('click', this.clickHandler);
+        // this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+        // this.closeModalBtn.addEventListener('click', this.hideModal);
+        // this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
+        // this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
+        
+        if(this.tabsListEl) {
+            this.tabsListEl.addEventListener('click', this.changeOrdersStatus);
+        }
+
+    }
+
+    @autobind
+    changeOrdersStatus(e: Event) {
+
+        const clickBtn = e.target as HTMLLinkElement;
+
+        const orderStatus = clickBtn.closest('li')?.dataset.orderStatus;
+        
+        if(orderStatus) {
+
+            const result = this.selectedOrderStatus(orderStatus);
+            const {status, tableId} = result;
+            this.tableEl = document.getElementById(tableId) as HTMLTableElement;
+
+            console.log(this.tableEl);
+            console.log("order status: ", status);
+
+            this._tableId = tableId;
+            this.render(status);
+            this.attach();
+
+        }
+
+    }
+
+    selectedOrderStatus(status: string) {
+        switch (status) {
+            case "Waiting to Confirm":
+                return {
+                    status: OrderStatus.UNCONFIRMED,
+                    tableId: "table-orders-status-1"
+                };
+            case "confirmed":
+                return {
+                    status: OrderStatus.CONFIRMED,
+                    tableId: "table-orders-status-2"
+                };
+            case "shipping":
+                return {
+                    status: OrderStatus.SHIPPING,
+                    tableId: "table-orders-status-3"
+                };
+            case "success":
+                return {
+                    status: OrderStatus.SUCCESS,
+                    tableId: "table-orders-status-4"
+                };
+            case "failed":
+                return {
+                    status: OrderStatus.FAILED,
+                    tableId: "table-orders-status-5"
+                };
+            default:
+                return {
+                    status: OrderStatus.ALL,
+                    tableId: "table-orders-status-1"
+                };
+        }
+    }
+
+    createChartByYear(ordersSuccess: OrderInterface[] , selectedYear: number){
+
+
+        const selectedOrders = ordersSuccess.filter((order: OrderInterface) => {
+          const yearOfOrder = new Date(order.createdAt as string).getFullYear();
+      
+          return selectedYear === yearOfOrder;
+        });
+      
+        const monthLabels = [];
+        const summarizedData = [];
+      
+        for (let i = 1; i <= 12; i++) {
+          const currTotalSaleMonth = selectedOrders
+            .filter((order) => {
+              const createdAtMonth = new Date(order.createdAt as string).getMonth() + 1;
+              return i === createdAtMonth;
+            })
+            .reduce((acc, order) => {
+              return acc + order.products.totalPrice + (order.vatFee as number || 0 ) + (order.shippingFee as number || 0);
+            }, 0);
+      
+          monthLabels.push("Month " + i);
+          summarizedData.push(currTotalSaleMonth);
+        }
+      
+        if (this.myChart) {
+          this.myChart.destroy();
+        }
+      
+        this.myChart = new Chart(this.myChartEl, {
+          type: "bar",
+          data: {
+            labels: monthLabels,
+            datasets: [
+              {
+                label: `Our sale in ${selectedYear}`,
+                data: summarizedData,
+                borderWidth: 1,
+                backgroundColor: [
+                  "rgba(255, 99, 132, 0.2)",
+                  "rgba(255, 159, 64, 0.2)",
+                  "rgba(255, 205, 86, 0.2)",
+                  "rgba(75, 192, 192, 0.2)",
+                  "rgba(54, 162, 235, 0.2)",
+                  "rgba(153, 102, 255, 0.2)",
+                  "rgba(201, 203, 207, 0.2)",
+                  "rgba(210,105,30, 0.2)",
+                  "rgba	(112,128,144, 0.2)",
+                  "rgba(0,128,128, 0.2)",
+                  "rgba(46,139,87, 0.2)",
+                  "rgba(138,43,226, 0.2)",
+                ],
+                borderColor: [
+                  "rgb(255, 99, 132)",
+                  "rgb(255, 159, 64)",
+                  "rgb(255, 205, 86)",
+                  "rgb(75, 192, 192)",
+                  "rgb(54, 162, 235)",
+                  "rgb(153, 102, 255)",
+                  "rgb(201, 203, 207)",
+                  "rgb(210,105,30)",
+                  "rgb(112,128,144)",
+                  "rgb(0,128,128)",
+                  "rgb(46,139,87)",
+                  "rgb(138,43,226)",
+                ],
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+    };
+
+    renderChart() {
+
+        (async () => {
+
+            try {
+                const response = await OrdersApi.getAll({});
+
+                const {orders} = response.data;
+                this.ordersSuccess = orders.filter((order: OrderInterface) => order.status === OrderStatus.SUCCESS);
+
+                this.createChartByYear(this.ordersSuccess, this.selectedYear);
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        })()
+
+    }
+
+    // @autobind
+    // changeChartHandler(e: Event) {
+        
+    //     console.log(e.target);
+
+    //     // const selectedYear = e.target as HTMLSelectElement;
+    //     // this.selectedYear = +selectedYear.value;
+    //     // this.renderChart();
+    // }
+
+    renderSumarizedData() {
+        this.calcTotalProducts();
+        this.calcTotalUsers();
+        this.calcTotalViews();
+        this.calcTotalSales();
+    }
+
+    calcTotalSales() {
+        console.log(this.ordersSuccess);
+
+        const totalSales = this.ordersSuccess.reduce(
+            (acc, order) => acc + order.products.totalPrice + (order.vatFee as number || 0 )  + (order.shippingFee as number || 0),
+            0
+          );
+        this.totalSales = totalSales;
+
+        console.log(totalSales);
+
+        Helper.textContent("totalSale", `$${totalSales.toFixed(2)} `);
+    }
+
+    calcTotalViews() {
+        console.log(this.products);
+
+        const totalViews = this.products.reduce((acc, product) => acc + (product.views as number || 0), 0);
+        this.totalViews = totalViews;
+        console.log(totalViews);
+
+        Helper.textContent("totalViews", totalViews.toString());
+    }
+
+    calcTotalUsers() {
+        (async () => {
+            const response = await UsersApi.getAll();
+            const {users} = response.data;
+
+            console.log(users);
+
+            this.totalUsers = users.length;
+            Helper.textContent("totalUsers", users.length);
+        })()
+    }
+
+    calcTotalProducts() {
+        (async () => {
+            const response = await ProductsApi.getAll({});
+            const {products} = response.data;
+
+            console.log(products);
+            this.products = products;
+            this.totalProducts = products.length;
+            Helper.textContent("totalProducts", products.length);
+        })()
+    }
+
+ 
+    
 
 }

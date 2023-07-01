@@ -5,18 +5,20 @@ import { BACKEND_URL } from "../../../../constant/backend-domain";
 
 
 export default class ProductCard extends ProductItem {
- 
+    
+    _newPrice: number = 0;
+
     constructor( _id: string | undefined,  _name: string,  _oldPrice: number | undefined,  _discount: number | undefined,  _thumbnail: string) {
         // call super to extends from ProductItem class with arguments
         super(_id, _name, _oldPrice, _discount, _thumbnail);
+
+        if(this._oldPrice) {
+            this._newPrice = this._oldPrice * (1 - 1/(this._discount || 0));
+        }
     }
     
-    // Overide
+    // Override
     get component(): string {
-
-        if(this._oldPrice && this._discount) {
-            this._newPrice = this._oldPrice * (1 - 1/this._discount);
-        }
 
         return `
             <div data-id="${this._id}" class="lg:w-1/3 md:w-1/2 p-4 w-full card-product">
@@ -30,7 +32,7 @@ export default class ProductCard extends ProductItem {
             </button>
 
             <div>
-                <img src="${BACKEND_URL}/${this._thumbnail}" alt="${this._name}" class="h-64 w-full transition duration-500 group-hover:scale-105 sm:h-72 xl:px-4 md:px-2 object-contain sm:object-none">
+                <img src="${BACKEND_URL}/${this._thumbnail}" alt="${this._name}" class="h-64 w-full transition duration-500 group-hover:scale-105 sm:h-72 xl:px-4 md:px-2 object-contain sm:object-contain">
 
             </div>
             <div class="relative border border-gray-100 bg-white p-6">
@@ -43,8 +45,8 @@ export default class ProductCard extends ProductItem {
                 </h3>
 
                 <div class="flex items-center">
-                    <p class="mt-1.5 text-xl text-red-500 ">$1140.00</p>
-                    <p class="mt-1.5 text-sm text-gray-700 ms-2 line-through ">$1200</p>
+                    <p class="mt-1.5 text-xl text-red-500 ">$${this._newPrice.toFixed(2)}</p>
+                    <p class="mt-1.5 text-sm text-gray-700 ms-2 line-through ">$${this._oldPrice}</p>
                 </div>
 
                 <!-- Rating here -->

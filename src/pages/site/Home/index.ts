@@ -1,7 +1,9 @@
-// import { CustomComponent } from "../../decorators/component";
-
+import ShopApi from "../../../api/shopApi";
 import ProductList from "../../../components/ProductList";
 import Component from "../../../components/base-component";
+import { autobind } from "../../../decorators/autobind";
+import Router from "../../../router/router";
+import Helper from "../../../util/helper";
 
 const templateHTML = `
 <div id="carousel-section" class="carousel-section flex relative mt-8 gap-x-3">
@@ -233,8 +235,8 @@ const templateHTML = `
             <!--Second item-->
             <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
                 data-te-carousel-item style="backface-visibility: hidden">
-                <img src="../assets/images/redmi-note12s-004-sliding.png"
-                    class="block w-full xl:w-full rounded-[10px]" alt="..." />
+                <img src="https://techspace-phoner.netlify.app/assets/redmi-note12s-004-sliding-f8df3855.png"
+                    class="block w-full xl:w-full rounded-[10px]" alt="redmi-note12s-004-sliding-f8df3855" />
                 <!-- <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
             <h5 class="text-xl">Second slide label</h5>
             <p>
@@ -245,8 +247,8 @@ const templateHTML = `
             <!--Third item-->
             <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
                 data-te-carousel-item style="backface-visibility: hidden">
-                <img src="../assets/images/rog-phone7-sliding-pre-order.jpg"
-                    class="block w-full xl:w-full rounded-[10px]" alt="..." />
+                <img src="https://techspace-phoner.netlify.app/assets/rog-phone7-sliding-pre-order-4ce1f8b5.jpg"
+                    class="block w-full xl:w-full rounded-[10px]" alt="rog-phone7-sliding-pre-order" />
                 <!-- <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
             <h5 class="text-xl">Third slide label</h5>
             <p>
@@ -257,8 +259,8 @@ const templateHTML = `
             <!--four item-->
             <div class="relative float-left -mr-[100%] hidden w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
                 data-te-carousel-item style="backface-visibility: hidden">
-                <img src="../assets/images/x5-pro-sliding.png" class="block w-full xl:w-full rounded-[10px]"
-                    alt="..." />
+                <img src="https://techspace-phoner.netlify.app/assets/x5-pro-sliding-931804b5.png" class="block w-full xl:w-full rounded-[10px]"
+                    alt="x5-pro-sliding" />
                 <!-- <div class="absolute inset-x-[15%] bottom-5 hidden py-5 text-center text-white md:block">
             <h5 class="text-xl">Third slide label</h5>
             <p>
@@ -302,7 +304,7 @@ const templateHTML = `
         <li role="presentation" class="w-1/4 flex-auto text-center">
             <a href="#tabs-home01"
                 class="h-full my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 min-[0]:text-sm md:text-xs  font-medium  leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
-                data-te-toggle="pill" data-te-target="#tabs-home01" data-te-nav-active role="tab"
+                data-te-toggle="pill" data-te-target="#tabs-home01" role="tab"
                 aria-controls="tabs-home01" aria-selected="true">
                 <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">Iphone 14
                     Promax</p>
@@ -726,7 +728,7 @@ const templateHTML = `
     </div>
 
     <div class="flex justify-center items-center">
-        <a href="shop.html"
+        <a id="loadMoreBtn" href="shop.html"
             class="hover:bg-slate-600 dark:text-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 bg-slate-800 py-5 md:px-16 p-2 md:w-auto lg:mt-12 md:mt-12 mt-10 text-white font-medium text-base leading-4">Load
             More</a>
     </div>
@@ -1027,16 +1029,92 @@ const templateHTML = `
 </div>
 </section>
 
-
 `
-export default class Homepage extends Component<HTMLDivElement>{
+export default class Homepage extends Component<HTMLDivElement> {
+    
+    prodListInstance: ProductList;
+    nextBtn: HTMLSpanElement;
+    prevBtn: HTMLSpanElement;
+    showResultProductsEl: HTMLParagraphElement;
+    loadMoreBtn: HTMLAnchorElement;
     
     constructor(
+
     ) {
         super('main');
         this.hostEl.innerHTML = templateHTML;
-        const prodList = new ProductList();
-        prodList.load();
+        this.prodListInstance = new ProductList('show-product');
+        this.prodListInstance.load();
+   
+        this.nextBtn = document.getElementById("nextBtn") as HTMLSpanElement;
+        this.prevBtn = document.getElementById("prevBtn") as HTMLSpanElement;
+        this.showResultProductsEl = document.getElementById("show-result-products") as HTMLParagraphElement;
+        this.showResultProductsEl.innerText = `Showing ${8} products`;
+        this.loadMoreBtn = document.getElementById("loadMoreBtn") as HTMLAnchorElement;
+        this.attach();
     }
+
+    attach() {
+        this.nextBtn.addEventListener('click', this.nextProductsHandler);
+        this.prevBtn.addEventListener('click', this.prevProductsHandler);
+        this.loadMoreBtn.addEventListener('click', this.loadMoreHandler);
+    }
+
+    @autobind
+    nextProductsHandler() {
+
+       (async() => {
+
+        const currPage = +(Helper.getParams("_page") || 1);
+        const limitProducts = +(Helper.getParams("_limit") || 8);
+
+        const response = await ShopApi.getProducts({ _page: currPage, _limit: limitProducts});
+
+        const {
+          pagination: { _totalRows, _limit },
+        } = response.data;
+        const maxPage = Math.ceil(_totalRows / _limit);
+    
+        console.log("total rows: ",  response.data);
+
+        console.log("max page: ", maxPage);
+
+  
+
+        if (currPage >= maxPage) return;
+        
+        Helper.setParams("_page", (currPage + 1).toString());
+        this.prodListInstance.load();
+    
+        // await renderProducts({ _page: currPage + 1, _limit: 12 });
+      
+        this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+
+       })()
+    }
+
+    @autobind
+    prevProductsHandler() {
+        const currPage = +(Helper.getParams("_page") || 1);
+
+        if (currPage === 1) return;
+
+        Helper.setParams("_page", (currPage - 1).toString());
+
+        // Render Products
+        this.prodListInstance.load();
+        this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+
+    }
+
+    @autobind
+    loadMoreHandler(e: Event) {
+        e.preventDefault();
+
+        history.pushState(null, "", "/shop");
+        new Router();
+    }
+    
+
     
 }

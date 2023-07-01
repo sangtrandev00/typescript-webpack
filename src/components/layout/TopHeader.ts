@@ -1,3 +1,4 @@
+import Auth from "../../pages/site/Auth";
 import Router from "../../router/router";
 import Component from "../base-component";
 
@@ -114,11 +115,13 @@ data-te-navbar-ref>
 
 export default class TopHeader extends Component<HTMLDivElement>  {
     viewCartBtnEl: HTMLLinkElement;
+    logoutBtn: HTMLAnchorElement;
     constructor() {
         super('top-header');
         this.render();
         this.hostEl.innerHTML = templateHTML;
         this.viewCartBtnEl = document.getElementById("viewCartBtn") ! as HTMLLinkElement;
+        this.logoutBtn = document.getElementById("logoutBtn") ! as HTMLAnchorElement;
         this.attach();
     }
 
@@ -129,6 +132,7 @@ export default class TopHeader extends Component<HTMLDivElement>  {
     attach() {
         this.hostEl.addEventListener('click', this.navigateHandler);
         this.viewCartBtnEl.addEventListener('click', this.viewCartHandler);
+        this.logoutBtn.addEventListener('click', this.logoutHandler);
     }
 
     navigateHandler(e: Event) {
@@ -142,6 +146,13 @@ export default class TopHeader extends Component<HTMLDivElement>  {
         history.pushState({}, "", "./cart");
         new Router();
     }
+
+   logoutHandler(e: Event) {
+    e.preventDefault();
+    
+    const userAuth = new Auth();
+    userAuth.logout();
+   }
 
 }
 

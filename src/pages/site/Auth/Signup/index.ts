@@ -1,11 +1,14 @@
 import Input from "../components/Input";
 import Button from "../components/Button";
 import Component from "../../../../components/base-component";
+import { autobind } from "../../../../decorators/autobind";
+import AuthApi from "../../../../api/authApi";
+import Router from "../../../../router/router";
 
-const EmailInput = new Input("email", "email", "Email Address", "", "Email Address");
-const NameInput = new Input("name", "name", "Full Name", "", "Full Name");
-const PasswordInput = new Input("password", "password", "Password", "", "Password");
-const RePasswordInput = new Input("repassword", "repassword", "Re-Password", "", "Re-Password");
+const EmailInput = new Input("email","email", "email", "Email Address", "", "Email Address");
+const NameInput = new Input("name", "text", "name", "Full Name", "", "Full Name");
+const PasswordInput = new Input("password","password", "password", "Password", "", "Password");
+const RePasswordInput = new Input("repassword", "password", "repassword", "Re-Password", "", "Re-Password");
 const ButtonEl = new Button("submit", "SIGNUP");
 
 const templateHTML = `
@@ -64,7 +67,7 @@ const templateHTML = `
                             <!-- Register link -->
                             <p class="mb-0 mt-2 pt-1 text-sm font-semibold">
                                 Already have an account?
-                                <a href="./login"
+                                <a id="navigateLogin" href="./login"
                                     class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Login</a>
                             </p>
                         </div>
@@ -78,9 +81,76 @@ const templateHTML = `
 
 export default class Signup extends Component<HTMLDivElement>{
 
+    signupFormEl: HTMLFormElement;
+    navigateLoginBtn: HTMLAnchorElement;
     constructor() {
         super('main');
         this.hostEl.innerHTML = templateHTML;
+
+        this.signupFormEl = document.getElementById('signup-form') as HTMLFormElement;
+        this.navigateLoginBtn = document.getElementById('navigateLogin') as HTMLAnchorElement;
+        this.attach();
+    }
+
+    attach() {
+        this.signupFormEl.addEventListener('submit', this.signupHandler);
+        this.navigateLoginBtn.addEventListener('click', this.navigateLoginHandler);   
+    }
+
+    @autobind
+    signupHandler(e: Event){
+   
+          e.preventDefault();
+          const formEl = e.target as HTMLFormElement;
+
+            (async () => {
+               
+                try {
+                    const elements = formEl.elements as unknown as {[key: string]: HTMLInputElement};
+
+                    console.log(elements);
+
+                    const email = elements["email"].value;
+                    const fullName = elements["name"].value;
+                    const password = elements["password"].value;
+                    const repassword = elements["repassword"].value;
+                
+                if (password !== repassword) {
+                  console.log("Please enter re password again!");
+            
+                  // Validate here
+                  return;
+                }
+            
+                const user = {
+                  email,
+                  name: fullName,
+                  password,
+                  role: "client",
+                };
+            
+                const authResponse = await AuthApi.signup(user);
+                const { message, userId } = authResponse.data;
+    
+                console.log(message, userId);
+            
+                if (userId) {
+                  history.pushState(null, '', `/login`);
+                  new Router();
+                }
+                
+                } catch (error) {
+                 console.log(error);   
+                }
+
+            })()
+
+      };
+
+    navigateLoginHandler(e: Event) {
+        e.preventDefault();
+        history.pushState(null, '', `/login`);
+        new Router();
     }
 
 }

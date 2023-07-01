@@ -1,5 +1,4 @@
 "use strict";
-// Write a class component
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -13,12 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -56,62 +49,55 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+// Write a class component
 var shopApi_1 = require("../../../../api/shopApi");
 var ProductList_1 = require("../../../../components/ProductList");
-var autobind_1 = require("../../../../decorators/autobind");
-var router_1 = require("../../../../router/router");
+var Pagination_1 = require("./Pagination");
 var ProductCard_1 = require("./ProductCard");
 var ProductCardList = /** @class */ (function (_super) {
     __extends(ProductCardList, _super);
-    function ProductCardList() {
+    function ProductCardList(query) {
         var _this = 
         // call super to extends from ProductItem class with arguments
-        _super.call(this) || this;
-        _this.hostEl = document.getElementById('product-list');
-        _this.attach();
+        _super.call(this, 'product-list') || this;
+        _this.query = query;
+        _this.products = [];
+        console.log(_this.hostEl);
+        console.log("init productcard list");
+        _this.pagination = new Pagination_1["default"]();
         return _this;
     }
+    // attach() {
+    //     console.log(this.hostEl);
+    //     this.hostEl.addEventListener('click', this.clickHandler);
+    // }
     ProductCardList.prototype.load = function () {
         var _this = this;
         var loadList = function () { return __awaiter(_this, void 0, void 0, function () {
-            var response, products, _i, products_1, product, _id, name, oldPrice, discount, thumbnail, prodItem;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, shopApi_1["default"].getProducts({ _limit: this.numOfProds })];
+            var response, _a, products, _totalRows, _i, products_1, product, _id, name, oldPrice, discount, thumbnail, prodItem, _b, _page, _limit;
+            var _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0: return [4 /*yield*/, shopApi_1["default"].getProducts(this.query)];
                     case 1:
-                        response = _b.sent();
-                        products = response.data.products;
+                        response = _d.sent();
+                        _a = response.data, products = _a.products, _totalRows = _a.pagination._totalRows;
+                        this.products = products;
                         this.hostEl.innerHTML = "";
                         for (_i = 0, products_1 = products; _i < products_1.length; _i++) {
                             product = products_1[_i];
                             _id = product._id, name = product.name, oldPrice = product.oldPrice, discount = product.discount, thumbnail = product.thumbnail;
                             prodItem = new ProductCard_1["default"](_id, name, oldPrice, discount, thumbnail);
-                            (_a = this.hostEl) === null || _a === void 0 ? void 0 : _a.insertAdjacentHTML('beforeend', prodItem.component);
+                            (_c = this.hostEl) === null || _c === void 0 ? void 0 : _c.insertAdjacentHTML('beforeend', prodItem.component);
                         }
+                        _b = this.query, _page = _b._page, _limit = _b._limit;
+                        this.pagination.createPagination(_page || 1, _totalRows, _limit || 12);
                         return [2 /*return*/];
                 }
             });
         }); };
         loadList();
     };
-    ProductCardList.prototype.attach = function () {
-        this.hostEl.addEventListener('click', this.moveDetailHandler);
-    };
-    ProductCardList.prototype.moveDetailHandler = function (e) {
-        e.preventDefault();
-        console.log(e.target);
-        var imgEl = e.target;
-        if (imgEl && imgEl.nodeName === "IMG") {
-            var cardProdEl = imgEl.closest('.card-product');
-            var prodId = cardProdEl === null || cardProdEl === void 0 ? void 0 : cardProdEl.dataset.id;
-            history.pushState(null, '', "/detail?id=" + prodId);
-            new router_1["default"]();
-        }
-    };
-    __decorate([
-        autobind_1.autobind
-    ], ProductCardList.prototype, "moveDetailHandler");
     return ProductCardList;
 }(ProductList_1["default"]));
 exports["default"] = ProductCardList;

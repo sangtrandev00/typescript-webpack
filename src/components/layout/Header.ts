@@ -5,6 +5,7 @@ import Router from "../../router/router";
 import { BACKEND_URL } from "../../constant/backend-domain";
 import { autobind } from "../../decorators/autobind";
 import Component from "../base-component";
+
 // import { CustomComponent } from "../../decorators/component";
 
 const templateHTML = `
@@ -28,7 +29,7 @@ const templateHTML = `
                 <i class="fa-solid fa-address-card"></i></a>
         </nav>
 
-        <form class="flex items-center md:me-10" action="./shop.html" method="GET">   
+        <form id="searchGlobalForm" class="flex items-center md:me-10" action="./shop.html" method="GET">   
             <label for="simple-search" class="sr-only">Search</label>
             <div class="relative w-full">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -49,12 +50,16 @@ const templateHTML = `
 `
 export default class Header extends Component<HTMLDivElement> {
 
+    searchGlobalFormEl: HTMLFormElement;
+
   constructor(
   ) {
     super('header');
 
     this.hostEl.innerHTML = templateHTML;
     
+    this.searchGlobalFormEl = document.getElementById('searchGlobalForm') as HTMLFormElement;
+
     this.attach();
   }
 
@@ -63,7 +68,8 @@ export default class Header extends Component<HTMLDivElement> {
   }
 
   attach() {
-    this.hostEl.addEventListener("click", this.navigateHandler)
+    this.hostEl.addEventListener("click", this.navigateHandler);
+    this.searchGlobalFormEl.addEventListener('submit', this.search);
   }
 
   @autobind
@@ -85,6 +91,24 @@ export default class Header extends Component<HTMLDivElement> {
 
 
   }
+
+  @autobind
+  search(e: Event) {
+
+    e.preventDefault();
+
+    const formEl = e.target as HTMLFormElement;
+    const searchInput = (formEl.elements as unknown as {[key: string]: HTMLInputElement})['_q']
+    const queryValue = searchInput.value;
+    // Helper.setParams('shop?_q', `${queryValue}`);
+    history.pushState(null, '', `/shop?_q=${queryValue}`);
+    new Router();
+    searchInput.value = "";
+
+  }
+
+
+ 
 
 
 }

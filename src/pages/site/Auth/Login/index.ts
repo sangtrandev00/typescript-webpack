@@ -2,9 +2,19 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import DecorBackground from "../components/DecorBackground";
 import Component from "../../../../components/base-component";
+import { autobind } from "../../../../decorators/autobind";
+import AuthApi from "../../../../api/authApi";
+import Router from "../../../../router/router";
+import Auth from '../../Auth';
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../../../firebase/firebase-config";
 
-const EmailInput = new Input('email', 'email', 'Email Address', "", "Email address");
-const PasswordInput = new Input('password', 'password', 'Password', "", "Password");
+// import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+// import { auth } from "../../../../firebase/firebase-config";
+// import AuthApi from "../../../../api/authApi";
+
+const EmailInput = new Input('email', 'email', 'email', 'Email Address', "", "Email address");
+const PasswordInput = new Input('password','password', 'password', 'Password', "", "Password");
 const ButtonEl  = new Button('submit', "LOGIN");
 const DecorBackgroundEl = new DecorBackground("https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp", "Login Background");
 const templateHTML = `
@@ -68,7 +78,7 @@ const templateHTML = `
                         </div>
 
                         <!--Forgot password link-->
-                        <a href="./forgot">Forgot password?</a>
+                        <a id="navigateForgot" href="./forgot">Forgot password?</a>
                     </div>
 
                     <!-- Login button -->
@@ -78,7 +88,7 @@ const templateHTML = `
                         <!-- Register link -->
                         <p class="mb-0 mt-2 pt-1 text-sm font-semibold">
                             Don't have an account?
-                            <a href="./signup"
+                            <a id="linkRegister" href="./signup"
                                 class="text-danger transition duration-150 ease-in-out hover:text-danger-600 focus:text-danger-600 active:text-danger-700">Register</a>
                         </p>
                     </div>
@@ -88,13 +98,158 @@ const templateHTML = `
     </div>
 </section>
 </div>
-`
+`;
 
 export default class Login extends Component<HTMLDivElement>{
+
+    loginFormEl: HTMLFormElement;
+    linkRegisterEl: HTMLLinkElement;
+    linkForgotEl: HTMLLinkElement;
+    googleSignInBtn: HTMLButtonElement;
 
     constructor() {
         super('main');
         this.hostEl.innerHTML = templateHTML;
+        this.loginFormEl = document.getElementById('login-form') as HTMLFormElement;
+        this.linkRegisterEl = document.getElementById('linkRegister') as HTMLLinkElement;
+        this.linkForgotEl = document.getElementById('navigateForgot') as HTMLLinkElement;
+        this.googleSignInBtn = document.getElementById('google-signin-btn') as HTMLButtonElement;
+        this.attach();
+    }
+
+    attach() {
+        this.loginFormEl.addEventListener('submit', this.loginHandler);
+        this.linkRegisterEl.addEventListener('click', this.navigateHandler);
+        this.linkForgotEl.addEventListener('click', this.navigateHandler);
+        this.googleSignInBtn.addEventListener('click', this.signInWithGoogle);
     }
     
+    @autobind
+    loginHandler(e: Event) {
+        e.preventDefault();
+        (async() => {
+            try {
+                const formEls = e.target as unknown as {[key: string]: HTMLInputElement};
+                const email = formEls["email"].value;
+                const password = formEls["password"].value;
+        
+                const user = {
+                    email,
+                    password,
+                };
+        
+                const authResponse = await AuthApi.login(user);
+                const {token, userId } = authResponse.data;
+                const expiryDate = new Date(Date.now() + 60 * 60 * 1000);
+
+                localStorage.setItem("userId", userId);
+                localStorage.setItem("token", token);
+                localStorage.setItem("expiryDate", expiryDate.toString());
+        
+                history.pushState(null,'' , `/`);
+                new Router();
+                const userAuth = new Auth();
+                userAuth.login();
+
+            } catch (error) {
+                console.log(error);
+            }
+        })()
+
+    }
+
+    @autobind
+    signInWithGoogle(){
+
+        (async () => {
+
+            const provider = new GoogleAuthProvider();
+      
+            try {
+            
+            const { providerId, user } = await signInWithPopup(auth, provider);
+            const idTokenResult = await user.getIdTokenResult();
+            console.log(idTokenResult.token);
+            console.log(user, providerId);
+
+              const {
+                displayName,
+                email,
+                photoURL: avatar,
+                // stsTokenManager: { accessToken},
+              }  = user;
+          
+          
+              const authResponse = await AuthApi.checkExisingUser({ email, providerId });
+
+              const { result } = authResponse.data;
+          
+              if (result === "not found") {
+                const response = await AuthApi.signup({
+                  providerId,
+                  name: displayName,
+                  email,
+                  avatar,
+                  password: "google.com",
+                  role: "client",
+                });
+          
+                console.log(response);
+              }
+          
+              const response  = await AuthApi.googleLogin({ token: idTokenResult.token });
+          
+              const {token, userId } = response.data;
+
+              // Login using google Login
+          
+              const expiryDate = new Date(Date.now() + 60 * 60 * 1000);
+              localStorage.setItem("userId", userId);
+              localStorage.setItem("token", token);
+              localStorage.setItem("expiryDate", expiryDate.toString());
+          
+              const userAuth = new Auth();
+              userAuth.login();
+              history.pushState(null,'' , `/`);
+              new Router();
+
+            } catch (error) {
+              // Handle errors
+            //   const errorCode = error?.code;
+            //   const errorMessage = error?.message;
+            //   console.log("Error:", errorCode, errorMessage);
+
+            console.log(error);
+            }
+        })()
+
+    };
+    
+    automateLogout() {
+        const now = new Date();
+        const expiryDate = localStorage.getItem("expiryDate");
+        if (now > new Date(expiryDate as string)) {
+          localStorage.removeItem("expiryDate");
+          localStorage.removeItem("token");
+          localStorage.removeItem("userId");
+        }
+    }
+    
+    @autobind
+    navigateHandler(e: Event) {
+        e.preventDefault();
+
+        const linkEl = e.target as HTMLAnchorElement;
+        const targetLink = linkEl.getAttribute("href");
+
+        if(linkEl && targetLink === "./signup") {
+            history.pushState(null, "", targetLink);
+        }else if(linkEl && targetLink === "./forgot") {
+            history.pushState(null, "", targetLink);
+        }
+
+        new Router();
+
+    }
+
 }

@@ -48,10 +48,12 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         _this.toastMsgEl = document.getElementById(_this._toastId);
         _this.createBtn = document.getElementById(_this._createBtnId);
         _this.closeFormModalBtn = document.getElementById(_this._closeFormModalBtnId);
+        _this.closeDeleteModalBtn = document.getElementById("closeDeleteModal");
         _this.closeToastBtn = document.getElementById(_this._closeToastBtnId);
         _this.triggerModalDeleteBtn = document.getElementById(_this._triggerModalDeleteBtnId);
         _this.deleteConfirmBtn = document.getElementById(_this._deleteConfirmBtnId);
         _this.FormEl = document.getElementById(_this._formId);
+        _this.deleteModalEl = document.getElementById('deleteModal');
         _this.modal = new flowbite_1.Modal(_this.modalFormEl);
         _this.toastMsg = new AdminToast_1["default"]();
         _this.attach();
@@ -68,6 +70,7 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         }
         console.log(this.deleteConfirmBtn);
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
         // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
     };
     AdminBaseComponent.prototype.clickHandler = function (e) {
@@ -89,14 +92,22 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         if (targetEl &&
             targetEl.classList.contains("delete-modal-trigger") &&
             targetEl.matches("button, button i")) {
-            this.toggleDeleteModal();
+            this.showDeleteModal();
         }
     };
     ;
-    AdminBaseComponent.prototype.toggleDeleteModal = function () {
-        this.triggerModalDeleteBtn.click();
+    AdminBaseComponent.prototype.showDeleteModal = function () {
+        // const deleteModalEl = document.getElementById('deleteModal');
+        this.deleteModal = new flowbite_1.Modal(this.deleteModalEl);
+        this.deleteModal.show();
     };
     ;
+    AdminBaseComponent.prototype.hideDeleteModal = function () {
+        var _a;
+        console.log("hide modal clicked!");
+        // this.deleteModal = new Modal(this.deleteModalEl);
+        (_a = this.deleteModal) === null || _a === void 0 ? void 0 : _a.hide();
+    };
     AdminBaseComponent.prototype.clearInputs = function () {
     };
     AdminBaseComponent.prototype.clearTableData = function () {
@@ -160,6 +171,9 @@ var AdminBaseComponent = /** @class */ (function (_super) {
     __decorate([
         autobind_1.autobind
     ], AdminBaseComponent.prototype, "clickHandler");
+    __decorate([
+        autobind_1.autobind
+    ], AdminBaseComponent.prototype, "hideDeleteModal");
     __decorate([
         autobind_1.autobind
     ], AdminBaseComponent.prototype, "showToast");

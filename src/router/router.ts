@@ -58,13 +58,9 @@ export default class Router {
               // Render detail page content
               new Forgot();
               break;
-            case '/reset-password':
+            case '/reset':
               // Render detail page content
-              new ResetPass();
-              break;
-            case '/reset-token':
-              // Render detail page content
-              new Signup();
+               new ResetPass();
               break;
 
             default:

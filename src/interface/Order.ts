@@ -1,3 +1,5 @@
+import { CartItem } from "./Cart";
+
 export enum OrderStatus {ALL="all", UNCONFIRMED = "Waiting to Confirm", CONFIRMED="confirmed", SHIPPING="shipping", SUCCESS="success", FAILED="failed"};
 
 type UserInfo = {
@@ -8,25 +10,25 @@ type UserInfo = {
     shippingAddress: string;
 }
 
-type Product = {
-    prodId: string;
-    qty: number;
-    price: number;
-    name: string;
-    image: string;
-    _id?: string;
-}
-
+// type Product = {
+//     prodId: string;
+//     qty: number;
+//     price: number;
+//     name: string;
+//     image: string;
+//     _id?: string;
+// }
 
 export interface OrderInterface {
 
     _id?: string;
-    shippingFree: number;
+    shippingFee?: number;
     vatFee?:number;
     paymentMethod?: string;
-    status: OrderStatus;
+    status?: OrderStatus;
     user: UserInfo;
-    products: {items: Product[], totalPrice: number};
+    products: {items: (CartItem | undefined)[], totalPrice: number};
+    note?: string;
     createdAt?:string;
     updatedAt?:string;
 }

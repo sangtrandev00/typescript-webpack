@@ -28,58 +28,7 @@ export default class Filter {
                             <h6 class="text-base font-medium text-black dark:text-white">
                                 Categories
                             </h6>
-        
-                        
-            <div data-id="646781266859a50acfca8e93" class="flex items-center cate-item">
-            <input id="646781266859a50acfca8e93" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="646781266859a50acfca8e93" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Oppo
-            </label>
-            </div>
-        
-            <div data-id="646781606859a50acfca8e96" class="flex items-center cate-item">
-            <input id="646781606859a50acfca8e96" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="646781606859a50acfca8e96" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Iphone
-            </label>
-            </div>
-        
-            <div data-id="6467817f6859a50acfca8e99" class="flex items-center cate-item">
-            <input id="6467817f6859a50acfca8e99" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="6467817f6859a50acfca8e99" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Samsung
-            </label>
-            </div>
-        
-            <div data-id="646782436859a50acfca8e9c" class="flex items-center cate-item">
-            <input id="646782436859a50acfca8e9c" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="646782436859a50acfca8e9c" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Xiaomi
-            </label>
-            </div>
-        
-            <div data-id="646782fd6859a50acfca8ea4" class="flex items-center cate-item">
-            <input id="646782fd6859a50acfca8ea4" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="646782fd6859a50acfca8ea4" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Nokia
-            </label>
-            </div>
-        
-            <div data-id="647ef0d31ac3e3b986a50e2e" class="flex items-center cate-item">
-            <input id="647ef0d31ac3e3b986a50e2e" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-        
-            <label for="647ef0d31ac3e3b986a50e2e" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-            Nokia 3
-            </label>
-            </div>
-            <a href="#" class="flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline">
-            View all
-            </a></div>
+                    </div>
         
                         <!-- Prices -->
                         <div class="space-y-2">

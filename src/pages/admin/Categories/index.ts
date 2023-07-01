@@ -261,7 +261,6 @@ const templateHTML = `
 
     </main>
 `;
-
 export default class Categories extends AdminBaseComponent{
 
 
@@ -283,10 +282,13 @@ export default class Categories extends AdminBaseComponent{
 
     render() : void {
         const renderCategoriesList = async () => {
-        try {
+        
+            try {
+
             const response = await CategoriesApi.getAll();
             const {categories} = response.data;
             const tableHtml = categories.map((category: CategoryInterface) => {
+            
             const {
                   _id,
                   name,
@@ -455,7 +457,7 @@ export default class Categories extends AdminBaseComponent{
         (async() => {
             try {
                 const response = await CategoriesApi.delete(this._currentId);
-                this.toggleDeleteModal();
+                this.hideDeleteModal();
                 this.clearTableData();
                 this.render();
                 const {message, categoryId} = response.data;

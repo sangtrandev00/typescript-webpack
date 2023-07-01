@@ -135,16 +135,16 @@ const templateHTML = `
                                 <div>
                                     <label for="Quantity" class="sr-only">Quantity: </label>
 
-                                    <div class="flex items-center gap-1">
-                                        <button type="button"
+                                    <div id="productQuantityWrap" class="flex items-center gap-1">
+                                        <button data-change="minus" type="button"
                                             class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
                                             &minus;
                                         </button>
 
-                                        <input type="number" id="Quantity" value="1" name="qty"
+                                        <input type="number" id="Quantity" min="1" required value="1" name="qty"
                                             class="h-10 w-24 rounded border-gray-200 sm:text-sm" />
 
-                                        <button type="button"
+                                        <button data-change="plus" type="button"
                                             class="h-10 w-10 leading-10 text-gray-600 transition hover:opacity-75">
                                             &plus;
                                         </button>
@@ -778,13 +778,14 @@ const templateHTML = `
     </div>
 
 `
-
 export default class Detail extends Component<HTMLDivElement>  {
 
     _id: string = "";
     smallThumbsEle: HTMLElement;
     addCartBtn: HTMLButtonElement;
     qtyEl: HTMLInputElement;
+    productQtyWrapEl: HTMLDivElement;
+
     constructor() {
         super('main');
 
@@ -793,9 +794,9 @@ export default class Detail extends Component<HTMLDivElement>  {
         this.smallThumbsEle = document.getElementById("small-thumbnails") as HTMLDivElement;
         this.addCartBtn = document.getElementById("addToCartBtn") ! as HTMLButtonElement;
         this.qtyEl = document.getElementById('Quantity') ! as HTMLInputElement;
+        this.productQtyWrapEl = document.getElementById('productQuantityWrap') ! as HTMLDivElement;
         this.render();
         this.attach();
-
 
         this.hostEl.scrollIntoView({behavior: "smooth", block: "start"});
     }
@@ -847,7 +848,9 @@ export default class Detail extends Component<HTMLDivElement>  {
     }
 
     attach() {
-        this.addCartBtn.addEventListener("click", this.addCartHandler)
+        this.addCartBtn.addEventListener("click", this.addCartHandler);
+        this.smallThumbsEle.addEventListener('click', this.triggerViewSmallThumbs);
+        this.productQtyWrapEl.addEventListener('click',this.changeQtyHandler)
     }
 
     @autobind
@@ -872,5 +875,30 @@ export default class Detail extends Component<HTMLDivElement>  {
 
 
     }
+
+    triggerViewSmallThumbs(e: Event){
+        const thumbEl = e.target as HTMLImageElement;
+          if (thumbEl && thumbEl.nodeName === "IMG") {
+            const imgUrl = thumbEl.getAttribute("src");
+            Helper.imageContent("thumbnail", imgUrl || "");
+          }
+    };
+
+    @autobind
+    changeQtyHandler(e: Event) {
+
+        const btn = e.target as HTMLButtonElement;
+
+        const currQty = +this.qtyEl.value;
+
+        if(btn && btn.dataset.change ==="minus") {
+
+            currQty <= 1 ? this.qtyEl.value = "1" : this.qtyEl.value = `${currQty - 1}`;
+        }else if(btn && btn.dataset.change === "plus") {
+            this.qtyEl.value = `${currQty + 1}`
+        }
+
+    }
+
 
 }

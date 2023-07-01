@@ -1,4 +1,7 @@
+import ShopApi from "../../../api/shopApi";
 import Component from "../../../components/base-component";
+import { BACKEND_URL } from "../../../constant/backend-domain";
+import Helper from "../../../util/helper";
 
 const templateHTML = `
 <div id="order-completed" class="">
@@ -212,9 +215,97 @@ const templateHTML = `
 
 export default class OrderCompleted extends Component<HTMLDivElement> {
     
+    _orderId: string;
+    viewCartEl: HTMLDivElement;
+
     constructor() {
         super('main')
         this.hostEl.innerHTML = templateHTML;
+
+        this._orderId = Helper.getParams('id') as string;
+        this.viewCartEl = document.getElementById("view-history-cart") as HTMLDivElement;
+
+        this.renderHistoryOrder();
     }
+
+    renderHistoryOrder(){
+
+        (async () => {
+
+            try {
+                const orderResponse = await ShopApi.getOrderById(this._orderId);
+
+            const {
+                order: {
+                  user: { fullName, email, phone, shippingAddress },
+                  products: { items, totalPrice },
+                  createdAt,
+                },
+              } = orderResponse.data;
+            
+              const allTotal = (totalPrice + 8).toFixed(2);
+            
+              Helper.textContent("orderId", `#${this._orderId}`);
+              Helper.textContent("orderCreatedAt", `${createdAt}`);
+              Helper.textContent("subtotal", `$${totalPrice.toFixed(2)}`);
+              Helper.textContent("discount", `0`);
+              Helper.textContent("allTotal", `$${allTotal}`);
+            
+              //   Customer info
+              Helper.textContent("customerName", `${fullName}`);
+              Helper.textContent("shippingAddress", `${shippingAddress}`);
+              Helper.textContent("email", `${email}`);
+              Helper.textContent("phone", `${phone}`);
+            
+              Helper.imageContent("customerAvatar", `${BACKEND_URL}/images/user-avatar.jpg`);
+            
+              const cartList = items;
+            
+              this.viewCartEl.innerHTML = "";
+              
+              Helper.listCartHandler(cartList, this.viewCartEl, this.insertCart);
+            } catch (error) {
+                console.log(error);
+            }
+            
+        })()
+
+      };
+
+      insertCart(prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number){
+        const cartItemHtml = `
+              <div prod-id=${prodId}
+              class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
+              <div class="pb-4 md:pb-8 w-10 md:w-40 ">
+                  <img class="w-28 hidden md:block" src="${BACKEND_URL}/${thumbnail}"
+                      alt="${name}" />
+                  <img class="w-full md:hidden" src="${BACKEND_URL}/${thumbnail}"
+                      alt="${name}" />
+              </div>
+              <div
+                  class="border-b border-gray-200 md:flex-row flex-col flex justify-between items-start w-full pb-8 space-y-4 md:space-y-0">
+                  <div class="w-full flex flex-col justify-start items-start space-y-8">
+                      <h3
+                          class="text-xl dark:text-white xl:text-2xl font-semibold leading-6 text-gray-800">
+                          ${name}</h3>
+                      <div class="flex justify-start items-start flex-col space-y-2">
+                          <p class="text-sm dark:text-white leading-none text-gray-800"><span
+                                  class="dark:text-gray-400 text-gray-300">Brand: </span>
+                              ${cateName}</p>
+                      </div>
+                  </div>
+                  <div class="flex justify-between space-x-8 items-start w-full">
+                      <p class="text-base dark:text-white xl:text-lg leading-6">$${price} </p>
+                      <p class="text-base dark:text-white xl:text-lg leading-6 text-gray-800">${qty} <span class="italic font-normal text-gray-500">(item)</span></p>
+                      <p
+                          class="text-base dark:text-white xl:text-lg font-semibold leading-6 text-gray-800">
+                          $${totalItem}</p>
+                  </div>
+              </div>
+              </div>
+            `;
+      
+        return cartItemHtml;
+      };
     
 }

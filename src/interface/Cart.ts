@@ -1,5 +1,3 @@
-
-
 export interface CartItem {
     prodId: string;
     name?: string;
@@ -9,7 +7,7 @@ export interface CartItem {
 
 }
 
-export interface Cart {
+export interface ICart {
     cartList: CartItem[],
-    totalPrice: number
+    totalPrice?: number
 }

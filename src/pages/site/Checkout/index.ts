@@ -1,4 +1,14 @@
+// import ProductsApi from "../../../api/productsApi";
+import ProductsApi from "../../../api/productsApi";
+import ShopApi from "../../../api/shopApi";
+import UsersApi from "../../../api/userApi";
 import Component from "../../../components/base-component";
+import { BACKEND_URL } from "../../../constant/backend-domain";
+import { autobind } from "../../../decorators/autobind";
+import { CartItem, ICart } from "../../../interface/Cart";
+import { OrderInterface } from "../../../interface/Order";
+import Router from "../../../router/router";
+import Helper from "../../../util/helper";
 
 const templateHTML = `
 <div class="checkout-content py-12">
@@ -162,9 +172,9 @@ const templateHTML = `
                 <label for="Note" class="mt-4 mb-2 block font-medium">Your Note:
                 </label>
 
-                <div class="relative mb-3" data-te-input-wrapper-init>
+                <div class="relative mb-3" >
                     <textarea name="note"
-                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                        class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 border-slate-200 focus:border-blue-500 shadow-sm"
                         id="Note" rows="3" placeholder="Your message"></textarea>
                     <label for="Note"
                         class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Take
@@ -200,10 +210,244 @@ const templateHTML = `
 
 export default class Checkout extends Component<HTMLDivElement> {
 
+    selectProvinceEl: HTMLSelectElement;
+    selectDistrictEl: HTMLSelectElement;
+    selectWardEl: HTMLSelectElement;
+    defaultShippingEl: HTMLDivElement;
+    defaultShippingInput: HTMLInputElement;
+    newShippingAddressRadioInput: HTMLInputElement;
+    defaultShippingAddressRadioInput: HTMLInputElement;
+    viewCartEl: HTMLDivElement;
+    newShippingAddressEl: HTMLDivElement;
+    newShippingSelectAddressEl: HTMLDivElement;
+    checkoutMethod1: HTMLInputElement;
+    checkoutMethod2: HTMLInputElement;
+    orderFormEl: HTMLFormElement;
+    cart?: ICart;
+    cartList?: CartItem[] = [];
+    userId?: string;
+
     constructor() {
         super("main");
         this.hostEl.innerHTML = templateHTML;
+        this.selectProvinceEl = document.getElementById("selectProvince") as HTMLSelectElement;
+        this.selectDistrictEl = document.getElementById("selectDistrict") as HTMLSelectElement;
+        this.selectWardEl = document.getElementById("selectWard") as HTMLSelectElement;
+        this.defaultShippingEl = document.querySelector(".default-shipping-el") as HTMLDivElement;
+        this.defaultShippingInput = document.querySelector(".default-shipping-input") as HTMLInputElement;
+        
+
+        this.newShippingAddressRadioInput = document.getElementById("radioDefault02") as HTMLInputElement;
+        console.log(this.newShippingAddressRadioInput);
+
+        this.defaultShippingAddressRadioInput = document.getElementById("radioDefault01") as HTMLInputElement;
+        this.viewCartEl = document.getElementById("view-cart") as HTMLDivElement;
+        this.newShippingAddressEl = document.querySelector(".new-shipping-el") as HTMLDivElement;
+        this.newShippingSelectAddressEl = document.querySelector(".new-shipping-address-select-el") as HTMLDivElement;
+        this.checkoutMethod1 = document.getElementById("checkoutMethod1") as HTMLInputElement;
+        this.checkoutMethod2 = document.getElementById("checkoutMethod2") as HTMLInputElement;
+        this.orderFormEl = document.getElementById("order-form") as HTMLFormElement;
+
+        const localCart = localStorage.getItem("cart");
+        if(localCart) {
+            this.cart = JSON.parse(localCart);
+            this.cartList = this.cart?.cartList;
+        }
+
+        this.userId = localStorage.getItem("userId") as string;
+
+        this.renderOrder();
+        this.attach();
     }
+
+    attach() {
+        this.orderFormEl.addEventListener("submit", this.createOrder);
+    }   
+
+    renderOrder(){
+       (async () => {
+
+        this.viewCartEl.innerHTML = "";
+        Helper.listCartHandler(this.cartList || [], this.viewCartEl, this.insertCart);
+      
+        const { totalPrice } = Helper.calcTotalAndLengthOfCart(this.cartList || []);
+      
+        const allTotal = totalPrice + 8;
+      
+        Helper.textContent("subtotal", `$${totalPrice.toFixed(2)}`);
+        Helper.textContent("allTotal", `$${allTotal.toFixed(2)}`);
+      
+        if (!this.userId) {
+          this.newShippingAddressRadioInput.checked = true;
+          return;
+        }
+      
+        this.defaultShippingEl.classList.remove("hidden");
+        this.defaultShippingInput.classList.remove("hidden");
+      
+        // newShippingAddressEl.classList.add("hidden");
+        this.newShippingSelectAddressEl.classList.add("hidden");
+      
+        if(this.userId) {
+            const response = await UsersApi.getById(this.userId);
+
+            const {user} = response.data;
+    
+            const { email, name, address, phone } = user;
+            
+            if(email) {
+                Helper.inputValue("email", email);
+            }
+            if(name) {
+                Helper.inputValue("fullName", name);
+            }
+
+            if(phone) {
+                Helper.inputValue("phone", phone);
+            }
+            if(address) {
+                Helper.inputValue("default-shipping-input", address);
+            }
+        }
+
+       })()
+    };
+
+    insertCart(prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number){
+        console.log(cateName);
+        const cartItemHtml = `
+              <div prod-id=${prodId} class="flex flex-col rounded-lg bg-white sm:flex-row">
+                  <img class="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                      src="${BACKEND_URL}/${thumbnail}"
+                      alt="${name}" />
+                  <div class="flex w-full flex-col px-4 py-4">
+                      <span class="font-semibold">${name}</span>
+                      <span class="float-right text-gray-400">Qty: ${qty}, Price/item: $${price}</span>
+                      <p class="text-lg font-bold">Total item: $${totalItem}</p>
+                  </div>
+              </div>
+            `;
+      
+        return cartItemHtml;
+    };
+
+    @autobind
+    createOrder(e: Event){
+
+        e.preventDefault();
+
+        const formEl = e.target as HTMLFormElement;
+
+        (async() => {
+            const currFormEles = formEl.elements as unknown as { [key: string]: HTMLInputElement };
+      
+            console.log(currFormEles);
+
+            const inputSelectShippings = [...document.querySelectorAll("input[data-te-select-input-ref]")] as HTMLInputElement[];
+        
+            let addressShipping = "";
+
+            if (this.newShippingAddressRadioInput.checked) {
+              addressShipping = inputSelectShippings.map((input) => input.value).join(", ");
+  
+            } else if (this.defaultShippingAddressRadioInput.checked) {
+              addressShipping = this.defaultShippingInput.value;
+            }
+
+            const email = currFormEles["email"].value;
+            const fullName = currFormEles["fullName"].value;
+            const phone = currFormEles["phone"].value;
+            const note = currFormEles["note"].value;
+        
+            let paymentMethod = "COD"; // Default --- Fix here later
+        
+            if (this.checkoutMethod1.checked) {
+              paymentMethod = "COD";
+            } else if (this.checkoutMethod2.checked) {
+              paymentMethod = "VNPAY";
+            }
+        
+            const user = {
+              email,
+              fullName,
+              phone,
+              shippingAddress: addressShipping,
+            };
+        
+            const localCart = localStorage.getItem("cart");
+            if(!localCart) return;
+            const cart = JSON.parse(localCart) as ICart;
+
+            interface IProducts {
+                items: ( CartItem| undefined )[];
+                totalPrice: number;
+            }
+
+            const products: IProducts = {
+              items: [],
+              totalPrice: 0,
+            };
+        
+            const promisesProducts =  cart.cartList.map(async (cartItem: CartItem) => {
+              const { prodId, qty } = cartItem;
+
+              try {
+              
+                  const productResponse = await ProductsApi.getById(prodId as string);
+  
+                const {
+                  product: { name, oldPrice, discount, thumbnail },
+                } = productResponse.data;
+        
+                const productItem: CartItem = {
+                    prodId,
+                    qty,
+                };
+
+                productItem.name = name;
+                productItem.price = oldPrice * (1 - discount / 100);
+                productItem.image = thumbnail;
+
+                return productItem;
+  
+              } catch (error) {
+                console.log(error);
+                return undefined;
+              }
+            });
+        
+            products.totalPrice = cart.cartList.reduce((acc: number, cartItem: CartItem) => {
+              return acc + (cartItem.qty as number || 0 ) * (cartItem.price as number || 0 );
+            }, 0);
+        
+            // Using Promise.all to resolve concerruntly promises
+            const productsList = await Promise.all(promisesProducts);
+  
+            products.items = productsList;
+  
+            const order : OrderInterface = {
+              paymentMethod,
+              note,
+              user,
+              products: products,
+            };
+        
+            const response = await ShopApi.createOrder(order);
+        
+            const {
+              order: { _id },
+            } = response.data;
+        
+            // Clear cart
+            localStorage.removeItem("cart");
+        
+            // Minus stockQty at databasae
+  
+            history.pushState(null, "", `./order-completed?id=${_id}`);
+            new Router()
+        })();
+            
+      };
 
 }
 

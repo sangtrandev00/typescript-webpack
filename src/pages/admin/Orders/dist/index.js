@@ -80,9 +80,11 @@ var Orders = /** @class */ (function (_super) {
         _this.render(Order_1.OrderStatus.ALL);
         _this.tableEl = document.getElementById(_this._tableId);
         _this.viewDetailTableCartEl = document.getElementById('view-detail-cart');
-        _this.deleteConfirmBtn = document.querySelector('#deleteOrderBtn');
-        _this.closeModalBtn = document.querySelector('#closeModalBtn');
-        _this.updateOrderForm = document.querySelector('#update-order-form');
+        _this.deleteConfirmBtn = document.getElementById('deleteOrderBtn');
+        _this.closeModalBtn = document.getElementById('closeModalBtn');
+        _this.closeDeleteModalBtn = document.getElementById('closeDeleteModal');
+        _this.updateOrderForm = document.getElementById('update-order-form');
+        _this.deleteModalEl = document.getElementById('deleteModal');
         _this.attach();
         return _this;
     }
@@ -91,6 +93,7 @@ var Orders = /** @class */ (function (_super) {
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
         this.closeModalBtn.addEventListener('click', this.hideModal);
         this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
+        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
     };
     Orders.prototype.render = function (orderStatus) {
         var _this = this;
@@ -114,7 +117,7 @@ var Orders = /** @class */ (function (_super) {
                         }
                         tableRows = filteredOrders.map(function (order) {
                             var _id = order._id, paymentMethod = order.paymentMethod, status = order.status, fullName = order.user.fullName, _a = order.products, items = _a.items, totalPrice = _a.totalPrice, createdAt = order.createdAt;
-                            var cartLength = items.reduce(function (acc, item) { return acc + item.qty; }, 0);
+                            var cartLength = items.reduce(function (acc, item) { return acc + ((item === null || item === void 0 ? void 0 : item.qty) || 0); }, 0);
                             return [
                                 "<p class=\"truncate-id\">" + _id + "</p>",
                                 fullName,
@@ -173,7 +176,7 @@ var Orders = /** @class */ (function (_super) {
         if (targetEl &&
             targetEl.classList.contains("delete-modal-trigger") &&
             targetEl.matches("button, button i")) {
-            this.showModal('deleteModal');
+            this.showDeleteModal();
         }
     };
     Orders.prototype.deleteHandler = function () {
@@ -219,6 +222,9 @@ var Orders = /** @class */ (function (_super) {
                         console.log("response: ", response);
                         _a = response.data.order, _b = _a.user, fullName = _b.fullName, email = _b.email, status = _a.status;
                         elements = this.updateOrderForm.elements;
+                        console.log(elements["name"]);
+                        console.log(elements["email"]);
+                        console.log(elements["currStatus"]);
                         elements["name"].value = fullName;
                         elements["email"].value = email;
                         elements["currStatus"].value = status;
@@ -236,6 +242,7 @@ var Orders = /** @class */ (function (_super) {
         var _this = this;
         e.preventDefault();
         var updateFormEl = e.target;
+        console.log(updateFormEl);
         (function () { return __awaiter(_this, void 0, void 0, function () {
             var updatedOrderStatus, response, error_4;
             return __generator(this, function (_a) {
@@ -260,6 +267,9 @@ var Orders = /** @class */ (function (_super) {
     };
     Orders.prototype.showModal = function (modalId) {
         this.modalEl = document.getElementById(modalId);
+        // this.closeModalBtn = this.modalEl.querySelector('#closeModalBtn') as HTMLButtonElement;
+        // this.closeModalBtn.addEventListener('click', this.hideModal);
+        // console.log(this.closeModalBtn);
         // const OrderDetailModal = document.getElementById(`viewOrderDetailModal`) as HTMLDivElement;
         this.modal = new flowbite_1.Modal(this.modalEl);
         this.modal.show();
@@ -274,7 +284,13 @@ var Orders = /** @class */ (function (_super) {
     Orders.prototype.hideModal = function () {
         this.modal.hide();
     };
-    Orders.prototype.hide = function () {
+    Orders.prototype.showDeleteModal = function () {
+        this.deleteModal = new flowbite_1.Modal(this.deleteModalEl);
+        this.deleteModal.show();
+    };
+    Orders.prototype.hideDeleteModal = function () {
+        var _a;
+        (_a = this.deleteModal) === null || _a === void 0 ? void 0 : _a.hide();
     };
     Orders.prototype.viewDetail = function () {
         var _this = this;
@@ -344,6 +360,12 @@ var Orders = /** @class */ (function (_super) {
     __decorate([
         autobind_1.autobind
     ], Orders.prototype, "hideModal");
+    __decorate([
+        autobind_1.autobind
+    ], Orders.prototype, "showDeleteModal");
+    __decorate([
+        autobind_1.autobind
+    ], Orders.prototype, "hideDeleteModal");
     return Orders;
 }(base_component_1["default"]));
 exports["default"] = Orders;

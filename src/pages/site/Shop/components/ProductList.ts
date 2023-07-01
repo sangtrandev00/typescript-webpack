@@ -1,34 +1,57 @@
-
 // Write a class component
-
 import ShopApi from "../../../../api/shopApi";
-import ProductList from "../../../../components/ProductList"
-import { autobind } from "../../../../decorators/autobind";
-import Router from "../../../../router/router";
+import ProductList from "../../../../components/ProductList";
+import { Productable } from "../../../../interface/Product";
+import Pagination from './Pagination';
 import ProductCard from "./ProductCard";
 
+interface Iquery {
+    _limit?: number;
+    _page?: number;
+    _sort?: string;
+    _order?: string;
+    _q?: string;
+    _min?: number;
+    _max?: number;
+    _cateIds?: string;
+}
 
 export default class ProductCardList extends ProductList {
- 
 
+    // hostEl: HTMLDivElement;
 
-    constructor() {
+    pagination: Pagination;
+    products: Productable[] = [];
+
+    constructor(public query: Iquery) {
         // call super to extends from ProductItem class with arguments
-        super();
+        super('product-list');
+        
+        console.log(this.hostEl);
 
-        this.hostEl = document.getElementById('product-list')! as HTMLDivElement;
+        console.log("init productcard list");
 
-
-        this.attach();
+        this.pagination = new Pagination();
     }
+
+    // attach() {
+
+    //     console.log(this.hostEl);
+
+    //     this.hostEl.addEventListener('click', this.clickHandler);
+    // }
     
     load() {
-
         const loadList = async () => {
 
-           const response = await ShopApi.getProducts({_limit: this.numOfProds}) 
+            const response = await ShopApi.getProducts(this.query) 
             
-            const {products} = response.data;
+            const {
+                products,
+                pagination: {_totalRows}
+            } = response.data;
+
+            this.products = products;
 
             this.hostEl.innerHTML = "";
 
@@ -38,37 +61,18 @@ export default class ProductCardList extends ProductList {
 
                 const prodItem = new ProductCard(_id, name, oldPrice, discount, thumbnail as string);
                 
-
-
                 this.hostEl?.insertAdjacentHTML('beforeend', prodItem.component);
             }
 
+            const {_page,_limit} = this.query;
+
+            
+            this.pagination.createPagination(_page || 1, _totalRows, _limit || 12);
 
         }
 
        loadList();
 
-    }
-
-    attach() {
-        this.hostEl.addEventListener('click', this.moveDetailHandler)
-    }
-
-    @autobind
-    moveDetailHandler(e: Event) {
-        e.preventDefault();
-
-        console.log(e.target);
-        const imgEl = e.target as HTMLElement;
-
-        if(imgEl && imgEl.nodeName === "IMG") {
-            
-            const cardProdEl = imgEl.closest('.card-product') as HTMLDivElement;
-            const prodId = cardProdEl?.dataset.id;
-
-            history.pushState(null, '', `/detail?id=${prodId}`);
-            new Router();
-        }
     }
 
 }

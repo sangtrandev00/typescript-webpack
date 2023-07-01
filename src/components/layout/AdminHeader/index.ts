@@ -1,3 +1,8 @@
+import UsersApi from "../../../api/userApi";
+import { BACKEND_URL } from "../../../constant/backend-domain";
+import { autobind } from "../../../decorators/autobind";
+import AdminRouter from "../../../router/adminRouter";
+import Helper from "../../../util/helper";
 import Component from "../../base-component";
 
 const templateHTML = `
@@ -416,9 +421,90 @@ class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:borde
 `;
 
 export default class AdminHeader extends Component<HTMLDivElement> {
+    logoutBtn: HTMLAnchorElement;
+    _adminId: string;
+    _adminToken: string;
+    _adminExpiryDate: string;
+
     constructor() {
         super('admin-header');
         this.hostEl.innerHTML = templateHTML;
+
+        this.logoutBtn = document.getElementById('admin-logout-btn') as HTMLAnchorElement;
+        this._adminId = localStorage.getItem("adminId") as string;
+        this._adminToken = localStorage.getItem("adminToken") as string;
+        this._adminExpiryDate = localStorage.getItem("adminExpiryDate") as string;
+        this.authenticateAdmin();
+        this.attach();
     }
+
+    attach() {
+        this.logoutBtn.addEventListener('click', this.logoutHandler)
+    }
+    
+    @autobind
+    logoutHandler(e: Event) {
+        e.preventDefault();
+
+        this.logout();
+    }
+
+    authenticateAdmin(){
+
+        (async() => {
+
+            try {
+                const authResponse = await UsersApi.getById(this._adminId);
+
+                const { user: admin } = authResponse.data;
+            
+                const {  name, avatar, email, loginToken, loginTokenExpiration } = admin;
+            
+                const imageUrl = avatar.startsWith("https://") ? avatar : `${BACKEND_URL}/${avatar}`;
+            
+                const isCorrectToken = this._adminToken === loginToken;
+
+                const isExpired = new Date(loginTokenExpiration).getTime() - Date.now() < 0;
+            
+                const isAuthenticated = this._adminToken && isCorrectToken && !isExpired;
+            
+                console.log("isAuthenticated", isAuthenticated);
+            
+                if (isAuthenticated) {
+                  Helper.textContent("adminName", `${name}`);
+                  Helper.textContent("adminEmail", `${email}`);
+                  Helper.imageContent("adminAvatar", imageUrl, name);
+                } else {
+                  history.pushState("admin", "", "/admin-login");
+                    new AdminRouter();
+                }
+              } catch (error) {
+                console.log(error);
+              }
+
+        })()
+
+    };
+
+    logout() {
+         // Reset admin token
+         localStorage.removeItem("adminExpiryDate");
+         localStorage.removeItem("adminToken");
+         localStorage.removeItem("adminId");
+ 
+         history.pushState({}, '', '/admin-login');
+         new AdminRouter();
+    }
+
+    automateLogout(){
+      
+        setInterval(() => {
+          const timerOut = Math.trunc(((this._adminExpiryDate  as any)   - Date.now()) / 1000);
+          if (timerOut <= 0) {
+            this.logout();
+          }
+        }, 1000);
+      
+    };
 
 }

@@ -1,5 +1,4 @@
 
-
 export default class Input {
     constructor(private _classSize: string, private _id: string, private _label: string, private _type: string, private _name: string, private _placeholder: string) {
 

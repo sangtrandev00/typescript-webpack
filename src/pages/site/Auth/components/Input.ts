@@ -13,21 +13,23 @@ export default class Input {
 
     private _id: string;
     private _name: string;
+    private _type: string;
     private _placeholder: string;
     private _label: string;
     private _value: string;
-    constructor(id: string, name: string, placeholder: string, value: string = "", label: string) {
+    constructor(id: string, type: string, name: string, placeholder: string, value: string = "", label: string) {
         this._id = id;
         this._name = name;
         this._placeholder = placeholder;
         this._value = value;
         this._label = label;
+        this._type = type;
     }
 
     render() {
         return `
-        <div class="relative mb-6 border" data-te-input-wrapper-init>
-            <input type="text" name="${this._name}"
+        <div class="relative mb-6 border">
+            <input type="${this._type}" name="${this._name}"
                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
                 id="${this._id}" placeholder="${this._placeholder}" value="${this._value}" />
             <label for="${this._id}"

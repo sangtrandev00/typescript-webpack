@@ -1,17 +1,26 @@
+// import ShopApi from "../../../api/shopApi";
+import CategoriesApi from "../../../api/categoriesApi";
+import ShopApi from "../../../api/shopApi";
 import Component from "../../../components/base-component";
+import { autobind } from "../../../decorators/autobind";
+import { CategoryInterface } from "../../../interface/Category";
+import { ParamInterface } from "../../../interface/Params";
+import { Productable } from "../../../interface/Product";
+import Helper from "../../../util/helper";
+// import { BACKEND_URL } from "../../../constant/backend-domain";
+// import { Productable } from "../../../interface/Product";
 import Filter from "./components/Filter";
-import Pagination from "./components/Pagination";
 import ProductCardList from "./components/ProductList";
 import Search from "./components/Search";
 import Sort from "./components/Sort";
 
-const FilterEl = new Filter();
-const SearchEl = new Search();
-const SortEl = new Sort();
+const FilterInstance = new Filter();
+const SearchInstance = new Search();
+const SortInstace = new Sort();
 
 const templateHTML = `
     <div id="shop-content" class="shop-content flex mt-8 w-full">
-    ${FilterEl.render()}
+    ${FilterInstance.render()}
 
     <!-- Flex 70% content shop-->
     <div class="shop-content__products-collection md:w-3/4 w-full">
@@ -20,11 +29,11 @@ const templateHTML = `
         <div class="flex p-4 justify-between">
 
             <div class="w-2/3">
-                ${SearchEl.render()}
+                ${SearchInstance.render()}
             </div>
 
             <div class="relative w-1/3" data-te-dropdown-ref>
-               ${SortEl.render()}
+               ${SortInstace.render()}
             </div>
         </div>
 
@@ -676,19 +685,344 @@ const templateHTML = `
     </div>
 `;
 
+
 export default class Shop extends Component<HTMLDivElement>{
+
+    prodListEl: HTMLDivElement;
+    cateListEl: HTMLDivElement;
+    sortGlobalValue: string = '';
+    pagination: HTMLDivElement;
+    products: Productable[] = [];
+    sortBarEl: HTMLDivElement;
+    searchInputEl: HTMLInputElement;
+    searchBtn: HTMLButtonElement;
+    filterEl: HTMLDivElement;
+    applyFilterBtn: HTMLButtonElement;
+    prodListInstance?: ProductCardList;
 
     constructor() {
         super('main');
 
         this.hostEl.innerHTML = templateHTML;
+        this.sortBarEl = document.getElementById("sortBarEl") as HTMLDivElement;
+        this.prodListEl = document.getElementById('product-list') as HTMLDivElement; // aldready been declare (remember to customize later!)
+        this.pagination = document.getElementById('pagination') as HTMLDivElement;
+        this.searchInputEl = document.getElementById("searchInput") as HTMLInputElement;
+        this.searchBtn = document.getElementById("search-btn") as HTMLButtonElement;
+        this.cateListEl = document.getElementById("cate-list") as HTMLDivElement;
+        this.filterEl = document.getElementById("shop-content__filter-bar") as HTMLDivElement;
+        this.applyFilterBtn = document.getElementById("apply-filter-btn") as HTMLButtonElement;
 
-        const prodList = new ProductCardList();
-        prodList.load();
-
-        new Pagination();
+        this.renderProdList();
+        this.renderCateList();
+        this.attach();
 
     }
-    
 
-}
+    attach() {
+        this.pagination.addEventListener('click', this.paginationHandler);
+        this.sortBarEl.addEventListener('click', this.sortHandler);
+        this.searchBtn.addEventListener('click', this.searchHandler);
+        this.cateListEl.addEventListener('click', this.cateFilterHandler);
+        this.applyFilterBtn.addEventListener('click', this.priceFilterHanlder);
+    }
+
+    @autobind
+    sortHandler(e: Event) {
+        
+        const sortBtn = e.target as HTMLLinkElement;
+
+        console.log("sortBtn", sortBtn);
+
+          if (sortBtn && sortBtn.nodeName === "A") {
+            
+            const sortVal = sortBtn.dataset.sort;
+            switch (sortVal) {
+              case "pricedesc":
+                Helper.setParams("_sort", "oldPrice");
+                Helper.setParams("_order", "desc");
+      
+                this.sortGlobalValue = "Price descrease";
+                break;
+              case "priceasc":
+                Helper.setParams("_sort", "oldPrice");
+                Helper.setParams("_order", "asc");
+      
+                this.sortGlobalValue = "Price ascending";
+                break;
+              case "oldest":
+                Helper.setParams("_sort", "createdAt");
+                Helper.setParams("_order", "asc");
+                this.sortGlobalValue = "Oldest products";
+                break;
+              case "latest":
+                Helper.setParams("_sort", "createdAt");
+                Helper.setParams("_order", "desc");
+      
+                this.sortGlobalValue = "Latest products";
+      
+                break;
+      
+              default:
+                break;
+            }
+      
+            // Generate Product list here!!!
+
+            this.renderProdList();
+        }
+      };
+
+    @autobind
+    searchHandler() {
+      
+        this.searchInputEl = document.getElementById("searchInput") as HTMLInputElement;
+        console.log("click search", this.searchInputEl.value);
+        const searchVal = this.searchInputEl.value;
+        
+        Helper.setParams("_q", searchVal);
+        
+        // Update UI and pagination
+        // await renderProdList();
+        // Reset Input:
+
+        this.searchInputEl.value = "";
+        this.renderProdList();
+    }
+
+    @autobind
+    priceFilterHanlder() {
+        const priceFromEl = document.getElementById("price-from") as HTMLInputElement;
+        const priceToEl = document.getElementById("price-to") as HTMLInputElement;
+        const _min = priceFromEl.value;
+        const _max = priceToEl.value;
+
+        Helper.setParams("_min", _min);
+        Helper.setParams("_max", _max);
+    
+        this.renderProdList();
+    }
+    @autobind
+    paginationHandler(e: Event) {
+
+      console.log(e.target);
+
+      e.preventDefault();
+
+      console.log('paginationHandler');
+
+      const paginationBtn = e.target as HTMLLinkElement | HTMLLIElement;
+
+      const page = paginationBtn.getAttribute('href');
+
+      if(page) {
+        const pageNum = page.slice(-1);
+        Helper.setParams('_page', pageNum);
+
+        this.renderProdList();
+      }
+
+    }
+
+    renderProdList() {
+        (async() => {
+            const _q = Helper.getParams("_q");
+            const _limit = +(Helper.getParams("_limit") || 12);
+            const _page = +(Helper.getParams("_page") || 1);
+            const _sort = Helper.getParams("_sort");
+            const _order = Helper.getParams("_order");
+            const _min = Helper.getParams("_min");
+            const _max = Helper.getParams("_max");
+            const _cateIds = Helper.getParams("_cateIds");
+
+            // const showResultTextEl = document.getElementById("show-result-text");
+            // const keyword = document.getElementById("keyword");
+            
+            try {
+              const query: ParamInterface = {
+                _limit,
+                _page,
+              };
+          
+              if (_sort && _order) {
+                query._sort = _sort;
+                query._order = _order;
+                // Helper.showBySort(showResultBySort, sortGlobalValue);
+              }
+          
+              if (_q) {
+                query._q = _q;
+          
+                // showResultTextEl.classList.remove("hidden");
+          
+                // keyword.innerText = _q;
+              }
+          
+              if (_min) {
+                query._min = +_min;
+          
+                // Helper.showByRange(showResultByRange, _min, _max);
+              }
+          
+              if (_max) {
+                query._max = +_max;
+          
+                // showByRange(showResultByRange, _min, _max);
+              }
+          
+              if (_cateIds) {
+                query._cateIds = _cateIds;
+          
+                // showByCate(showResultByCate, _cateIds);
+              } else {
+                // Reset show cate
+                // showResultByCate.innerHTML = "";
+              }
+          
+              console.log("query: ", query);
+              this.prodListInstance = new ProductCardList(query);
+               this.prodListInstance.load();
+              
+            } catch (error) {
+              console.log(error);
+            }
+        })()
+        
+    }
+
+    renderCateList() {
+
+        (async () => {
+            
+            try {
+
+            const response = await CategoriesApi.getAll();
+
+            const { categories } = response.data;
+          
+            const viewAllEl = ` 
+            <a href="#"
+                class="flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline">
+                View all
+             </a>`;
+          
+            categories.forEach((cate: CategoryInterface) => {
+              const { _id, name } = cate;
+          
+              const cateItem = `
+              <div data-id=${_id} class="flex items-center cate-item">
+                <input id="${_id}" type="checkbox" value=""
+                    class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+          
+                <label for="${_id}" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                   ${name}
+                </label>
+              </div>
+            `;
+          
+              this.cateListEl.insertAdjacentHTML("beforeend", cateItem);
+            });
+          
+            this.cateListEl.insertAdjacentHTML("beforeend", viewAllEl);
+          
+            // Render range [minvalue - maxvalue];
+          
+            const resMinPrice = await ShopApi.getMinPrice();
+
+            const resMaxPrice = await ShopApi.getMaxPrice();
+            
+            const {
+              result: [{ minFieldValue }],
+            } = resMinPrice.data;
+          
+            const {
+              result: [{ maxFieldValue }],
+            } = resMaxPrice.data;
+          
+            Helper.inputValue("price-from", minFieldValue);
+            Helper.inputValue("price-to", maxFieldValue);
+          
+            // console.log(minFieldValue);
+            // console.log(maxFieldValue);
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        })()
+    }
+
+    @autobind
+    cateFilterHandler(e: Event) {
+
+        const checkBoxInput = e.target as HTMLInputElement;
+
+        if (checkBoxInput && checkBoxInput.nodeName === "INPUT") {
+            const isChecked = checkBoxInput.checked;
+
+            const cateId = checkBoxInput.id;
+      
+            const cateIds = Helper.getParams("_cateIds")?.split(",");
+      
+            console.log(cateIds);
+            
+            let cateIdsQuery;
+
+            if (cateIds && cateIds.length > 0) {
+              if (!isChecked) {
+                cateIdsQuery = (Helper.getParams("_cateIds") as string)
+                  .split(",")
+                  .filter((ci) => ci !== cateId);
+              } else {
+                cateIdsQuery = [...(Helper.getParams("_cateIds") as string ).split(","), cateId].join(",");
+              }
+
+              Helper.setParams("_cateIds", cateIdsQuery as string);
+            } else {
+              Helper.setParams("_cateIds", cateId);
+              cateIdsQuery = cateId;
+            }
+      
+            // Render products here
+            this.renderProdList();
+          }
+    }
+
+    showByRange(resultEl: HTMLDivElement, _min: number = 0, _max: number = 1140){
+        resultEl.innerHTML = `Theo giá từ: $${_min} -> $${_max}`;
+        resultEl.classList.remove("hidden");
+      };
+      
+    showByCate = async (resultEl: HTMLDivElement, _cateIds: string) => {
+        // <i class="fa-solid fa-check"></i> Oppo <i class="fa-solid fa-check"></i> Samsung
+      
+        // How to get cateName ?
+      
+        const cateIdList = _cateIds.split(",");
+        const showResult = cateIdList.map(async (cateId: string) => {
+
+        const shopResponse = await ShopApi.getCategoryById(cateId);
+
+        const {
+            category: { name },
+          } = shopResponse.data;
+      
+          return `
+          <i class="fa-solid fa-check"></i> ${name}
+          `;
+        });
+      
+        resultEl.innerHTML = `
+        Trong danh mục: ${(await Promise.all(showResult)).join(", ")}
+        `;
+        resultEl.classList.remove("hidden");
+      };
+      
+    showBySort(resultEl: HTMLDivElement, sortValue: string){
+        resultEl.innerHTML = `
+        Lọc sản phẩm: <i class="fa-solid fa-filter-circle-xmark"></i> ${sortValue}
+        `;
+        resultEl.classList.remove("hidden");
+      };
+
+}    
