@@ -7,7 +7,7 @@
   "scripts": {
     "server": "node server.js",
     "dev": "webpack-dev-server",
-    "build": "webpack --mode production"
+    "build": "webpack --config=webpack.config.prod.js"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.37",

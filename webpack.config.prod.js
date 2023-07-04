@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production', // For production ???
@@ -11,7 +12,7 @@ module.exports = {
         directory: path.join(__dirname),
       },
     ],
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 3002,
   },
   output: {
     filename: 'bundle.js',
@@ -22,7 +23,10 @@ module.exports = {
   module: {
     rules: [
       { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
-      // { parser: { system: false } }, // Add this line
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   resolve: {
@@ -32,6 +36,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve('./index.html'),
     }),
+    new CleanPlugin.CleanWebpackPlugin(),
   ],
 };
 
