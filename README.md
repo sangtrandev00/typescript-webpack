@@ -9,7 +9,7 @@
 + Build tool Webpack
   
 ### Description
-+ The updated of [(JS VERSION)]([https](https://github.com/sangtrandev00/frontend-fullstack-es6-techspace-repo))
++ The updated of [(JS VERSION)](https://github.com/sangtrandev00/frontend-fullstack-es6-techspace-repo)
 
 + More focus about load page using single page appliction using history pushState, develop website base on website component and OOP principle (interhitance, mophypolism, encapsulation,abstract ) to reusable code and more clean code with Typescript (Type checking). Focus on core bussiness of B2B website with client and admin.
 
