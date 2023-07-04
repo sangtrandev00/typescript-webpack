@@ -8,13 +8,17 @@ import Users from "../pages/admin/Users";
 export default class AdminRouter {
 
     constructor() {
+
         this.renderContent();
     }
 
     private renderContent() : void {
+     
+
         const url = new URL(location.href);
         const path = url.pathname;
         // Main Component - Change content here
+
         switch (path) {
             case '/admin':
               // Render homepage content
@@ -48,5 +52,6 @@ export default class AdminRouter {
           }
 
     }
+
 
 }

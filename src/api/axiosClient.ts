@@ -39,12 +39,12 @@ axiosClient.interceptors.response.use(
     if (!error.response) throw new Error("Network error. Please try again later.");
 
     // Redirect to login if not logged in
-    if (error.response.status === 401) {
-      // Clear token, logout
-      // ...
-      window.location.assign("/login.html");
-      return;
-    }
+    // if (error.response.status === 401) {
+    //   // Clear token, logout
+    //   // ...
+    //   window.location.assign("/login.html");
+    //   return;
+    // }
 
     // Any status codes that fall outside the range of 2xx trigger this function
     // Do something with the response error

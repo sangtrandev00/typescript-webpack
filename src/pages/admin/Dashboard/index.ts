@@ -154,7 +154,7 @@ const templateHTML = `
               role="tab"
               aria-controls="tabs-orders-status-1"
               aria-selected="true"
-              >Unconfirmed</a
+              >Unconfirmed (<span id="unconfirmedQty">3</span>)</a
             >
           </li>
           <li role="presentation" data-order-status="${OrderStatus.CONFIRMED}" class="flex-auto text-center">
@@ -166,7 +166,7 @@ const templateHTML = `
               role="tab"
               aria-controls="tabs-orders-status-2"
               aria-selected="false"
-              >Confirmed</a
+              >Confirmed (<span id="confirmedQty">3</span>)</a
             >
           </li>
           <li role="presentation" data-order-status="${OrderStatus.SHIPPING}" class="flex-auto text-center">
@@ -178,7 +178,7 @@ const templateHTML = `
               role="tab"
               aria-controls="tabs-orders-status-3"
               aria-selected="false"
-              >Shipping</a
+              >Shipping (<span id="shippingQty">3</span>)</a
             >
           </li>
           <li role="presentation" data-order-status="${OrderStatus.SUCCESS}" class="flex-auto text-center">
@@ -190,7 +190,7 @@ const templateHTML = `
               role="tab"
               aria-controls="tabs-orders-status-4"
               aria-selected="false"
-              >Success</a
+              >Success (<span id="successQty">3</span>)</a
             >
           </li>
           <li role="presentation" data-order-status="${OrderStatus.FAILED}" class="flex-auto text-center">
@@ -202,7 +202,7 @@ const templateHTML = `
               role="tab"
               aria-controls="tabs-orders-status-5"
               aria-selected="false"
-              >Failed</a
+              >Failed (<span id="failedQty">3</span>)</a
             >
           </li>
        
@@ -453,17 +453,22 @@ export default class Dashboard extends Orders{
         this.tableEl = document.getElementById('table-orders-status-1') as HTMLTableElement;
         this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
         this.viewDetailTableCartEl = document.getElementById('view-detail-cart') as HTMLDivElement;
-        this.deleteConfirmBtn = document.querySelector('#deleteOrderBtn') as HTMLButtonElement;
+        this.deleteConfirmBtn = document.getElementById('deleteOrderBtn') as HTMLButtonElement;
         this.myChartEl = document.getElementById('myChart') as HTMLCanvasElement;
+        this.closeModalBtn = document.getElementById('closeModalBtn') ! as HTMLButtonElement;
+        this.closeDeleteModalBtn = document.getElementById('closeDeleteModal') ! as HTMLButtonElement
+        this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
+        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+
         // Custom attach function here!!!
         this.selectYearEl = document.getElementById('selectYear') as HTMLSelectElement;
-        console.log(this.myChartEl);
-        console.log(this.selectYearEl)
+     
         this.attach();
         this.renderSumarizedData();
 
         // Init table
         this._tableId = "table-orders-status-1";
+        this._currentOrderStatus = OrderStatus.UNCONFIRMED;
         this.render(OrderStatus.UNCONFIRMED);
 
         this.renderChart();
@@ -471,12 +476,12 @@ export default class Dashboard extends Orders{
 
     // Re init
     attach() {
-        super.attach();
-        // this.tableEl.addEventListener('click', this.clickHandler);
-        // this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
-        // this.closeModalBtn.addEventListener('click', this.hideModal);
-        // this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
-        // this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
+        // super.attach();
+        this.tableEl.addEventListener('click', this.clickHandler);
+        this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+        this.closeModalBtn.addEventListener('click', this.hideModal);
+        this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
+        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
         
         if(this.tabsListEl) {
             this.tabsListEl.addEventListener('click', this.changeOrdersStatus);
@@ -495,6 +500,7 @@ export default class Dashboard extends Orders{
 
             const result = this.selectedOrderStatus(orderStatus);
             const {status, tableId} = result;
+            this._currentOrderStatus = status;
             this.tableEl = document.getElementById(tableId) as HTMLTableElement;
 
             console.log(this.tableEl);
@@ -623,6 +629,7 @@ export default class Dashboard extends Orders{
         });
     };
 
+    // Render chart and sales and qty orders by status (confirmed, unconfirm,...)
     renderChart() {
 
         (async () => {
@@ -633,7 +640,27 @@ export default class Dashboard extends Orders{
                 const {orders} = response.data;
                 this.ordersSuccess = orders.filter((order: OrderInterface) => order.status === OrderStatus.SUCCESS);
 
+                const qtyOrdersFailed = orders.filter((order: OrderInterface) => order.status === OrderStatus.FAILED).length;
+                const qtyOrdersUnconfirmed = orders.filter((order: OrderInterface) => order.status === OrderStatus.UNCONFIRMED).length;
+                const qtyOrdersConfirmed = orders.filter((order: OrderInterface) => order.status === OrderStatus.CONFIRMED).length;
+                const qtyOrdersShipping = orders.filter((order: OrderInterface) => order.status === OrderStatus.SHIPPING).length;
+
+                Helper.textContent("failedQty", qtyOrdersFailed);
+                Helper.textContent("successQty", this.ordersSuccess.length.toString());
+                Helper.textContent("confirmedQty", qtyOrdersConfirmed);
+                Helper.textContent("unconfirmedQty", qtyOrdersUnconfirmed);
+                Helper.textContent("shippingQty", qtyOrdersShipping);
+
                 this.createChartByYear(this.ordersSuccess, this.selectedYear);
+
+                // Calculate total sales here !!!
+                const totalSales = this.ordersSuccess.reduce(
+                    (acc, order) => acc + order.products.totalPrice + (order.vatFee as number || 0 )  + (order.shippingFee as number || 0),
+                    0
+                  );
+                this.totalSales = totalSales;
+        
+                Helper.textContent("totalSale", `$${totalSales.toFixed(2)} `);
 
             } catch (error) {
                 console.log(error);
@@ -642,6 +669,7 @@ export default class Dashboard extends Orders{
         })()
 
     }
+
 
     // @autobind
     // changeChartHandler(e: Event) {
@@ -654,33 +682,18 @@ export default class Dashboard extends Orders{
     // }
 
     renderSumarizedData() {
-        this.calcTotalProducts();
-        this.calcTotalUsers();
-        this.calcTotalViews();
-        this.calcTotalSales();
-    }
+        (async() => {
+            await this.calcTotalProducts();
+            this.calcTotalUsers();
+            this.calcTotalViews();
 
-    calcTotalSales() {
-        console.log(this.ordersSuccess);
-
-        const totalSales = this.ordersSuccess.reduce(
-            (acc, order) => acc + order.products.totalPrice + (order.vatFee as number || 0 )  + (order.shippingFee as number || 0),
-            0
-          );
-        this.totalSales = totalSales;
-
-        console.log(totalSales);
-
-        Helper.textContent("totalSale", `$${totalSales.toFixed(2)} `);
+        })()
     }
 
     calcTotalViews() {
-        console.log(this.products);
 
         const totalViews = this.products.reduce((acc, product) => acc + (product.views as number || 0), 0);
         this.totalViews = totalViews;
-        console.log(totalViews);
-
         Helper.textContent("totalViews", totalViews.toString());
     }
 
@@ -688,27 +701,20 @@ export default class Dashboard extends Orders{
         (async () => {
             const response = await UsersApi.getAll();
             const {users} = response.data;
-
-            console.log(users);
-
             this.totalUsers = users.length;
             Helper.textContent("totalUsers", users.length);
         })()
     }
 
-    calcTotalProducts() {
-        (async () => {
+   async calcTotalProducts() {
             const response = await ProductsApi.getAll({});
             const {products} = response.data;
-
-            console.log(products);
             this.products = products;
             this.totalProducts = products.length;
             Helper.textContent("totalProducts", products.length);
-        })()
     }
 
- 
-    
+
+
 
 }

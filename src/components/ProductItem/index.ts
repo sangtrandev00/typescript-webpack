@@ -21,11 +21,11 @@ export default class ProductItem {
                         <div class="absolute top-0 left-0 py-2 px-4 bg-white bg-opacity-50">
                             <p class="text-xs leading-3 text-gray-800">New</p>
                         </div>
-                        <div class="relative group">
+                        <div class="relative group h-[240px]">
                             <div
                                 class="flex justify-center items-center opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full">
                             </div>
-                            <img class="w-full"
+                            <img class="w-full h-full object-contain"
                                 src="${BACKEND_URL}/${this._thumbnail}"
                                 alt="${this._name}" />
                             <div class="absolute bottom-0 p-8 w-full opacity-0 group-hover:opacity-100">
@@ -33,7 +33,7 @@ export default class ProductItem {
                                     class="add-to-cart dark:bg-gray-800 dark:text-gray-300 font-medium text-base leading-4 text-gray-800 bg-white py-3 w-full">Add
                                     to bag</button>
                                 <button
-                                    class="bg-transparent font-medium text-base leading-4 border-2 border-white py-3 w-full mt-2 text-white">Quick
+                                    class="show-quick-view bg-transparent font-medium text-base leading-4 border-2 border-white py-3 w-full mt-2 text-white">Quick
                                     View</button>
                             </div>
                         </div>

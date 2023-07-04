@@ -122,6 +122,11 @@ var Shop = /** @class */ (function (_super) {
         _this.cateListEl = document.getElementById("cate-list");
         _this.filterEl = document.getElementById("shop-content__filter-bar");
         _this.applyFilterBtn = document.getElementById("apply-filter-btn");
+        _this.showResultByCateEl = document.querySelector(".show-result-text__by-cate");
+        _this.showResultByRangeEl = document.querySelector(".show-result-text__by-range");
+        _this.showResultBySortEl = document.querySelector(".show-result-text__by-sort");
+        _this.keywordQueryEl = document.getElementById('keyword');
+        _this.showResultBySearchEl = document.getElementById('show-result-text');
         _this.renderProdList();
         _this.renderCateList();
         _this.attach();
@@ -163,6 +168,7 @@ var Shop = /** @class */ (function (_super) {
                 default:
                     break;
             }
+            console.log(this.sortGlobalValue);
             // Generate Product list here!!!
             this.renderProdList();
         }
@@ -203,7 +209,7 @@ var Shop = /** @class */ (function (_super) {
     Shop.prototype.renderProdList = function () {
         var _this = this;
         (function () { return __awaiter(_this, void 0, void 0, function () {
-            var _q, _limit, _page, _sort, _order, _min, _max, _cateIds, query;
+            var _q, _limit, _page, _sort, _order, _min, _max, _cateIds, query, sort, order, sortValueText;
             return __generator(this, function (_a) {
                 _q = helper_1["default"].getParams("_q");
                 _limit = +(helper_1["default"].getParams("_limit") || 12);
@@ -223,32 +229,55 @@ var Shop = /** @class */ (function (_super) {
                     if (_sort && _order) {
                         query._sort = _sort;
                         query._order = _order;
-                        // Helper.showBySort(showResultBySort, sortGlobalValue);
+                        sort = helper_1["default"].getParams('_sort');
+                        order = helper_1["default"].getParams("_order");
+                        sortValueText = "";
+                        if (sort === "createdAt") {
+                            if (order === "asc") {
+                                sortValueText = "Oldest products";
+                            }
+                            else if (order === "desc") {
+                                sortValueText = "Latest products";
+                            }
+                        }
+                        else if (sort === "oldPrice") {
+                            if (order === "asc") {
+                                sortValueText = "Price ascending";
+                            }
+                            else if (order === "desc") {
+                                sortValueText = "Price descending";
+                            }
+                        }
+                        this.showBySort(this.showResultBySortEl, sortValueText);
                     }
                     if (_q) {
                         query._q = _q;
-                        // showResultTextEl.classList.remove("hidden");
-                        // keyword.innerText = _q;
+                        this.showResultBySearchEl.classList.remove("hidden");
+                        this.keywordQueryEl.innerText = _q;
+                    }
+                    else {
+                        this.keywordQueryEl.innerText = "";
                     }
                     if (_min) {
                         query._min = +_min;
-                        // Helper.showByRange(showResultByRange, _min, _max);
+                        // this.showByRange(this.showResultByRangeEl, +_min, +_max || 0);
                     }
                     if (_max) {
                         query._max = +_max;
-                        // showByRange(showResultByRange, _min, _max);
+                        // this.showByRange(this.showResultByRangeEl, _min || 0, +_max);
                     }
                     if (_cateIds) {
                         query._cateIds = _cateIds;
-                        // showByCate(showResultByCate, _cateIds);
+                        this.showByCate(this.showResultByCateEl, _cateIds);
                     }
                     else {
                         // Reset show cate
-                        // showResultByCate.innerHTML = "";
+                        this.showResultByCateEl.innerHTML = "";
                     }
                     console.log("query: ", query);
                     this.prodListInstance = new ProductList_1["default"](query);
                     this.prodListInstance.load();
+                    console.log(this.sortGlobalValue);
                 }
                 catch (error) {
                     console.log(error);

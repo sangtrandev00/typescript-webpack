@@ -4,6 +4,7 @@ import { Productable } from "../../interface/Product";
 import Router from "../../router/router";
 import Helper from "../../util/helper";
 import ProductItem from "../ProductItem";
+import QuickViewModal from "../QuickView";
 
 export default class ProductList  {
     // static instance: ProductList = new ProductList();
@@ -72,6 +73,10 @@ export default class ProductList  {
         if(clickBtn && clickBtn.classList.contains('add-to-cart')) {
             this.addCartHandler(clickBtn);
         }
+
+        if(clickBtn && clickBtn.classList.contains('show-quick-view')) {
+            this.quickViewHandler(clickBtn);
+        }
     }
 
     @autobind
@@ -90,6 +95,31 @@ export default class ProductList  {
         const prodId = cardProdEl?.dataset.id;
         Helper.addToCart(prodId as string, 1);
 
+    }
+
+    quickViewHandler(quickViewBtn: any) {
+        const cardProdEl = quickViewBtn.closest('.card-product') as HTMLDivElement;
+        const prodId = cardProdEl?.dataset.id;
+
+        (async() => {
+
+           try {
+            const response = await ShopApi.getProductById(prodId as string);
+            const {product} = response.data;
+
+            console.log(product);
+
+            const {_id, name, oldPrice, discount, thumbnail, shortDesc} = product;
+
+            const quickViewModal =  new QuickViewModal(_id, name, oldPrice, discount, thumbnail, shortDesc);
+            quickViewModal.show();
+
+           } catch (error) {
+                console.log(error);            
+           }
+
+        })()
+      
     }
 
     get getProducts() {

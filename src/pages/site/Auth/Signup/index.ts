@@ -5,6 +5,9 @@ import { autobind } from "../../../../decorators/autobind";
 import AuthApi from "../../../../api/authApi";
 import Router from "../../../../router/router";
 
+// @ts-ignore
+import JustValidate from 'just-validate';
+
 const EmailInput = new Input("email","email", "email", "Email Address", "", "Email Address");
 const NameInput = new Input("name", "text", "name", "Full Name", "", "Full Name");
 const PasswordInput = new Input("password","password", "password", "Password", "", "Password");
@@ -80,7 +83,7 @@ const templateHTML = `
 `
 
 export default class Signup extends Component<HTMLDivElement>{
-
+    validator: any;
     signupFormEl: HTMLFormElement;
     navigateLoginBtn: HTMLAnchorElement;
     constructor() {
@@ -89,7 +92,9 @@ export default class Signup extends Component<HTMLDivElement>{
 
         this.signupFormEl = document.getElementById('signup-form') as HTMLFormElement;
         this.navigateLoginBtn = document.getElementById('navigateLogin') as HTMLAnchorElement;
+        this.formValidator("signup-form");
         this.attach();
+
     }
 
     attach() {
@@ -127,7 +132,12 @@ export default class Signup extends Component<HTMLDivElement>{
                   name: fullName,
                   password,
                   role: "client",
+                  providerId: "local"
                 };
+
+                console.log(this.validator);
+
+                if(!this.validator.isValid) return;
             
                 const authResponse = await AuthApi.signup(user);
                 const { message, userId } = authResponse.data;
@@ -140,7 +150,18 @@ export default class Signup extends Component<HTMLDivElement>{
                 }
                 
                 } catch (error) {
-                 console.log(error);   
+                 console.log(error);
+                 
+                 const errorType = (error as any).response.data.errorType;
+                 const errorMessage = (error as any).response.data.message;
+ 
+                 console.log(errorType);
+                 console.log(errorMessage);
+ 
+                 if(errorType === "email") {
+                     this.validator.showErrors({"#email": errorMessage});
+                 }
+
                 }
 
             })()
@@ -151,6 +172,58 @@ export default class Signup extends Component<HTMLDivElement>{
         e.preventDefault();
         history.pushState(null, '', `/login`);
         new Router();
+    }
+
+    formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#email", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "email",
+                 }
+            ])
+            .addField("#name", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "minLength",
+                    value: 8
+                }
+            ])
+            .addField("#password", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "strongPassword",
+                }
+            ])
+            .addField("#repassword", [
+                {
+                    rule: "required",
+                }, 
+                {
+                    validator: (value: string, fields: { [key: string]: { elem: HTMLInputElement} }) => {
+
+                        if(fields["#password"] && fields["#password"].elem) {
+                            const repeatPasswordVal = fields["#password"].elem.value;
+                            return value === repeatPasswordVal;
+                        }
+                        return true;
+                    },
+                    errorMessage: "Passwords do not match!"
+                }
+            ])
     }
 
 }

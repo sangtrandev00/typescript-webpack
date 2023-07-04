@@ -61,6 +61,8 @@ var Button_1 = require("../components/Button");
 var autobind_1 = require("../../../../decorators/autobind");
 var authApi_1 = require("../../../../api/authApi");
 var router_1 = require("../../../../router/router");
+// @ts-ignore
+var just_validate_1 = require("just-validate");
 var ButtonEl = new Button_1["default"]("submit", "UPDATE");
 var PasswordInput = new Input_1["default"]("password", "password", "password", "Password", "", "Password");
 var templateHTML = "\n    <div id=\"login-content\">\n    <section class=\"h-screen\">\n        <div class=\"h-full\">\n            <!-- Left column container with background-->\n            <div\n                class=\"g-6 flex h-full flex-wrap items-center justify-center lg:justify-between shadow-md border-2 px-10\">\n                <div class=\"shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12\">\n                    <img src=\"https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp\"\n                        class=\"w-full\" alt=\"Sample image\" />\n                </div>\n\n                <!-- Right column container -->\n                <div class=\"mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12\">\n                    <form id=\"reset-password-form\">\n                        <!--Sign in section-->\n                        <div class=\"flex flex-row items-center justify-center lg:justify-start\">\n                            <p class=\"mb-4 mr-4 text-lg\">Your new password</p>\n\n                        </div>\n\n                        <!-- Email input -->\n                    " + PasswordInput.render() + "\n\n                        <!-- Login button -->\n                        <div class=\"text-center lg:text-left\">\n                         " + ButtonEl.render() + "\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </section>\n    </div>\n\n";
@@ -70,6 +72,7 @@ var ResetPass = /** @class */ (function (_super) {
         var _this = _super.call(this, 'main') || this;
         _this.hostEl.innerHTML = templateHTML;
         _this.resetFormEl = document.getElementById("reset-password-form");
+        _this.formValidator("reset-password-form");
         _this.attach();
         return _this;
     }
@@ -85,13 +88,14 @@ var ResetPass = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        e.preventDefault();
                         url = new URL(location.href);
                         passwordToken = url.searchParams.get("token");
                         formEl = e.target;
                         formEls = formEl.elements;
                         password = formEls["password"].value;
                         userId = JSON.parse(localStorage.getItem("user")).userId;
+                        if (!this.validator.isValid)
+                            return [2 /*return*/];
                         return [4 /*yield*/, authApi_1["default"].updatePassword({ password: password, passwordToken: passwordToken, userId: userId })];
                     case 1:
                         response = _a.sent();
@@ -101,7 +105,7 @@ var ResetPass = /** @class */ (function (_super) {
                             timeInterval_1 = setInterval(function () {
                                 // Render to UI here!!! when have enough time!!!
                                 console.log("Redirect after: ", Math.trunc((redirectTimer_1 - Date.now()) / 1000));
-                                if (Math.trunc((redirectTimer_1 - Date.now()) / 1000) === 0) {
+                                if (Math.trunc((redirectTimer_1 - Date.now()) / 1000) <= 0) {
                                     history.pushState(null, '', "/login");
                                     new router_1["default"]();
                                     clearInterval(timeInterval_1);
@@ -117,6 +121,20 @@ var ResetPass = /** @class */ (function (_super) {
                 }
             });
         }); })();
+    };
+    ResetPass.prototype.formValidator = function (formId) {
+        this.validator = new just_validate_1["default"]("#" + formId, {
+            validateBeforeSubmitting: true
+        });
+        this.validator
+            .addField("#password", [
+            {
+                rule: "required"
+            },
+            {
+                rule: "strongPassword"
+            }
+        ]);
     };
     __decorate([
         autobind_1.autobind

@@ -22,7 +22,7 @@ export class Form {
 
     get component() {
         return `
-        <form action="#" id="${this._id}">
+        <form action="#" id="${this._id}" autocomplete="off" novalidate="novalidate">
                         <div class="grid gap-4 mb-4 sm:grid-cols-2">
                             ${this.CateNameInput.component}
                            ${this.CateImageInput.component}

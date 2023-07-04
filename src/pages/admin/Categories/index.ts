@@ -8,6 +8,9 @@ import ActionBtn from "../../../components/AdminForm/ActionButton";
 import ModalForm from "./components/modalForm";
 import AdminBaseComponent from "../AdminComponent";
 
+//@ts-ignore
+import JustValidate from 'just-validate';
+
 const templateHTML = `
 <!-- Main content wrapper -->
     <main class="p-4 md:ml-64 h-auto pt-20">
@@ -263,7 +266,7 @@ const templateHTML = `
 `;
 export default class Categories extends AdminBaseComponent{
 
-
+    validator: any;
     constructor() {
         super(
         'category',
@@ -316,6 +319,8 @@ export default class Categories extends AdminBaseComponent{
                 ];
              
               });
+
+              this.clearTableData();
         
               this.dataTable =  new DataTables("#table-categories", {
                 data: tableHtml,
@@ -336,15 +341,6 @@ export default class Categories extends AdminBaseComponent{
         renderCategoriesList();
     }
 
-    // attach(): void {
-    //     // this.FormEl.addEventListener('submit', this.submitHandler);
-    //     this.tableEl.addEventListener('click', this.clickHandler);
-    //     this.createBtn.addEventListener('click', this.addHandler);
-    //     this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
-    //     // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
-        
-    // }
-
     @autobind 
     submitHandler(e: Event) {
         e.preventDefault();
@@ -352,29 +348,34 @@ export default class Categories extends AdminBaseComponent{
 
         const typeForm = CategoryForm.getAttribute('id');
 
+
+        const elements = (CategoryForm).elements as unknown as {
+            [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+          };
+          let cateImage: File | undefined;
+
+          if (elements["cateImage"]) {
+            cateImage = (elements["cateImage"] as HTMLInputElement).files?.[0];
+          }
+
+          const name = elements["name"].value as string;
+          const description = elements["description"].value as string;
+          
+          const formData = new FormData();
+          formData.append("name", name);
+          
+          if(cateImage) {
+              formData.append("cateImage", cateImage);
+          }
+          formData.append("description", description);
+
+          if(!this.validator.isValid) return; 
+
         // Add/update category logic
         (async () => {
-            const elements = (CategoryForm).elements as unknown as {
-                [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-              };
-              let cateImage: File | undefined;
-    
-              if (elements["cateImage"]) {
-                cateImage = (elements["cateImage"] as HTMLInputElement).files?.[0];
-              }
-    
-              const name = elements["name"].value as string;
-              const description = elements["description"].value as string;
-              
-              const formData = new FormData();
-              formData.append("name", name);
-              
-              if(cateImage) {
-                  formData.append("cateImage", cateImage);
-              }
-              formData.append("description", description);
-
+            
               try {
+
                 let response: any;
                 if(typeForm === "update-cate-form") {
                     
@@ -382,10 +383,12 @@ export default class Categories extends AdminBaseComponent{
                     formData.append("oldImage", oldImage);
 
                     // Update cate call API
+
                     response = await CategoriesApi.update(formData, this._currentId);
 
                 }else {
                     // Add cate Call API
+
                     response = await CategoriesApi.add(formData);
                 }
 
@@ -395,14 +398,16 @@ export default class Categories extends AdminBaseComponent{
 
                 // Handle add toast here!!
 
-                this.clearTableData();
                 this.render();
                 this.closeFormModal();                
                 this.showToast('success', 'Success', message);
 
                 // Show Toast to notify here
               } catch (error) {
-                
+                console.log(error);
+                this.validator.showErrors({
+                    "#name": (error as any).response.data.message
+                })
               }
 
 
@@ -410,43 +415,6 @@ export default class Categories extends AdminBaseComponent{
 
     }
 
-    // @autobind
-    // clickHandler(e: Event) {
-    //     e.preventDefault();
-
-    //     console.log(e.target);
-
-    //     const targetEl = e.target as HTMLElement;
-
-    //     const btnEl = targetEl.closest('button')! as HTMLButtonElement;
-    //     if(btnEl) {
-    //         this._currentId = btnEl?.getAttribute('category-id') as string ;
-    //     }
-
-    //     // Edit
-    //     if (
-    //         targetEl &&
-    //         targetEl.matches("button, button i") &&
-    //         targetEl.classList.contains("update-modal-trigger")
-    //       ) {
-    //         this.editHandler();
-    //     }
-
-    //     // Delete
-    //     if (
-    //         targetEl &&
-    //         targetEl.classList.contains("delete-modal-trigger") &&
-    //         targetEl.matches("button, button i")
-    //       ) {
-    //         this.toggleDeleteModal();
-    //       }
-
-    // }
-
-
-    // toggleDeleteModal() {
-    //     this.triggerModalDeleteBtn.click();
-    // }
     clearInputs() {
 
     }
@@ -457,12 +425,11 @@ export default class Categories extends AdminBaseComponent{
         (async() => {
             try {
                 const response = await CategoriesApi.delete(this._currentId);
-                this.hideDeleteModal();
-                this.clearTableData();
+                
                 this.render();
+                this.hideDeleteModal();
                 const {message, categoryId} = response.data;
-
-                this.showToast('warning', `Delete #id: ${categoryId}`, message);
+                this.showToast('success', `Delete #id: ${categoryId}`, message);
 
               } catch (error) {
                 console.log(error);
@@ -470,48 +437,24 @@ export default class Categories extends AdminBaseComponent{
                 // Handle error here
               }
         })()
-
-        
+   
     }
-
-    // showModal(type: string) {
-    //     this.modalFormEl = document.getElementById('CategoryModal') as HTMLDivElement;
-    //     this.modal = new Modal(this.modalFormEl);
-    //     this.modal.show();
-    //     this.closeFormModalBtn = document.getElementById('closeModalForm') as HTMLButtonElement;
-    //     this.closeFormModalBtn.addEventListener('click', this.hideModal);
-    //     this.FormEl = document.getElementById(`${type}-cate-form`) as HTMLFormElement;
-    //     this.FormEl.addEventListener('submit', this.submitHandler);
-    // }
-
-    // showToast(type = "primary", title = 'Add Category', message = 'Add Category Successfully!', minutes = '1 minutes') {
-
-    //     console.log(type, title, message, minutes);
-
-    //     this.toastMsg = new ToastMessage(type, title, message , minutes);
-    //     this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
-    //     this.closeToastBtn.addEventListener('click', this.hideToast);
-    //     this.toastMsg.show();
-    // }
-
 
     @autobind
     addHandler() {
         new ModalForm('add');
         this.showModal('add');
+        this.formValidator('add-cate-form');
     }
 
     @autobind
     editHandler() {
-        console.log("Edit Category!!!");
-        console.log(this._currentId);
-        
         new ModalForm('update');
         this.showModal('update');
 
         const CategoryForm = document.getElementById('update-cate-form') as HTMLFormElement;
 
-            (async() => {
+        (async() => {
                 try {
 
                     const response = await CategoriesApi.getById(this._currentId);
@@ -528,9 +471,46 @@ export default class Categories extends AdminBaseComponent{
 
                 } catch (error) {
                     console.log(error);
+                   
+                   
                 }
 
-            })()
+        })();
+
+        this.formValidator('update-cate-form');
+        this.validator.removeField("#cateImage");
+    }
+
+    formValidator(formId: string) {
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+          });
+        
+        this.validator
+        .addField("#name", [
+            {
+                rule: "required",
+            }, {
+                rule: "minLength",
+                value: 3,
+            }
+        ])
+        .addField("#cateImage", [
+            {
+                rule: "minFilesCount",
+                value: 1,
+                errorMessage: "At least 1 file is required"
+            }
+        ])
+        .addField("#description", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minLength",
+                value: 3,
+            }
+        ])
     }
 
     get component() {

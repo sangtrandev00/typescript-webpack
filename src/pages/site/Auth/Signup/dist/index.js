@@ -61,6 +61,8 @@ var base_component_1 = require("../../../../components/base-component");
 var autobind_1 = require("../../../../decorators/autobind");
 var authApi_1 = require("../../../../api/authApi");
 var router_1 = require("../../../../router/router");
+// @ts-ignore
+var just_validate_1 = require("just-validate");
 var EmailInput = new Input_1["default"]("email", "email", "email", "Email Address", "", "Email Address");
 var NameInput = new Input_1["default"]("name", "text", "name", "Full Name", "", "Full Name");
 var PasswordInput = new Input_1["default"]("password", "password", "password", "Password", "", "Password");
@@ -74,6 +76,7 @@ var Signup = /** @class */ (function (_super) {
         _this.hostEl.innerHTML = templateHTML;
         _this.signupFormEl = document.getElementById('signup-form');
         _this.navigateLoginBtn = document.getElementById('navigateLogin');
+        _this.formValidator("signup-form");
         _this.attach();
         return _this;
     }
@@ -86,7 +89,7 @@ var Signup = /** @class */ (function (_super) {
         e.preventDefault();
         var formEl = e.target;
         (function () { return __awaiter(_this, void 0, void 0, function () {
-            var elements, email, fullName, password, repassword, user, authResponse, _a, message, userId, error_1;
+            var elements, email, fullName, password, repassword, user, authResponse, _a, message, userId, error_1, errorType, errorMessage;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -106,8 +109,12 @@ var Signup = /** @class */ (function (_super) {
                             email: email,
                             name: fullName,
                             password: password,
-                            role: "client"
+                            role: "client",
+                            providerId: "local"
                         };
+                        console.log(this.validator);
+                        if (!this.validator.isValid)
+                            return [2 /*return*/];
                         return [4 /*yield*/, authApi_1["default"].signup(user)];
                     case 1:
                         authResponse = _b.sent();
@@ -121,6 +128,13 @@ var Signup = /** @class */ (function (_super) {
                     case 2:
                         error_1 = _b.sent();
                         console.log(error_1);
+                        errorType = error_1.response.data.errorType;
+                        errorMessage = error_1.response.data.message;
+                        console.log(errorType);
+                        console.log(errorMessage);
+                        if (errorType === "email") {
+                            this.validator.showErrors({ "#email": errorMessage });
+                        }
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -132,6 +146,52 @@ var Signup = /** @class */ (function (_super) {
         e.preventDefault();
         history.pushState(null, '', "/login");
         new router_1["default"]();
+    };
+    Signup.prototype.formValidator = function (formId) {
+        this.validator = new just_validate_1["default"]("#" + formId, {
+            validateBeforeSubmitting: true
+        });
+        this.validator
+            .addField("#email", [
+            {
+                rule: "required"
+            },
+            {
+                rule: "email"
+            }
+        ])
+            .addField("#name", [
+            {
+                rule: "required"
+            },
+            {
+                rule: "minLength",
+                value: 8
+            }
+        ])
+            .addField("#password", [
+            {
+                rule: "required"
+            },
+            {
+                rule: "strongPassword"
+            }
+        ])
+            .addField("#repassword", [
+            {
+                rule: "required"
+            },
+            {
+                validator: function (value, fields) {
+                    if (fields["#password"] && fields["#password"].elem) {
+                        var repeatPasswordVal = fields["#password"].elem.value;
+                        return value === repeatPasswordVal;
+                    }
+                    return true;
+                },
+                errorMessage: "Passwords do not match!"
+            }
+        ]);
     };
     __decorate([
         autobind_1.autobind

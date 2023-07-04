@@ -1,6 +1,3 @@
-// type GetCategoryResponse = {
-//     data: CategoryInterface
-// }
 
 export default class Order  {
 

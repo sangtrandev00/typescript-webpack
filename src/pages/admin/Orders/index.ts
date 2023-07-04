@@ -8,6 +8,7 @@ import Helper from "../../../util/helper";
 import { BACKEND_URL } from "../../../constant/backend-domain";
 import { OrderStatus } from "../../../interface/Order";
 import Utilities from "./components/Utilites";
+import ToastMessage from "../../../components/AdminToast";
 
 const templateHTML = `
 <!-- Main content wrapper -->
@@ -194,6 +195,7 @@ const templateHTML = `
 export default class Orders extends Component<HTMLDivElement>{
     tableEl: HTMLTableElement;
     _tableId: string = "table-orders";
+    _currentOrderStatus: OrderStatus = OrderStatus.ALL;
     _currentId: string = "";
     dataTable: any;
    
@@ -204,16 +206,17 @@ export default class Orders extends Component<HTMLDivElement>{
     closeModalBtn: HTMLButtonElement;
     updateOrderForm!: HTMLFormElement;
     deleteModalEl: HTMLDivElement;
+    closeToastBtn: HTMLButtonElement;
 
     modal!: Modal;
     deleteModal?: Modal;
-
+    toastMsg?: ToastMessage;
     constructor(hostElId: string  = "admin-content") {
         super(
             hostElId
         )
 
-        this.hostEl.innerHTML = this.component;
+        this.hostEl.innerHTML = this.component || templateHTML;
         
         this.hostEl.scrollIntoView({
             behavior: 'smooth',
@@ -229,7 +232,8 @@ export default class Orders extends Component<HTMLDivElement>{
         this.closeDeleteModalBtn = document.getElementById('closeDeleteModal') ! as HTMLButtonElement
         this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
         this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
-        
+        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+
         this.attach();
 
     }       
@@ -250,11 +254,18 @@ export default class Orders extends Component<HTMLDivElement>{
               const {orders} = response.data;
             //   tableBody.innerHTML = "";
             let filteredOrders = [];
+            
+            orderStatus = this._currentOrderStatus;
+
             if(orderStatus !== OrderStatus.ALL) {
                 filteredOrders = orders.filter((order: OrderInterface) => orderStatus === order.status);
             }else {
                 filteredOrders = orders;
             }
+
+            // console.log("order status: ", orderStatus);
+
+            // console.log("filtered orders: ", filteredOrders);
 
               const tableRows = filteredOrders.map((order: OrderInterface) => {
                 const {
@@ -300,6 +311,8 @@ export default class Orders extends Component<HTMLDivElement>{
 
             this.clearTableData();
           
+            console.log("render at table: ", this._tableId);
+
             this.dataTable =   new DataTables(`#${this._tableId}`, {
                 data: tableRows,
                 columns: [
@@ -317,7 +330,6 @@ export default class Orders extends Component<HTMLDivElement>{
               console.log(error);
             }
           };
-
         renderOrderList();
     }
 
@@ -354,6 +366,9 @@ export default class Orders extends Component<HTMLDivElement>{
             targetEl.classList.contains("delete-modal-trigger") &&
             targetEl.matches("button, button i")
           ) {
+
+            console.log("trigger delete modal!");
+            
             this.showDeleteModal();
           }
 
@@ -370,10 +385,10 @@ export default class Orders extends Component<HTMLDivElement>{
 
                 console.log(response.data);
 
-                // const {message, orderId} = response.data;
+                const {message, orderId} = response.data;
              
-                // this.showToast('warning', `Delete #id: ${orderId}`, message);
-                this.hideModal();
+                this.showToast('success', `Delete #id: ${orderId}`, message);
+                this.hideDeleteModal();
                 this.render();
 
                 // Should i use websocket.io ?
@@ -437,8 +452,16 @@ export default class Orders extends Component<HTMLDivElement>{
                 const response = await OrdersApi.updateOrderStatus({ status: updatedOrderStatus }, this._currentId);
       
                 console.log(response.data);
-    
+
+                const {orderId, message} = response.data;
+                
+                this.render(this._currentOrderStatus);
+
                 this.hideModal();
+
+                this.removeBackdrop();
+
+                this.showToast("success", `Update #id: ${orderId}`, message);
 
             } catch (error) {
                 
@@ -448,6 +471,24 @@ export default class Orders extends Component<HTMLDivElement>{
         })()
     }
 
+
+    whichStatusOrder(status: string) {
+        switch (status) {
+            case "success":
+                return OrderStatus.SUCCESS;                
+            case "failed":
+                return OrderStatus.FAILED;                
+            case "shipping":
+                return OrderStatus.SHIPPING;                
+            case "confirmed":
+                return OrderStatus.CONFIRMED;                
+            case "unconfirmed":
+                return OrderStatus.UNCONFIRMED;                
+            default:
+                return OrderStatus.ALL;
+        }
+    }
+
     showModal(modalId: string): void {
         this.modalEl = document.getElementById(modalId) as HTMLDivElement;
         // this.closeModalBtn = this.modalEl.querySelector('#closeModalBtn') as HTMLButtonElement;
@@ -455,34 +496,47 @@ export default class Orders extends Component<HTMLDivElement>{
         // console.log(this.closeModalBtn);
         // const OrderDetailModal = document.getElementById(`viewOrderDetailModal`) as HTMLDivElement;
         this.modal = new Modal(this.modalEl);
+
+        console.log(this.modal);
+
         this.modal.show();
     }
 
-    // showToast(type = "primary", title = ``, message = `Add  Successfully!`, minutes = '1 minutes') {
-    //     this.toastMsg = new ToastMessage(type, title, message , minutes);
+    showToast(type = "primary", title = ``, message = `Add  Successfully!`, minutes = '1 minutes') {
+        this.toastMsg = new ToastMessage(type, title, message , minutes);
 
-    //     this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+        console.log(document.getElementById("closeToast"));
+        this.closeToastBtn = document.getElementById("closeToast") as HTMLButtonElement;
+        this.closeToastBtn.addEventListener('click', this.hideToast);
+        this.toastMsg.show();
+    }
 
-    //     console.log(this.closeToastBtn);
-
-    //     this.closeToastBtn.addEventListener('click', this.hideToast);
-    //     this.toastMsg.show();
-    // }
+    @autobind
+    hideToast() {
+        this.toastMsg?.hide();
+    }
 
     @autobind
     hideModal() {
+        console.log(this.modal);
         this.modal.hide();
     }
 
     @autobind
     showDeleteModal() {
         this.deleteModal = new Modal(this.deleteModalEl);
+
+        console.log(this.deleteModal);
+
+        console.log(this.deleteModal.show());
+        this.deleteModal._isHidden = false;
         this.deleteModal.show();
     }
 
     @autobind
     hideDeleteModal() {
         this.deleteModal?.hide();
+        this.removeBackdrop();
     }
 
     viewDetail(): void {
@@ -584,6 +638,13 @@ export default class Orders extends Component<HTMLDivElement>{
     clearTableData() {
         if(this.dataTable) {
             this.dataTable.destroy();
+        }
+    }
+
+    removeBackdrop() {
+        const backdropEl = document.querySelector("div[modal-backdrop]") as HTMLDivElement;
+        if(backdropEl) {
+            backdropEl.remove();
         }
     }
 

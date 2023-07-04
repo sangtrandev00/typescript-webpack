@@ -4,199 +4,23 @@ import Component from "../../../components/base-component";
 import { autobind } from "../../../decorators/autobind";
 import Router from "../../../router/router";
 import Helper from "../../../util/helper";
+import KeenSlider from 'keen-slider';
+import CategoryList from "./components/CategoryList";
+import SideNavBanner from "./components/SideNavBanner";
 
 const templateHTML = `
 <div id="carousel-section" class="carousel-section flex relative mt-8 gap-x-3">
-<div class="carousel-section__block-left sm: md:w-2/12  relative">
+<div class="carousel-section__block-left md:w-3/12 lg:w-2/12 xl:w-3/12 relative">
     <!-- Sidenav -->
-    <nav id="sidenav-1"
+    <nav id="sidenavBanner"
         class="max-[755px]:hidden rounded-[20px] absolute left-0 top-0 z-8 h-full w-full -translate-x-full overflow-hidden bg-slate-300/50 shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 dark:bg-zinc-800"
-        data-te-sidenav-init data-te-sidenav-hidden="false" data-te-sidenav-position="absolute">
-        <ul class="relative m-0 list-none px-[0.2rem]" data-te-sidenav-menu-ref>
-
-            <li class="relative">
-                <a href="./shop.html"
-                    class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[1.1rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                    data-te-sidenav-link-ref>
-
-                    <i class="fa-solid fa-bars mr-4"></i>
-                    <span>I phone</span>
-                    <span
-                        class="absolute right-0 ml-auto mr-[0.8rem] transition-transform duration-300 ease-linear motion-reduce:transition-none [&>svg]:text-gray-600 dark:[&>svg]:text-gray-300"
-                        data-te-sidenav-rotate-icon-ref>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                </a>
-                <ul class="!visible relative m-0 hidden list-none p-0 data-[te-collapse-show]:block "
-                    data-te-sidenav-collapse-ref data-te-collapse-show>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>All Iphone</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Iphone 14</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Iphone 13</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Iphone 12</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Iphone 11</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="relative">
-                <a href="./shop.html"
-                    class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[1.1rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                    data-te-sidenav-link-ref>
-                    <i class="fa-solid fa-bars mr-4"></i>
-                    <span>Samsung</span>
-                    <span
-                        class="absolute right-0 ml-auto mr-[0.8rem] transition-transform duration-300 ease-linear motion-reduce:transition-none [&>svg]:text-gray-600 dark:[&>svg]:text-gray-300"
-                        data-te-sidenav-rotate-icon-ref>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                </a>
-                <ul class="show !visible relative m-0 hidden list-none p-0 data-[te-collapse-show]:block "
-                    data-te-sidenav-collapse-ref>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>All samsung</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Galaxy S</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Galaxy A</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Galaxy M</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Galaxy Z</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="relative">
-                <a href="./shop.html"
-                    class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[1.1rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                    data-te-sidenav-link-ref>
-                    <i class="fa-solid fa-bars mr-4"></i>
-                    <span>Xiaomi</span>
-                    <span
-                        class="absolute right-0 ml-auto mr-[0.8rem] transition-transform duration-300 ease-linear motion-reduce:transition-none [&>svg]:text-gray-600 dark:[&>svg]:text-gray-300"
-                        data-te-sidenav-rotate-icon-ref>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                </a>
-                <ul class="show !visible relative m-0 hidden list-none p-0 data-[te-collapse-show]:block "
-                    data-te-sidenav-collapse-ref>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>All Xiaomi</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Xiaomi 13</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Xiaomi 12</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Xiaomi 11</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="relative">
-                <a href="./shop.html"
-                    class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[1.1rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                    data-te-sidenav-link-ref>
-                    <i class="fa-solid fa-bars mr-4"></i>
-                    <span>Oppo</span>
-                    <span
-                        class="absolute right-0 ml-auto mr-[0.8rem] transition-transform duration-300 ease-linear motion-reduce:transition-none [&>svg]:text-gray-600 dark:[&>svg]:text-gray-300"
-                        data-te-sidenav-rotate-icon-ref>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                            class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                </a>
-                <ul class="show !visible relative m-0 hidden list-none p-0 data-[te-collapse-show]:block "
-                    data-te-sidenav-collapse-ref>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Oppo Reno </a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Oppo Find</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Oppo A</a>
-                    </li>
-                    <li class="relative">
-                        <a href="./shop.html"
-                            class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.9rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10"
-                            data-te-sidenav-link-ref>Oppo Z</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        data-te-sidenav-hidden="false" data-te-sidenav-position="absolute">
+        
     </nav>
     <!-- Sidenav -->
 </div>
 <div
-    class="carousel-section__block-center lg:w-7/12 md:w-10/12 sm:w-full max-[700px]:w-full border p-3 rounded-[20px] pb-12 shadow bg-slate-300/50 md:ml-28 lg:ml-24 xl:ml-12">
+    class="carousel-section__block-center lg:w-7/12 md:w-10/12 sm:w-full max-[700px]:w-full border p-3 rounded-[20px] pb-12 shadow bg-slate-300/50">
     <!-- Carousel for header -->
     <div id="carouselExampleCaptions" class="relative" data-te-carousel-init data-te-carousel-slide>
         <!--Carousel indicators-->
@@ -352,15 +176,15 @@ const templateHTML = `
                     id="right-banner-image-1"
                     src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-1-right.jpg" width="312"
                     height="300" alt="GALAXY S20 FE<br>Giá rẻ ngất ngây" loading="lazy"
-                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md"></a><a href="#"
+                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a><a href="#"
                 class="right-banner__item mb-3 button__link "><img id="right-banner-image-2"
                     src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-2-right.jpg" width="312"
                     height="300" alt="IPAD CHÍNH HÃNG<br>Lên đời từ 6.49 triệu" loading="lazy"
-                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md"></a><a href="#"
+                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a><a href="#"
                 class="right-banner__item mb-3 button__link "><img id="right-banner-image-3"
                     src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-3-right.jpg" width="690"
                     height="300" alt="LENOVO IDEAPAD<br> THIẾT KẾ CỨNG CÁP" loading="lazy"
-                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md"></a></div>
+                    class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a></div>
     </div>
 
 </div>
@@ -371,21 +195,16 @@ const templateHTML = `
 <div class="uppercase text-2xl mt-10 font-bold p-3">CATALOG</div>
 <div id="catalog-section" class="flex items-center justify-center w-full h-full py-24 sm:py-8 ">
 <div class="w-full relative flex items-center justify-center">
-    <button aria-label="slide backward"
-        class="absolute z-30 left-0 ml-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 cursor-pointer"
-        id="prev">
-        <svg class="dark:text-gray-900" width="8" height="14" viewBox="0 0 8 14" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 1L1 7L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-        </svg>
-    </button>
+    <button id="prevCatalogBtn" aria-label="slide backward" class="absolute z-30 left-0 ml-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 cursor-pointer" id="prev">
+            <i class="fa-solid fa-circle-chevron-left text-slate-700 text-3xl"></i>
+                </button>
     <div class="w-full h-full mx-auto overflow-x-hidden overflow-y-hidden">
-        <div id="slider"
-            class="h-full flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700">
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+        <div id="categories-slider"
+            class="h-full max-h-[450px] flex lg:gap-8 md:gap-6 gap-14 items-center justify-start transition ease-out duration-700">
+            
+            <div class="keen-slider__slide number-slide1 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://www.thephoner.online/uploads/a96-pink-1920.png"
-                    alt="black chair and white table" class="object-cover object-center w-full" />
+                    alt="black chair and white table" class="object-cover object-center w-full h-full"/>
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
                     <h2 class="lg:text-xl leading-4 text-base lg:leading-5 text-white dark:text-gray-900">
                         Catalog 1</h2>
@@ -396,7 +215,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide2 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/t/a/tab_s8_2.jpg"
                     alt="sitting area" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -409,7 +228,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide3 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/3/_/3_51_1_7.jpg"
                     alt="sitting area" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -422,7 +241,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide4 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/e/real_me_pro_002.jpg"
                     alt="sitting area" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -435,7 +254,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide5 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/e/real_me_pro_002.jpg"
                     alt="black chair and white table" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -448,7 +267,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide6 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/e/real_me_pro_002.jpg"
                     alt="sitting area" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -461,7 +280,7 @@ const templateHTML = `
                     </div>
                 </div>
             </div>
-            <div class="flex flex-shrink-0 relative w-full sm:w-auto">
+            <div class="keen-slider__slide number-slide7 flex flex-shrink-0 relative w-full sm:w-auto">
                 <img src="https://cdn2.cellphones.com.vn/358x358,webp,q100/media/catalog/product/r/e/real_me_pro_002.jpg"
                     alt="sitting area" class="object-cover object-center w-full" />
                 <div class="bg-gray-800 bg-opacity-30 absolute w-full h-full p-6">
@@ -475,18 +294,13 @@ const templateHTML = `
                 </div>
             </div>
 
-
         </div>
     </div>
-    <button aria-label="slide forward"
-        class="absolute z-30 right-0 mr-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
-        id="next">
-        <svg class="dark:text-gray-900" width="8" height="14" viewBox="0 0 8 14" fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round" />
-        </svg>
+
+    <button id="nextCatalogBtn" aria-label="slide forward" class="absolute z-30 right-0 mr-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400" id="next">
+             <i class="fa-solid fa-circle-chevron-right text-slate-700 text-3xl"></i>
     </button>
+
 </div>
 </div>
 
@@ -507,7 +321,7 @@ const templateHTML = `
 
     <div class="flex justify-between items-center">
         <div
-            class="flex space-x-3 justify-center items-center text-gray-800 dark:text-white cursor-pointer">
+            class="flex space-x-3 justify-center items-center text-gray-800 dark:text-white cursor-pointer opacity-0">
             <img class="dark:hidden"
                 src="https://tuk-cdn.s3.amazonaws.com/can-uploader/product-grid-5-svg1.svg" alt="toggler">
             <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/product-grid-5-svg1dark.svg
@@ -1030,6 +844,7 @@ const templateHTML = `
 </section>
 
 `
+
 export default class Homepage extends Component<HTMLDivElement> {
     
     prodListInstance: ProductList;
@@ -1037,7 +852,9 @@ export default class Homepage extends Component<HTMLDivElement> {
     prevBtn: HTMLSpanElement;
     showResultProductsEl: HTMLParagraphElement;
     loadMoreBtn: HTMLAnchorElement;
-    
+    slider: any;
+    prevCatalogBtn: HTMLButtonElement;
+    nextCatalogBtn: HTMLButtonElement;
     constructor(
 
     ) {
@@ -1051,6 +868,14 @@ export default class Homepage extends Component<HTMLDivElement> {
         this.showResultProductsEl = document.getElementById("show-result-products") as HTMLParagraphElement;
         this.showResultProductsEl.innerText = `Showing ${8} products`;
         this.loadMoreBtn = document.getElementById("loadMoreBtn") as HTMLAnchorElement;
+
+        this.prevCatalogBtn = document.getElementById('prevCatalogBtn') as HTMLButtonElement;
+        this.nextCatalogBtn = document.getElementById('nextCatalogBtn') as HTMLButtonElement;
+
+        new SideNavBanner();
+        new CategoryList();
+
+        this.initCateSlider();
         this.attach();
     }
 
@@ -1058,6 +883,8 @@ export default class Homepage extends Component<HTMLDivElement> {
         this.nextBtn.addEventListener('click', this.nextProductsHandler);
         this.prevBtn.addEventListener('click', this.prevProductsHandler);
         this.loadMoreBtn.addEventListener('click', this.loadMoreHandler);
+        this.prevCatalogBtn.addEventListener('click', this.prevCatalogHandler);
+        this.nextCatalogBtn.addEventListener('click', this.nextCatalogHandler);
     }
 
     @autobind
@@ -1114,7 +941,46 @@ export default class Homepage extends Component<HTMLDivElement> {
         history.pushState(null, "", "/shop");
         new Router();
     }
-    
 
+    createSlider(sliderWrapperId: string, itemPerView: number ) {
+        var slider = new KeenSlider(`#${sliderWrapperId}`, {
+            slides: {
+              perView: itemPerView,
+            },
+            loop: true,
+          })
+
+        this.slider = slider;
+    }
     
+    @autobind
+    initCateSlider() {
+      
+          this.slider = new KeenSlider("#categories-slider", {
+            breakpoints: {
+              "(min-width: 768px)": {
+                slides: { perView: 2, spacing: 5, },
+              },
+              "(min-width: 1000px)": {
+                slides: { perView: 3, spacing: 10 },
+              },
+              "(min-width: 1200px)": {
+                slides: { perView: 4, spacing: 12 },
+              },
+            },
+            loop: true,
+          })
+    }
+
+    @autobind
+    prevCatalogHandler() {
+        console.log(this.slider);
+        this.slider.prev();
+    }
+    
+    @autobind
+    nextCatalogHandler() {
+        console.log(this.slider);
+        this.slider.next();
+    }
 }

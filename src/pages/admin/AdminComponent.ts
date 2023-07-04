@@ -4,6 +4,7 @@ import Component from "../../components/base-component";
 import { autobind } from "../../decorators/autobind";
 import ToastMessage from "../../components/AdminToast";
 import Helper from "../../util/helper";
+import {IsString} from 'class-validator';
 
 const templateHTML = `
 `;
@@ -27,6 +28,8 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
     modal: Modal;
     deleteModal?: Modal;
     toastMsg: ToastMessage;
+
+    @IsString()
     _currentId: string = "";
 
     constructor(
@@ -46,6 +49,8 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         this.hostEl.innerHTML = this.component;
         this.clearTableData();
         this.render();
+        this.toastMsg = new ToastMessage();
+        
 
         this.tableEl = document.getElementById(this._tableElId) as HTMLTableElement;
         this.modalFormEl = document.getElementById(this._modalFormId) as HTMLDivElement;
@@ -61,10 +66,10 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         this.FormEl = document.getElementById(this._formId) as HTMLFormElement;
 
         this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
-        
         this.modal = new Modal(this.modalFormEl);
-        this.toastMsg = new ToastMessage();
-
+        
+        
+    
         this.attach();
     }
 
@@ -87,6 +92,7 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
         this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
         // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
+        this.closeToastBtn.addEventListener('click', this.hideToast)
     }
 
     abstract submitHandler(e: Event) : void;
@@ -190,15 +196,19 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
         console.log(type, title, message, minutes);
 
         this.toastMsg = new ToastMessage(type, title, message , minutes);
-        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+       
+        console.log(this.toastMsg);
+
         console.log(this.closeToastBtn);
 
-        this.closeToastBtn.addEventListener('click', this.hideToast);
         this.toastMsg.show();
     }
 
     @autobind
     hideModal() {
+
+        console.log(this.modal);
+
         this.modal.hide();
     }
 
@@ -216,11 +226,18 @@ export default abstract class AdminBaseComponent extends Component<HTMLDivElemen
     @autobind
     closeFormModal() {
         this.modal.hide();
+        this.removeBackdrop();
     }
 
     get component() {
         return templateHTML;
     }
 
-  
+    removeBackdrop() {
+        const backdropEl = document.querySelector("div[modal-backdrop]") as HTMLDivElement;
+        if(backdropEl) {
+            backdropEl.remove();
+        }
+    }
+
 }

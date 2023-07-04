@@ -1,7 +1,9 @@
 import AuthApi from '../../../api/authApi';
 import Component from '../../../components/base-component';
 import { autobind } from '../../../decorators/autobind';
-import AdminRouter from '../../../router/adminRouter';
+
+// @ts-ignore
+import JustValidate from 'just-validate';
 
 const templateHTML = `
     <!-- ===== Main Content Start ===== -->
@@ -131,11 +133,11 @@ const templateHTML = `
                                 Sign In to TechSpace
                             </h2>
 
-                            <form id="admin-login-form">
+                            <form id="admin-login-form" action="#">
                                 <div class="mb-4">
                                     <label class="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                                     <div class="relative">
-                                        <input type="email" name="email" placeholder="Enter your email"
+                                        <input type="email" id="email" name="email" placeholder="Enter your email"
                                             class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
 
                                         <span class="absolute right-4 top-4">
@@ -154,7 +156,7 @@ const templateHTML = `
                                 <div class="mb-6">
                                     <label class="mb-2.5 block font-medium text-black dark:text-white">Password</label>
                                     <div class="relative">
-                                        <input name="password" type="password" placeholder="Enter your password"
+                                        <input name="password" id="password" type="password" placeholder="Enter your password"
                                             class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" />
 
                                         <span class="absolute right-4 top-4">
@@ -196,14 +198,16 @@ const templateHTML = `
     <!-- ===== Main Content End ===== -->
 `
 export default class AdminLogin extends Component<HTMLDivElement> {
-    
+    validator: any;
     loginFormEl: HTMLFormElement;
 
     constructor() {
         super('admin-app');
         this.hostEl.innerHTML = this.component;
         this.loginFormEl = document.getElementById('admin-login-form') as HTMLFormElement; 
+        this.formValidator("admin-login-form");
         this.attach();
+       
     }
 
     get component() {
@@ -217,29 +221,40 @@ export default class AdminLogin extends Component<HTMLDivElement> {
     @autobind
     loginHandler(e: Event) {
         e.preventDefault();
+        const formEl = e.target as HTMLFormElement;
+        const formEls = formEl.elements as unknown as { [key: string]: HTMLFormElement };
+        console.log(formEls);
+
+        const email = formEls["email"].value;
+        const password = formEls["password"].value;
+    
+        const user = {
+            email,
+            password,
+        };
+
+        if(!this.validator.isValid) return;
 
         (async() => {
-
-            const formEl = e.target as HTMLFormElement;
-            const formEls = formEl.elements as unknown as { [key: string]: HTMLFormElement };
-            console.log(formEls);
-
-            const email = formEls["email"].value;
-            const password = formEls["password"].value;
-        
-            const user = {
-                email,
-                password,
-            };
-        
-            const authResponse = await AuthApi.adminLogin(user);
-            const {token, userId } = authResponse.data;
-            const expiryDate = Date.now() + 60 * 60 * 1000;
-            localStorage.setItem("adminId", userId);
-            localStorage.setItem("adminToken", token);
-            localStorage.setItem("adminExpiryDate", expiryDate.toString());
-            history.pushState(null, "", '/admin');
-            new AdminRouter();
+            try {
+             
+                const authResponse = await AuthApi.adminLogin(user);
+                const {token, userId } = authResponse.data;
+                const expiryDate = Date.now() + 60 * 60 * 1000;
+                
+                localStorage.setItem("adminId", userId);
+                localStorage.setItem("adminToken", token);
+                localStorage.setItem("adminExpiryDate", expiryDate.toString());
+                history.pushState(null, "", '/admin');
+                // new AdminRouter();
+                location.reload();
+            } 
+                catch (error) {                 
+                console.log(error);
+                const errorMessage = (error as any).response.data.message;
+                alert(errorMessage);
+                
+            }
 
             // alert("Login successfully!, navigate after 3s");
             // const timeOutId = setTimeout(() => {
@@ -249,6 +264,31 @@ export default class AdminLogin extends Component<HTMLDivElement> {
         })()
     }
 
-    
+    formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#email", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "email",
+                 }
+            ])
+            .addField("#password", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "minLength",
+                    value: 6
+                }
+            ])
+    }
 
 }

@@ -100,12 +100,16 @@ const templateHTML = `
 </div>
 `;
 
+// @ts-ignore
+import JustValidate from 'just-validate';
+
 export default class Login extends Component<HTMLDivElement>{
 
     loginFormEl: HTMLFormElement;
     linkRegisterEl: HTMLLinkElement;
     linkForgotEl: HTMLLinkElement;
     googleSignInBtn: HTMLButtonElement;
+    validator: any;
 
     constructor() {
         super('main');
@@ -114,6 +118,7 @@ export default class Login extends Component<HTMLDivElement>{
         this.linkRegisterEl = document.getElementById('linkRegister') as HTMLLinkElement;
         this.linkForgotEl = document.getElementById('navigateForgot') as HTMLLinkElement;
         this.googleSignInBtn = document.getElementById('google-signin-btn') as HTMLButtonElement;
+        this.formValidator('login-form');
         this.attach();
     }
 
@@ -127,16 +132,20 @@ export default class Login extends Component<HTMLDivElement>{
     @autobind
     loginHandler(e: Event) {
         e.preventDefault();
+
+        const formEls = e.target as unknown as {[key: string]: HTMLInputElement};
+        const email = formEls["email"].value;
+        const password = formEls["password"].value;
+
+        const user = {
+            email,
+            password,
+        };
+
+        if(!this.validator.isValid) return;
+
         (async() => {
             try {
-                const formEls = e.target as unknown as {[key: string]: HTMLInputElement};
-                const email = formEls["email"].value;
-                const password = formEls["password"].value;
-        
-                const user = {
-                    email,
-                    password,
-                };
         
                 const authResponse = await AuthApi.login(user);
                 const {token, userId } = authResponse.data;
@@ -153,6 +162,19 @@ export default class Login extends Component<HTMLDivElement>{
 
             } catch (error) {
                 console.log(error);
+
+                const errorType = (error as any).response.data.errorType;
+                const errorMessage = (error as any).response.data.message;
+
+                console.log(errorType);
+                console.log(errorMessage);
+
+                if(errorType === "email") {
+                    this.validator.showErrors({"#email": errorMessage});
+                }else if(errorType === "password") {
+                    this.validator.showErrors({"#password": errorMessage});
+                }
+
             }
         })()
 
@@ -251,5 +273,33 @@ export default class Login extends Component<HTMLDivElement>{
         new Router();
 
     }
+
+    formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#email", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "email",
+                 }
+            ])
+            .addField("#password", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "minLength",
+                    value: 6
+                }
+            ])
+    }
+
 
 }

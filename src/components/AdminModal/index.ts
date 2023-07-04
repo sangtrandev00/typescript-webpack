@@ -80,7 +80,7 @@ class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 
 
 export default class AdminModal extends Component<HTMLDivElement> {
     constructor() {
-        super('modal');
+        super('admin-modal');
         this.hostEl.innerHTML = templateHTML;
     }
 

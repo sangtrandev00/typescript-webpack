@@ -1,7 +1,3 @@
-// type GetCategoryResponse = {
-//     data: CategoryInterface
-// }
-  
   export default class User{
     constructor(
         public _id: string,

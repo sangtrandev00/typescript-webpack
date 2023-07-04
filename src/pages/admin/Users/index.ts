@@ -6,6 +6,8 @@ import DataTables from "datatables.net-dt";
 import AdminBaseComponent from "../AdminComponent";
 import ModalForm from "./components/ModalForm";
 import { autobind } from "../../../decorators/autobind";
+//@ts-ignore
+import JustValidate from 'just-validate';
 
 const templateHTML = `
 <!-- Main content wrapper -->
@@ -410,6 +412,7 @@ const templateHTML = `
 `;
 
 export default class Users extends AdminBaseComponent{
+    validator: any;
 
     constructor() {
 
@@ -522,6 +525,9 @@ export default class Users extends AdminBaseComponent{
               const password = elements["password"].value as string;
               const role = elements["role"].value as string;
               
+            //   Validate here ???
+
+
               const formData = new FormData();
 
               formData.append("name", name);
@@ -534,6 +540,11 @@ export default class Users extends AdminBaseComponent{
               if(avatarImage) {
                   formData.append("avatar", avatarImage);
               }
+
+
+              console.log("validator: ", this.validator.isValid);
+
+              if(!this.validator.isValid) return;
 
               try {
                 let response: any;
@@ -559,6 +570,9 @@ export default class Users extends AdminBaseComponent{
                 this.closeFormModal();                
                 this.showToast('success', 'Success', message);
 
+
+                console.log(this.toastMsgEl);
+
                 // Show Toast to notify here
               } catch (error) {
                 
@@ -577,8 +591,8 @@ export default class Users extends AdminBaseComponent{
                 const {message, userId} = response.data;
                 
                 this.render();
-                this.hideModal();
-                this.showToast('warning', `Delete #id: ${userId}`, message);
+                this.hideDeleteModal();
+                this.showToast('success', `Delete #id: ${userId}`, message);
                 
                 // Should i use websocket.io ?
     
@@ -592,6 +606,7 @@ export default class Users extends AdminBaseComponent{
         new ModalForm('add');
         this.showModal('add');
 
+        this.formValidator('add-user-form');
     }
 
     @autobind
@@ -627,11 +642,83 @@ export default class Users extends AdminBaseComponent{
                     console.log(error);
                 }
 
-            })()
+            })();
+
+        this.formValidator('update-user-form');
+        this.validator.removeField("#avatar");
+    }
+
+
+    formValidator(formId: string) {
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        });
+        
+        this.validator
+        .addField("#name", [
+            {
+                rule: "required",
+            }, 
+            {
+                rule: "minLength",
+                value: 3,
+            }
+        ])
+        .addField("#email", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "email"
+            }
+        ])
+        .addField("#phone", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minNumber",
+                value: 10,
+                errorMessage: "Phone number is not correct at least 10 number"
+            },
+         
+        ])
+        .addField("#address", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minLength",
+                value: 3,
+            }
+        ])
+        .addField("#password", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minLength",
+                value: 8
+            },
+       
+        ])
+        .addField("#avatar", [
+            {
+                rule: "minFilesCount",
+                value: 1
+            },
+        ])
+        .addField("#role ", [
+            {
+                rule: "required",
+            },
+        ])
+        
     }
 
     get component() {
         return templateHTML;
     }
+
 
 }

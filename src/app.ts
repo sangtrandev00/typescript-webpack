@@ -1,4 +1,5 @@
 import "flowbite";
+import 'keen-slider/keen-slider.min.css';
 
 import { initTE, Modal, Ripple, Toast, Tab, Carousel, Sidenav, Collapse, Dropdown,Select, Input } from "tw-elements";
 
@@ -12,7 +13,9 @@ import AdminRouter from "./router/adminRouter";
 import AdminModal from "./components/AdminModal";
 import Helper from "./util/helper";
 import Auth from "./pages/site/Auth";
-
+import ToastMessage from "./components/AdminToast";
+import AuthenticateAdmin from "./pages/admin/Auth";
+// import AuthenticateAdmin from "./pages/admin/Auth";
 export default class App {
 
     modalWrapperEl: HTMLDivElement;
@@ -29,6 +32,10 @@ export default class App {
       const pathName = url.pathname;
     
       if(pathName.startsWith("/admin")) {
+
+        const authAdmin = new AuthenticateAdmin();
+        authAdmin.authenticateAdmin();
+
         this.initAdmin();
       }else {
         this.initSite();
@@ -42,6 +49,9 @@ export default class App {
       this.authUser.login();
         // Start init 
         this.initCart();
+      
+
+        // init admin authenticate
 
     }
 
@@ -81,6 +91,8 @@ export default class App {
     }
 
     initAdmin() {
+      
+
       this.siteAppEl.remove();
       // Init adminHeader
       new AdminHeader();
@@ -89,7 +101,7 @@ export default class App {
       new AdminModal();
       // Init adminSideBar
       // Init Admin content
-     
+     new ToastMessage();
     }
 
 

@@ -5,6 +5,9 @@ import { autobind } from "../../../../decorators/autobind";
 import AuthApi from "../../../../api/authApi";
 import Router from "../../../../router/router";
 
+// @ts-ignore
+import JustValidate from 'just-validate';
+
 
 const ButtonEl = new Button("submit", "UPDATE");
 const PasswordInput = new Input("password","password", "password", "Password", "", "Password");
@@ -46,13 +49,17 @@ const templateHTML = `
 
 `;
 
+
 export default class ResetPass extends Component<HTMLDivElement> {
 
     resetFormEl: HTMLFormElement;
+    validator: any;
+
     constructor() {
         super('main');
         this.hostEl.innerHTML = templateHTML;
         this.resetFormEl = document.getElementById("reset-password-form") as HTMLFormElement;
+        this.formValidator("reset-password-form");
         this.attach();
     }
 
@@ -67,13 +74,16 @@ export default class ResetPass extends Component<HTMLDivElement> {
         (async() => {
 
             try {            
-        e.preventDefault();
+      
         const url = new URL(location.href);
         const passwordToken = url.searchParams.get("token");
         const formEl = e.target as HTMLFormElement;
         const formEls = formEl.elements as unknown as {[key: string]: HTMLInputElement};
         const password = formEls["password"].value;
+        
         const { userId } = JSON.parse(localStorage.getItem("user") as string);
+        
+        if(!this.validator.isValid) return;
         
         const response = await AuthApi.updatePassword({ password, passwordToken, userId });
 
@@ -86,7 +96,7 @@ export default class ResetPass extends Component<HTMLDivElement> {
             // Render to UI here!!! when have enough time!!!
             console.log("Redirect after: ", Math.trunc((redirectTimer - Date.now()) / 1000));
 
-            if (Math.trunc((redirectTimer - Date.now()) / 1000) === 0) {
+            if (Math.trunc((redirectTimer - Date.now()) / 1000) <= 0) {
                 history.pushState(null,'' , `/login`);
                 new Router();
                 clearInterval(timeInterval);
@@ -101,6 +111,24 @@ export default class ResetPass extends Component<HTMLDivElement> {
 
         })()
 
+    }
+
+
+    formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#password", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "strongPassword",
+                 }
+            ])
     }
 
 

@@ -10,6 +10,8 @@ import Editor from "./components/Editor";
 import CategoriesApi from "../../../api/categoriesApi";
 import { CategoryInterface } from "../../../interface/Category";
 
+//@ts-ignore
+import JustValidate from 'just-validate';
 // import { BACKEND_URL } from "../../../constant/backend-domain";
 
 const templateHTML = `
@@ -264,11 +266,9 @@ const templateHTML = `
 </main>
 `;
 export default class Products extends AdminBaseComponent{
-
+    validator: any;
     fullDescEditor: any;
     shortDescEditor: any;
-    updateShortDescEditor: any;
-    updateFullDescEditor: any;
 
     constructor() {
         super(
@@ -289,8 +289,6 @@ export default class Products extends AdminBaseComponent{
             block: 'end',
         })
 
-       this.getEditorData();
-       this.getEditorUpdateData();
     }
 
     // override method
@@ -347,7 +345,7 @@ export default class Products extends AdminBaseComponent{
                   `,
                 ];
               });
-          
+              this.clearTableData();
               this.dataTable = new DataTables("#table-products", {
                 dom: '<"top"<"row"<"col-md-6"l><"col-md-6 text-right"f>>B>rt<"bottom"p>',
                 data: tableRows,
@@ -371,47 +369,40 @@ export default class Products extends AdminBaseComponent{
           renderProductsList();
     }
 
-    // attach(): void {
-
-    //     console.log(this.tableEl);
-
-    //     this.tableEl.addEventListener('click', this.clickHandler);
-    //     this.createBtn.addEventListener('click', this.addHandler);
-    // }
-
     @autobind
     submitHandler(e: Event) {
 
         e.preventDefault();
 
-        const ProductForm = e.target as HTMLFormElement;
-
-        const typeForm = ProductForm.getAttribute('id');
-
-        const shortDesc = this.shortDescEditor.getData;
-
-        const fullDesc = this.fullDescEditor.getData;
-
         // Add/update category logic
         (async () => {
+            
+            const ProductForm = e.target as HTMLFormElement;
+
+            const typeForm = ProductForm.getAttribute('id');
+    
+            const shortDesc = this.shortDescEditor.getData;
+    
+            const fullDesc = this.fullDescEditor.getData;
+    
             const elements = (ProductForm).elements as unknown as {
                 [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLAreaElement | File
               };
-
+    
               let images: File[] | any;
     
               if (elements["images"]) {
                 images = (elements["images"] as HTMLInputElement).files;
               }
-
+    
               const name = (elements["name"] as HTMLInputElement).value as string;
               const stockQty = (elements["quantity"] as HTMLInputElement).value as string;
               const oldPrice = (elements["price"] as HTMLInputElement).value as string;
               const categoryId = (elements["category"] as HTMLSelectElement).value as string;
               const discount = (elements["discount"] as HTMLSelectElement).value as string;
- 
+    
               const formData = new FormData();
-
+    
               formData.append("name", name);
               formData.append("stockQty", stockQty);
               formData.append("oldPrice", oldPrice);
@@ -419,18 +410,27 @@ export default class Products extends AdminBaseComponent{
               formData.append('fullDesc', fullDesc);
               formData.append('categoryId', categoryId);
               formData.append('discount', discount);
-
+    
                 console.log(images);
-
+    
               for (let i = 0; i < images.length; i++) {
                 formData.append("images[]", images[i]);
               }
+    
+              console.log(this.validator);
+              
+              console.log(this.validator.isValid);
+    
+              if(!this.validator.isValid) return; 
 
               try {
+
                 let response: any;
+
                 if(typeForm === "update-product-form") {
                     
                     const oldImage = (elements['oldImages'] as HTMLInputElement).value as string;
+                    
                     formData.append("oldImages", oldImage);
 
                     // Update cate call API
@@ -446,12 +446,10 @@ export default class Products extends AdminBaseComponent{
 
                 // Handle add toast here!!
 
-                this.clearTableData();
-
                 this.render();
                 this.closeFormModal();                
                 this.showToast('success', 'Success', message);
-
+                this.removeBackdrop();
                 // Show Toast to notify here
               } catch (error) {
                 
@@ -462,15 +460,11 @@ export default class Products extends AdminBaseComponent{
 
     }
 
-    getEditorData() {
+    configEditorData() {
         this.shortDescEditor = new Editor('#shortDescription');
         this.fullDescEditor = new Editor('#fullDescription');
     }
 
-    getEditorUpdateData() {
-        this.updateShortDescEditor = new Editor('#update-product-form #shortDescription');
-        this.updateFullDescEditor = new Editor('#update-product-form #fullDescription');
-    }
 
     async renderCateList () {
             const selectElement = document.getElementById("categorySelectId")! as HTMLSelectElement;
@@ -494,10 +488,11 @@ export default class Products extends AdminBaseComponent{
     addHandler(): void {
         new ModalForm('add');
         this.showModal('add');
+          // get editor Value
+        this.configEditorData();
 
-        // get editor Value
-        this.getEditorData();
-
+        this.formValidator("add-product-form");
+      
        (async () => {
         await this.renderCateList();
        })()
@@ -505,11 +500,12 @@ export default class Products extends AdminBaseComponent{
     }
 
 
+    @autobind
     editHandler(): void {
         new ModalForm('update');
         this.showModal('update');
 
-        this.getEditorUpdateData();
+        this.configEditorData();
 
         const updateProductForm = document.getElementById('update-product-form') as HTMLFormElement;
 
@@ -519,7 +515,7 @@ export default class Products extends AdminBaseComponent{
                 const response = await ProductsApi.getById(this._currentId);
                 const {product} = response.data;
 
-                const {name, discount, stockQty, oldPrice, categoryId, images} =
+                const {name, discount, stockQty, oldPrice, categoryId, images, shortDesc, fullDesc} =
                   product;
         
                 // const selectCateEl = document.querySelector("#update-product-form #categorySelectId");
@@ -536,24 +532,17 @@ export default class Products extends AdminBaseComponent{
                 elements["discount"].value = discount;
                 elements["category"].value = categoryId;
                 elements["oldImages"].value = images;
-                // elements["shortDesc"].innerText = shortDesc;
-                // elements["fullDesc"].innerText = fullDesc;
-                // console.log(this.updateShortDescEditor);
-                // console.log(this.updateFullDescEditor);
-                // this.updateShortDescEditor.getData();
-                // this.updateFullDescEditor.getData();
-
-                // this.updateShortDescEditor.setData(shortDesc);
-                // this.updateFullDescEditor.setData(fullDesc);
-           
-             
+                this.shortDescEditor.setData = shortDesc;
+                this.fullDescEditor.setData = fullDesc;
+  
               } catch (error) {
                 console.log(error);
               }
 
         })()
 
-
+        this.formValidator('update-product-form');
+        this.validator.removeField("#images");
     }
 
     @autobind
@@ -568,9 +557,10 @@ export default class Products extends AdminBaseComponent{
 
                 const {message, productId} = response.data;
              
-                this.showToast('warning', `Delete #id: ${productId}`, message);
+                this.showToast('success', `Delete #id: ${productId}`, message);
                 this.hideDeleteModal();
                 this.render();
+                this.removeBackdrop();
                 // Remove product from DOM here!!!
                 // Should i use websocket.io ?
               } catch (error) {
@@ -578,9 +568,94 @@ export default class Products extends AdminBaseComponent{
               }
         })()
     }
+
     get component() {
         return templateHTML;
     }
 
+    formValidator(formId: string) {
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+          });
+        
+        this.validator
+        .addField("#name", [
+            {
+                rule: "required",
+            }, 
+            {
+                rule: "minLength",
+                value: 3,
+            }
+        ])
+        .addField("#quantity", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minNumber",
+                value: 1,
+                errorMessage: "Quantity must be greater than 0"                
+            }
+        ])
+        .addField("#price", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minNumber",
+                value: 1,
+                errorMessage: "Price must be greater than 0"
+            }
+        ])
+        .addField("#discount", [
+            {
+                rule: "required",
+            },
+            {
+                rule: "minNumber",
+                value: 0,
+                errorMessage: "Discount must be greater or equal than 0"
+            }
+        ])
+        .addField("#categorySelectId", [
+            {
+                rule: "required",
+            },
+        ])
+        .addField("#images", [
+            {
+                rule: "minFilesCount",
+                value: 1
+            },
+        ])
+        // Wrong here!!!
+        // .addField("#shortDescription ", [
+        //     {
+        //         rule: "required",
+        //     },
+        //     {
+        //         rule: "minLength",
+        //         value: 10
+        //     }
+        // ]).
+        // addField("#fullDescription", [
+        //     {
+        //         rule: "required",
+        //     },
+        //     {
+        //         rule: "minLength",
+        //         value: 10
+        //     }
+        // ])
+        
+    }
+
+    removeBackdrop() {
+        const modalBackdropEl = document.querySelector("div[modal-backdrop]") as HTMLDivElement;
+        if(modalBackdropEl) {
+            modalBackdropEl.remove();
+        }
+    }
 
 }

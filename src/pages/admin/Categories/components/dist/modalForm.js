@@ -31,7 +31,7 @@ var Form = /** @class */ (function () {
     }
     Object.defineProperty(Form.prototype, "component", {
         get: function () {
-            return "\n        <form action=\"#\" id=\"" + this._id + "\">\n                        <div class=\"grid gap-4 mb-4 sm:grid-cols-2\">\n                            " + this.CateNameInput.component + "\n                           " + this.CateImageInput.component + "\n                           " + this.CateOldImages.component + "\n                           " + this.CateDesc.component + "\n                        </div>\n                        " + this.SubmitBtn.component + "\n        </form>\n        ";
+            return "\n        <form action=\"#\" id=\"" + this._id + "\" autocomplete=\"off\" novalidate=\"novalidate\">\n                        <div class=\"grid gap-4 mb-4 sm:grid-cols-2\">\n                            " + this.CateNameInput.component + "\n                           " + this.CateImageInput.component + "\n                           " + this.CateOldImages.component + "\n                           " + this.CateDesc.component + "\n                        </div>\n                        " + this.SubmitBtn.component + "\n        </form>\n        ";
         },
         enumerable: false,
         configurable: true

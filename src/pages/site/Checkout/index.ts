@@ -10,6 +10,10 @@ import { OrderInterface } from "../../../interface/Order";
 import Router from "../../../router/router";
 import Helper from "../../../util/helper";
 
+// @ts-ignore
+import JustValidate from 'just-validate';
+
+
 const templateHTML = `
 <div class="checkout-content py-12">
 <div class="grid sm:px-10 lg:grid-cols-2 shadow-md border">
@@ -226,6 +230,7 @@ export default class Checkout extends Component<HTMLDivElement> {
     cart?: ICart;
     cartList?: CartItem[] = [];
     userId?: string;
+    validator: any;
 
     constructor() {
         super("main");
@@ -256,6 +261,7 @@ export default class Checkout extends Component<HTMLDivElement> {
 
         this.userId = localStorage.getItem("userId") as string;
 
+        this.formValidator('order-form');
         this.renderOrder();
         this.attach();
     }
@@ -420,34 +426,91 @@ export default class Checkout extends Component<HTMLDivElement> {
               return acc + (cartItem.qty as number || 0 ) * (cartItem.price as number || 0 );
             }, 0);
         
-            // Using Promise.all to resolve concerruntly promises
-            const productsList = await Promise.all(promisesProducts);
-  
-            products.items = productsList;
-  
-            const order : OrderInterface = {
-              paymentMethod,
-              note,
-              user,
-              products: products,
-            };
-        
-            const response = await ShopApi.createOrder(order);
-        
-            const {
-              order: { _id },
-            } = response.data;
-        
-            // Clear cart
-            localStorage.removeItem("cart");
-        
-            // Minus stockQty at databasae
-  
-            history.pushState(null, "", `./order-completed?id=${_id}`);
-            new Router()
+           
+            try {
+                 // Using Promise.all to resolve concerruntly promises
+                const productsList = await Promise.all(promisesProducts);
+    
+                products.items = productsList;
+    
+                const order : OrderInterface = {
+                paymentMethod,
+                note,
+                user,
+                products: products,
+                };
+
+                if(!this.validator.isValid) return;
+            
+                const response = await ShopApi.createOrder(order);
+            
+                const {
+                order: { _id },
+                } = response.data;
+            
+                // Clear cart
+                localStorage.removeItem("cart");
+            
+                // Minus stockQty at databasae
+    
+                history.pushState(null, "", `./order-completed?id=${_id}`);
+                new Router()
+            } catch (error) {
+                console.log(error);
+            }
+
         })();
             
       };
+
+
+      formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#email", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "email",
+                 }
+            ])
+            .addField("#fullName", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "minLength",
+                    value: 8
+                }
+            ])
+            .addField("#phone", [
+                {
+                    rule: "required",
+                }
+                , 
+                {
+                    rule: "minLength",
+                    value: 8
+                }
+            ])
+            .addField("#Note", [
+                {
+                    rule: "required",
+                }, 
+
+                {
+                    rule: "minLength",
+                    value: 8
+                }
+            ])
+    }
+
 
 }
 

@@ -3,6 +3,10 @@ import Button from "../components/Button"
 import Component from "../../../../components/base-component";
 import { autobind } from "../../../../decorators/autobind";
 import AuthApi from "../../../../api/authApi";
+
+// @ts-ignore
+import JustValidate from 'just-validate';
+
 const EmailInput = new Input("email", "email","email", "Email Address", "", "Email Address");
 const ButtonEl = new Button("submit", "RESET");
 
@@ -46,12 +50,14 @@ const templateHTML = `
 export default class Reset extends Component<HTMLDivElement> {
 
     resetFormEl: HTMLFormElement;
+    validator: any;
 
     constructor() {
         super('main');
         this.hostEl.innerHTML = templateHTML;
 
         this.resetFormEl = document.getElementById('reset-form') as HTMLFormElement;
+        this.formValidator("reset-form");
         this.attach();
     }
 
@@ -70,9 +76,21 @@ export default class Reset extends Component<HTMLDivElement> {
             const rootUrl = window.location.origin;
             
             const resetPassUrl = `${rootUrl}/reset`;
+
+            if(!this.validator.isValid) return;
+            
             (async() => {
 
             try {
+
+                const isExistingRes = await AuthApi.checkExisingUser({ email, providerId: "local" });
+
+                if(isExistingRes.data.result === "not found") {
+                    alert("Email not found at this website");
+                    this.validator.showErrors({"#email": "Email not found at this website"});
+                    return;
+                }
+
                 const response = await AuthApi.sendEmailReset({ email, resetPassUrl });
                 const {
                   user: { _id },
@@ -102,5 +120,23 @@ export default class Reset extends Component<HTMLDivElement> {
         })()
 
     }
+
+    formValidator(formId: string) {
+
+        this.validator = new JustValidate(`#${formId}`, {
+            validateBeforeSubmitting: true,
+        })
+
+        this.validator
+            .addField("#email", [
+                {
+                    rule: "required",
+                },
+                 {
+                    rule: "email",
+                 }
+            ])
+    }
+
 
 }

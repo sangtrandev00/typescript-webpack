@@ -24,6 +24,7 @@ var base_component_1 = require("../../components/base-component");
 var autobind_1 = require("../../decorators/autobind");
 var AdminToast_1 = require("../../components/AdminToast");
 var helper_1 = require("../../util/helper");
+var class_validator_1 = require("class-validator");
 var templateHTML = "\n";
 var AdminBaseComponent = /** @class */ (function (_super) {
     __extends(AdminBaseComponent, _super);
@@ -43,6 +44,7 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         _this.hostEl.innerHTML = _this.component;
         _this.clearTableData();
         _this.render();
+        _this.toastMsg = new AdminToast_1["default"]();
         _this.tableEl = document.getElementById(_this._tableElId);
         _this.modalFormEl = document.getElementById(_this._modalFormId);
         _this.toastMsgEl = document.getElementById(_this._toastId);
@@ -55,7 +57,6 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         _this.FormEl = document.getElementById(_this._formId);
         _this.deleteModalEl = document.getElementById('deleteModal');
         _this.modal = new flowbite_1.Modal(_this.modalFormEl);
-        _this.toastMsg = new AdminToast_1["default"]();
         _this.attach();
         return _this;
     }
@@ -72,6 +73,7 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
         this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
         // this.closeFormModalBtn.addEventListener('click', this.closeFormModal);
+        this.closeToastBtn.addEventListener('click', this.hideToast);
     };
     AdminBaseComponent.prototype.clickHandler = function (e) {
         e.preventDefault();
@@ -144,12 +146,12 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         if (minutes === void 0) { minutes = '1 minutes'; }
         console.log(type, title, message, minutes);
         this.toastMsg = new AdminToast_1["default"](type, title, message, minutes);
-        this.closeToastBtn = document.getElementById('closeToast');
+        console.log(this.toastMsg);
         console.log(this.closeToastBtn);
-        this.closeToastBtn.addEventListener('click', this.hideToast);
         this.toastMsg.show();
     };
     AdminBaseComponent.prototype.hideModal = function () {
+        console.log(this.modal);
         this.modal.hide();
     };
     AdminBaseComponent.prototype.hideToast = function () {
@@ -160,6 +162,7 @@ var AdminBaseComponent = /** @class */ (function (_super) {
     };
     AdminBaseComponent.prototype.closeFormModal = function () {
         this.modal.hide();
+        this.removeBackdrop();
     };
     Object.defineProperty(AdminBaseComponent.prototype, "component", {
         get: function () {
@@ -168,6 +171,15 @@ var AdminBaseComponent = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    AdminBaseComponent.prototype.removeBackdrop = function () {
+        var backdropEl = document.querySelector("div[modal-backdrop]");
+        if (backdropEl) {
+            backdropEl.remove();
+        }
+    };
+    __decorate([
+        class_validator_1.IsString()
+    ], AdminBaseComponent.prototype, "_currentId");
     __decorate([
         autobind_1.autobind
     ], AdminBaseComponent.prototype, "clickHandler");

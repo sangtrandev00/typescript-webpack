@@ -700,6 +700,12 @@ export default class Shop extends Component<HTMLDivElement>{
     applyFilterBtn: HTMLButtonElement;
     prodListInstance?: ProductCardList;
 
+    showResultByCateEl: HTMLParagraphElement;
+    showResultByRangeEl: HTMLParagraphElement;
+    showResultBySortEl: HTMLParagraphElement;
+    showResultBySearchEl: HTMLParagraphElement;
+    keywordQueryEl: HTMLSpanElement;
+
     constructor() {
         super('main');
 
@@ -712,6 +718,11 @@ export default class Shop extends Component<HTMLDivElement>{
         this.cateListEl = document.getElementById("cate-list") as HTMLDivElement;
         this.filterEl = document.getElementById("shop-content__filter-bar") as HTMLDivElement;
         this.applyFilterBtn = document.getElementById("apply-filter-btn") as HTMLButtonElement;
+        this.showResultByCateEl = document.querySelector(".show-result-text__by-cate") as HTMLParagraphElement;
+        this.showResultByRangeEl = document.querySelector(".show-result-text__by-range") as HTMLParagraphElement;
+        this.showResultBySortEl = document.querySelector(".show-result-text__by-sort") as HTMLParagraphElement;
+        this.keywordQueryEl = document.getElementById('keyword') as HTMLSpanElement;
+        this.showResultBySearchEl = document.getElementById('show-result-text') as HTMLDivElement;
 
         this.renderProdList();
         this.renderCateList();
@@ -741,14 +752,15 @@ export default class Shop extends Component<HTMLDivElement>{
               case "pricedesc":
                 Helper.setParams("_sort", "oldPrice");
                 Helper.setParams("_order", "desc");
-      
                 this.sortGlobalValue = "Price descrease";
                 break;
+
               case "priceasc":
                 Helper.setParams("_sort", "oldPrice");
                 Helper.setParams("_order", "asc");
       
                 this.sortGlobalValue = "Price ascending";
+
                 break;
               case "oldest":
                 Helper.setParams("_sort", "createdAt");
@@ -766,6 +778,8 @@ export default class Shop extends Component<HTMLDivElement>{
               default:
                 break;
             }
+
+            console.log(this.sortGlobalValue);
       
             // Generate Product list here!!!
 
@@ -847,42 +861,70 @@ export default class Shop extends Component<HTMLDivElement>{
               if (_sort && _order) {
                 query._sort = _sort;
                 query._order = _order;
-                // Helper.showBySort(showResultBySort, sortGlobalValue);
+
+
+                const sort = Helper.getParams('_sort');
+                const order = Helper.getParams("_order");
+
+                let sortValueText = "";
+
+                if(sort === "createdAt") {
+
+                    if(order === "asc") {
+                        sortValueText = "Oldest products";
+                    }else if(order === "desc") {
+                        sortValueText = "Latest products";
+                    }
+
+                }else if(sort === "oldPrice") {
+
+                    if(order === "asc") {
+                        sortValueText = "Price ascending";
+                    }else if(order === "desc") {
+                        sortValueText = "Price descending";
+                        
+                    }
+
+                }
+
+                this.showBySort(this.showResultBySortEl,sortValueText);
               }
           
               if (_q) {
                 query._q = _q;
-          
-                // showResultTextEl.classList.remove("hidden");
-          
-                // keyword.innerText = _q;
+                this.showResultBySearchEl.classList.remove("hidden");
+                this.keywordQueryEl.innerText = _q;
+              }else {
+                this.keywordQueryEl.innerText = "";
               }
           
               if (_min) {
                 query._min = +_min;
           
-                // Helper.showByRange(showResultByRange, _min, _max);
+                // this.showByRange(this.showResultByRangeEl, +_min, +_max || 0);
               }
           
               if (_max) {
                 query._max = +_max;
           
-                // showByRange(showResultByRange, _min, _max);
+                // this.showByRange(this.showResultByRangeEl, _min || 0, +_max);
               }
           
               if (_cateIds) {
                 query._cateIds = _cateIds;
           
-                // showByCate(showResultByCate, _cateIds);
+                this.showByCate(this.showResultByCateEl, _cateIds);
               } else {
                 // Reset show cate
-                // showResultByCate.innerHTML = "";
+                this.showResultByCateEl.innerHTML = "";
               }
           
               console.log("query: ", query);
               this.prodListInstance = new ProductCardList(query);
                this.prodListInstance.load();
               
+              console.log(this.sortGlobalValue);
+
             } catch (error) {
               console.log(error);
             }
