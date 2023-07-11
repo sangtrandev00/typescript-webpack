@@ -1,13 +1,15 @@
+# TECHSPACE TYPESCRIPT PROJECT - B2B WEBSITE
+
 ### Links to websites:
 
 + Site:  https://techspace-ts-production.netlify.app/
 + Admin: https://techspace-ts-production.netlify.app/admin
 
 ### Technology and tools: 
-+ Html, CSS, Tailwind CSS, Typescript (OOP )
++ Html, CSS, Resposive Web Design, Tailwind CSS, Typescript (OOP )
 + Single page application
 + Build tool Webpack
-  
++ Deployment: Netlify
 ### Description
 + The updated of [(JS VERSION)](https://github.com/sangtrandev00/frontend-fullstack-es6-techspace-repo)
 

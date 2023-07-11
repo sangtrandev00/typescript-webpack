@@ -1,5 +1,5 @@
-import { autobind } from "../decorators/autobind";
-import Router from "../router/router";
+import { autobind } from '../decorators/autobind';
+import Router from '../router/router';
 
 const templateHTML = `
     <section class="bg-white dark:bg-gray-900 ">
@@ -26,38 +26,34 @@ const templateHTML = `
    
     </div>
     </section>
-`
+`;
 
 export default class ErrorPage {
+  hostEl: HTMLElement;
+  goBackBtn: HTMLButtonElement;
+  goHomeBtn: HTMLButtonElement;
+  constructor() {
+    this.hostEl = document.getElementById('main')! as HTMLElement;
+    this.hostEl.innerHTML = templateHTML;
 
-    hostEl: HTMLElement;
-    goBackBtn: HTMLButtonElement;
-    goHomeBtn: HTMLButtonElement;
-    constructor() {
-        this.hostEl = document.getElementById('main') ! as HTMLElement;
-        this.hostEl.innerHTML = templateHTML;
+    this.goBackBtn = document.getElementById('goBackBtn') as HTMLButtonElement;
+    this.goHomeBtn = document.getElementById('goHomeBtn') as HTMLButtonElement;
+    this.attach();
+  }
 
-        this.goBackBtn = document.getElementById("goBackBtn") as HTMLButtonElement;
-        this.goHomeBtn = document.getElementById("goHomeBtn") as HTMLButtonElement;
-        this.attach();
-    }
+  attach() {
+    this.goBackBtn.addEventListener('click', this.goBackHandler);
+    this.goHomeBtn.addEventListener('click', this.goHomeHandler);
+  }
 
-    attach() {
-        this.goBackBtn.addEventListener("click", this.goBackHandler);
-        this.goHomeBtn.addEventListener("click", this.goHomeHandler);
-    }
-
-    @autobind
-    goBackHandler() {
-        history.back();
-        new Router();
-    }
-    @autobind
-    goHomeHandler() {
-        history.pushState(null, "", "/");
-        new Router();
-    }
-    
-
+  @autobind
+  goBackHandler() {
+    history.back();
+    new Router();
+  }
+  @autobind
+  goHomeHandler() {
+    history.pushState(null, '', '/');
+    new Router();
+  }
 }
-
