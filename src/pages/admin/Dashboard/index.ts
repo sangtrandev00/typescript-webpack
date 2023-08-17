@@ -2,12 +2,12 @@
 // import Component from "../../../components/base-component";
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
-import { autobind } from "../../../decorators/autobind";
+import { autobind } from '../../../decorators/autobind';
 import { OrderInterface, OrderStatus } from '../../../interface/Order';
-import {Productable} from '../../../interface/Product';
+import { Productable } from '../../../interface/Product';
 import { UserInterface } from './../../../interface/User';
-import Orders from "../Orders";
-import Utilities from "../Orders/components/Utilites";
+import Orders from '../Orders';
+import Utilities from '../Orders/components/Utilites';
 import OrdersApi from '../../../api/orderApi';
 import ProductsApi from '../../../api/productsApi';
 import UsersApi from '../../../api/userApi';
@@ -421,300 +421,301 @@ const templateHTML = `
     </main>
 `;
 
-export default class Dashboard extends Orders{
+export default class Dashboard extends Orders {
+  ordersSuccess: OrderInterface[] = [];
+  products: Productable[] = [];
+  users: UserInterface[] = [];
 
-    ordersSuccess: OrderInterface[] = [];
-    products: Productable[] = [];
-    users: UserInterface[] = [];
+  totalSales: number = 0;
+  totalViews: number = 0;
+  totalProducts: number = 0;
+  totalUsers: number = 0;
+  selectedYear: number = 2023;
 
-    totalSales: number = 0;
-    totalViews: number = 0;
-    totalProducts: number = 0;
-    totalUsers: number = 0;
-    selectedYear: number = 2023;
+  hostEl: HTMLDivElement;
+  // tableEl: HTMLTableElement;
+  // viewDetailTableCartEl: HTMLDivElement;
+  tabsListEl: HTMLUListElement;
+  selectYearEl: HTMLSelectElement;
 
-    hostEl: HTMLDivElement;
-    // tableEl: HTMLTableElement;
-    // viewDetailTableCartEl: HTMLDivElement;
-    tabsListEl: HTMLUListElement;
-    selectYearEl: HTMLSelectElement;
+  myChart?: Chart;
+  myChartEl: HTMLCanvasElement;
 
-    myChart?: Chart;
-    myChartEl: HTMLCanvasElement;
+  constructor() {
+    super();
+    this.hostEl = document.getElementById('admin-content') as HTMLDivElement;
+    this.hostEl.innerHTML = templateHTML;
 
-    constructor() {
+    this.tabsListEl = document.getElementById('orders-tab-list') as HTMLUListElement;
 
-        super();
-        this.hostEl = document.getElementById('admin-content') as HTMLDivElement;
-        this.hostEl.innerHTML = templateHTML;
-        
-        this.tabsListEl = document.getElementById('orders-tab-list') as HTMLUListElement;
+    this.tableEl = document.getElementById('table-orders-status-1') as HTMLTableElement;
+    this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
+    this.viewDetailTableCartEl = document.getElementById('view-detail-cart') as HTMLDivElement;
+    this.deleteConfirmBtn = document.getElementById('deleteOrderBtn') as HTMLButtonElement;
+    this.myChartEl = document.getElementById('myChart') as HTMLCanvasElement;
+    this.closeModalBtn = document.getElementById('closeModalBtn')! as HTMLButtonElement;
+    this.closeDeleteModalBtn = document.getElementById('closeDeleteModal')! as HTMLButtonElement;
+    this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
+    this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
 
-        this.tableEl = document.getElementById('table-orders-status-1') as HTMLTableElement;
-        this.updateOrderForm = document.getElementById('update-order-form') as HTMLFormElement;
-        this.viewDetailTableCartEl = document.getElementById('view-detail-cart') as HTMLDivElement;
-        this.deleteConfirmBtn = document.getElementById('deleteOrderBtn') as HTMLButtonElement;
-        this.myChartEl = document.getElementById('myChart') as HTMLCanvasElement;
-        this.closeModalBtn = document.getElementById('closeModalBtn') ! as HTMLButtonElement;
-        this.closeDeleteModalBtn = document.getElementById('closeDeleteModal') ! as HTMLButtonElement
-        this.deleteModalEl = document.getElementById('deleteModal') as HTMLDivElement;
-        this.closeToastBtn = document.getElementById('closeToast') as HTMLButtonElement;
+    // Custom attach function here!!!
+    this.selectYearEl = document.getElementById('selectYear') as HTMLSelectElement;
 
-        // Custom attach function here!!!
-        this.selectYearEl = document.getElementById('selectYear') as HTMLSelectElement;
-     
-        this.attach();
-        this.renderSumarizedData();
+    this.attach();
+    this.renderSumarizedData();
 
-        // Init table
-        this._tableId = "table-orders-status-1";
-        this._currentOrderStatus = OrderStatus.UNCONFIRMED;
-        this.render(OrderStatus.UNCONFIRMED);
+    // Init table
+    this._tableId = 'table-orders-status-1';
+    this._currentOrderStatus = OrderStatus.UNCONFIRMED;
+    this.render(OrderStatus.UNCONFIRMED);
 
-        this.renderChart();
+    this.renderChart();
+  }
+
+  // Re init
+  attach() {
+    // super.attach();
+    this.tableEl.addEventListener('click', this.clickHandler);
+    this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
+    this.closeModalBtn.addEventListener('click', this.hideModal);
+    this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
+    this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
+
+    if (this.tabsListEl) {
+      this.tabsListEl.addEventListener('click', this.changeOrdersStatus);
+    }
+  }
+
+  @autobind
+  changeOrdersStatus(e: Event) {
+    const clickBtn = e.target as HTMLLinkElement;
+
+    const orderStatus = clickBtn.closest('li')?.dataset.orderStatus;
+
+    if (orderStatus) {
+      const result = this.selectedOrderStatus(orderStatus);
+      const { status, tableId } = result;
+      this._currentOrderStatus = status;
+      this.tableEl = document.getElementById(tableId) as HTMLTableElement;
+
+      console.log(this.tableEl);
+      console.log('order status: ', status);
+
+      this._tableId = tableId;
+      this.render(status);
+      this.attach();
+    }
+  }
+
+  selectedOrderStatus(status: string) {
+    switch (status) {
+      case 'Waiting to Confirm':
+        return {
+          status: OrderStatus.UNCONFIRMED,
+          tableId: 'table-orders-status-1',
+        };
+      case 'confirmed':
+        return {
+          status: OrderStatus.CONFIRMED,
+          tableId: 'table-orders-status-2',
+        };
+      case 'shipping':
+        return {
+          status: OrderStatus.SHIPPING,
+          tableId: 'table-orders-status-3',
+        };
+      case 'success':
+        return {
+          status: OrderStatus.SUCCESS,
+          tableId: 'table-orders-status-4',
+        };
+      case 'failed':
+        return {
+          status: OrderStatus.FAILED,
+          tableId: 'table-orders-status-5',
+        };
+      default:
+        return {
+          status: OrderStatus.ALL,
+          tableId: 'table-orders-status-1',
+        };
+    }
+  }
+
+  createChartByYear(ordersSuccess: OrderInterface[], selectedYear: number) {
+    const selectedOrders = ordersSuccess.filter((order: OrderInterface) => {
+      const yearOfOrder = new Date(order.createdAt as string).getFullYear();
+
+      return selectedYear === yearOfOrder;
+    });
+
+    const monthLabels = [];
+    const summarizedData = [];
+
+    for (let i = 1; i <= 12; i++) {
+      const currTotalSaleMonth = selectedOrders
+        .filter(order => {
+          const createdAtMonth = new Date(order.createdAt as string).getMonth() + 1;
+          return i === createdAtMonth;
+        })
+        .reduce((acc, order) => {
+          return (
+            acc +
+            order.products.totalPrice +
+            ((order.vatFee as number) || 0) +
+            ((order.shippingFee as number) || 0)
+          );
+        }, 0);
+
+      monthLabels.push('Month ' + i);
+      summarizedData.push(currTotalSaleMonth);
     }
 
-    // Re init
-    attach() {
-        // super.attach();
-        this.tableEl.addEventListener('click', this.clickHandler);
-        this.deleteConfirmBtn.addEventListener('click', this.deleteHandler);
-        this.closeModalBtn.addEventListener('click', this.hideModal);
-        this.updateOrderForm.addEventListener('submit', this.updateOrderHandler);
-        this.closeDeleteModalBtn.addEventListener('click', this.hideDeleteModal);
-        
-        if(this.tabsListEl) {
-            this.tabsListEl.addEventListener('click', this.changeOrdersStatus);
-        }
-
+    if (this.myChart) {
+      this.myChart.destroy();
     }
 
-    @autobind
-    changeOrdersStatus(e: Event) {
-
-        const clickBtn = e.target as HTMLLinkElement;
-
-        const orderStatus = clickBtn.closest('li')?.dataset.orderStatus;
-        
-        if(orderStatus) {
-
-            const result = this.selectedOrderStatus(orderStatus);
-            const {status, tableId} = result;
-            this._currentOrderStatus = status;
-            this.tableEl = document.getElementById(tableId) as HTMLTableElement;
-
-            console.log(this.tableEl);
-            console.log("order status: ", status);
-
-            this._tableId = tableId;
-            this.render(status);
-            this.attach();
-
-        }
-
-    }
-
-    selectedOrderStatus(status: string) {
-        switch (status) {
-            case "Waiting to Confirm":
-                return {
-                    status: OrderStatus.UNCONFIRMED,
-                    tableId: "table-orders-status-1"
-                };
-            case "confirmed":
-                return {
-                    status: OrderStatus.CONFIRMED,
-                    tableId: "table-orders-status-2"
-                };
-            case "shipping":
-                return {
-                    status: OrderStatus.SHIPPING,
-                    tableId: "table-orders-status-3"
-                };
-            case "success":
-                return {
-                    status: OrderStatus.SUCCESS,
-                    tableId: "table-orders-status-4"
-                };
-            case "failed":
-                return {
-                    status: OrderStatus.FAILED,
-                    tableId: "table-orders-status-5"
-                };
-            default:
-                return {
-                    status: OrderStatus.ALL,
-                    tableId: "table-orders-status-1"
-                };
-        }
-    }
-
-    createChartByYear(ordersSuccess: OrderInterface[] , selectedYear: number){
-
-
-        const selectedOrders = ordersSuccess.filter((order: OrderInterface) => {
-          const yearOfOrder = new Date(order.createdAt as string).getFullYear();
-      
-          return selectedYear === yearOfOrder;
-        });
-      
-        const monthLabels = [];
-        const summarizedData = [];
-      
-        for (let i = 1; i <= 12; i++) {
-          const currTotalSaleMonth = selectedOrders
-            .filter((order) => {
-              const createdAtMonth = new Date(order.createdAt as string).getMonth() + 1;
-              return i === createdAtMonth;
-            })
-            .reduce((acc, order) => {
-              return acc + order.products.totalPrice + (order.vatFee as number || 0 ) + (order.shippingFee as number || 0);
-            }, 0);
-      
-          monthLabels.push("Month " + i);
-          summarizedData.push(currTotalSaleMonth);
-        }
-      
-        if (this.myChart) {
-          this.myChart.destroy();
-        }
-      
-        this.myChart = new Chart(this.myChartEl, {
-          type: "bar",
-          data: {
-            labels: monthLabels,
-            datasets: [
-              {
-                label: `Our sale in ${selectedYear}`,
-                data: summarizedData,
-                borderWidth: 1,
-                backgroundColor: [
-                  "rgba(255, 99, 132, 0.2)",
-                  "rgba(255, 159, 64, 0.2)",
-                  "rgba(255, 205, 86, 0.2)",
-                  "rgba(75, 192, 192, 0.2)",
-                  "rgba(54, 162, 235, 0.2)",
-                  "rgba(153, 102, 255, 0.2)",
-                  "rgba(201, 203, 207, 0.2)",
-                  "rgba(210,105,30, 0.2)",
-                  "rgba	(112,128,144, 0.2)",
-                  "rgba(0,128,128, 0.2)",
-                  "rgba(46,139,87, 0.2)",
-                  "rgba(138,43,226, 0.2)",
-                ],
-                borderColor: [
-                  "rgb(255, 99, 132)",
-                  "rgb(255, 159, 64)",
-                  "rgb(255, 205, 86)",
-                  "rgb(75, 192, 192)",
-                  "rgb(54, 162, 235)",
-                  "rgb(153, 102, 255)",
-                  "rgb(201, 203, 207)",
-                  "rgb(210,105,30)",
-                  "rgb(112,128,144)",
-                  "rgb(0,128,128)",
-                  "rgb(46,139,87)",
-                  "rgb(138,43,226)",
-                ],
-              },
+    this.myChart = new Chart(this.myChartEl, {
+      type: 'bar',
+      data: {
+        labels: monthLabels,
+        datasets: [
+          {
+            label: `Our sale in ${selectedYear}`,
+            data: summarizedData,
+            borderWidth: 1,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)',
+              'rgba(210,105,30, 0.2)',
+              'rgba	(112,128,144, 0.2)',
+              'rgba(0,128,128, 0.2)',
+              'rgba(46,139,87, 0.2)',
+              'rgba(138,43,226, 0.2)',
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)',
+              'rgb(210,105,30)',
+              'rgb(112,128,144)',
+              'rgb(0,128,128)',
+              'rgb(46,139,87)',
+              'rgb(138,43,226)',
             ],
           },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
           },
-        });
-    };
+        },
+      },
+    });
+  }
 
-    // Render chart and sales and qty orders by status (confirmed, unconfirm,...)
-    renderChart() {
+  // Render chart and sales and qty orders by status (confirmed, unconfirm,...)
+  renderChart() {
+    (async () => {
+      try {
+        const response = await OrdersApi.getAll({});
 
-        (async () => {
+        const { orders } = response.data;
+        this.ordersSuccess = orders.filter(
+          (order: OrderInterface) => order.status === OrderStatus.SUCCESS,
+        );
 
-            try {
-                const response = await OrdersApi.getAll({});
+        const qtyOrdersFailed = orders.filter(
+          (order: OrderInterface) => order.status === OrderStatus.FAILED,
+        ).length;
+        const qtyOrdersUnconfirmed = orders.filter(
+          (order: OrderInterface) => order.status === OrderStatus.UNCONFIRMED,
+        ).length;
+        const qtyOrdersConfirmed = orders.filter(
+          (order: OrderInterface) => order.status === OrderStatus.CONFIRMED,
+        ).length;
+        const qtyOrdersShipping = orders.filter(
+          (order: OrderInterface) => order.status === OrderStatus.SHIPPING,
+        ).length;
 
-                const {orders} = response.data;
-                this.ordersSuccess = orders.filter((order: OrderInterface) => order.status === OrderStatus.SUCCESS);
+        Helper.textContent('failedQty', qtyOrdersFailed);
+        Helper.textContent('successQty', this.ordersSuccess.length.toString());
+        Helper.textContent('confirmedQty', qtyOrdersConfirmed);
+        Helper.textContent('unconfirmedQty', qtyOrdersUnconfirmed);
+        Helper.textContent('shippingQty', qtyOrdersShipping);
 
-                const qtyOrdersFailed = orders.filter((order: OrderInterface) => order.status === OrderStatus.FAILED).length;
-                const qtyOrdersUnconfirmed = orders.filter((order: OrderInterface) => order.status === OrderStatus.UNCONFIRMED).length;
-                const qtyOrdersConfirmed = orders.filter((order: OrderInterface) => order.status === OrderStatus.CONFIRMED).length;
-                const qtyOrdersShipping = orders.filter((order: OrderInterface) => order.status === OrderStatus.SHIPPING).length;
+        this.createChartByYear(this.ordersSuccess, this.selectedYear);
 
-                Helper.textContent("failedQty", qtyOrdersFailed);
-                Helper.textContent("successQty", this.ordersSuccess.length.toString());
-                Helper.textContent("confirmedQty", qtyOrdersConfirmed);
-                Helper.textContent("unconfirmedQty", qtyOrdersUnconfirmed);
-                Helper.textContent("shippingQty", qtyOrdersShipping);
+        // Calculate total sales here !!!
+        const totalSales = this.ordersSuccess.reduce(
+          (acc, order) =>
+            acc +
+            order.products.totalPrice +
+            ((order.vatFee as number) || 0) +
+            ((order.shippingFee as number) || 0),
+          0,
+        );
+        this.totalSales = totalSales;
 
-                this.createChartByYear(this.ordersSuccess, this.selectedYear);
+        Helper.textContent('totalSale', `$${totalSales.toFixed(2)} `);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
 
-                // Calculate total sales here !!!
-                const totalSales = this.ordersSuccess.reduce(
-                    (acc, order) => acc + order.products.totalPrice + (order.vatFee as number || 0 )  + (order.shippingFee as number || 0),
-                    0
-                  );
-                this.totalSales = totalSales;
-        
-                Helper.textContent("totalSale", `$${totalSales.toFixed(2)} `);
+  // @autobind
+  // changeChartHandler(e: Event) {
 
-            } catch (error) {
-                console.log(error);
-            }
+  //     console.log(e.target);
 
-        })()
+  //     // const selectedYear = e.target as HTMLSelectElement;
+  //     // this.selectedYear = +selectedYear.value;
+  //     // this.renderChart();
+  // }
 
-    }
+  renderSumarizedData() {
+    (async () => {
+      await this.calcTotalProducts();
+      this.calcTotalUsers();
+      this.calcTotalViews();
+    })();
+  }
 
+  calcTotalViews() {
+    const totalViews = this.products.reduce(
+      (acc, product) => acc + ((product.views as number) || 0),
+      0,
+    );
+    this.totalViews = totalViews;
+    Helper.textContent('totalViews', totalViews.toString());
+  }
 
-    // @autobind
-    // changeChartHandler(e: Event) {
-        
-    //     console.log(e.target);
+  calcTotalUsers() {
+    (async () => {
+      const response = await UsersApi.getAll();
+      const { users } = response.data;
+      this.totalUsers = users.length;
+      Helper.textContent('totalUsers', users.length);
+    })();
+  }
 
-    //     // const selectedYear = e.target as HTMLSelectElement;
-    //     // this.selectedYear = +selectedYear.value;
-    //     // this.renderChart();
-    // }
-
-    renderSumarizedData() {
-        (async() => {
-            await this.calcTotalProducts();
-            this.calcTotalUsers();
-            this.calcTotalViews();
-
-        })()
-    }
-
-    calcTotalViews() {
-
-        const totalViews = this.products.reduce((acc, product) => acc + (product.views as number || 0), 0);
-        this.totalViews = totalViews;
-        Helper.textContent("totalViews", totalViews.toString());
-    }
-
-    calcTotalUsers() {
-        (async () => {
-            const response = await UsersApi.getAll();
-            const {users} = response.data;
-            this.totalUsers = users.length;
-            Helper.textContent("totalUsers", users.length);
-        })()
-    }
-
-   async calcTotalProducts() {
-            const response = await ProductsApi.getAll({});
-            const {products} = response.data;
-            this.products = products;
-            this.totalProducts = products.length;
-            Helper.textContent("totalProducts", products.length);
-    }
-
-
-
-
+  async calcTotalProducts() {
+    const response = await ProductsApi.getAll({});
+    const { products } = response.data;
+    this.products = products;
+    this.totalProducts = products.length;
+    Helper.textContent('totalProducts', products.length);
+  }
 }

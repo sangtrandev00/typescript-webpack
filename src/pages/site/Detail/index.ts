@@ -803,7 +803,7 @@ export default class Detail extends Component<HTMLDivElement>  {
 
     render(): void {
         const asyncRender = async () => {
-            const response = await ProductsApi.getById(this._id);
+        const response = await ProductsApi.getById(this._id);
             
             const {product} = response.data;
         const { thumbnail, images, name, oldPrice, discount, shortDesc, fullDesc, stockQty, views } = product;

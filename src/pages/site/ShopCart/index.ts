@@ -1,9 +1,9 @@
-import Component from "../../../components/base-component";
-import { BACKEND_URL } from "../../../constant/backend-domain";
-import { autobind } from "../../../decorators/autobind";
-import { ICart, CartItem } from "../../../interface/Cart";
-import Router from "../../../router/router";
-import Helper from "../../../util/helper";
+import Component from '../../../components/base-component';
+import { BACKEND_URL } from '../../../constant/backend-domain';
+import { autobind } from '../../../decorators/autobind';
+import { ICart, CartItem } from '../../../interface/Cart';
+import Router from '../../../router/router';
+import Helper from '../../../util/helper';
 
 const templateHTML = `
     <div class="shopping-cart bg-gray-100">
@@ -63,48 +63,46 @@ const templateHTML = `
     </div>
 
     </div>
-`
+`;
 
-export default class ShopCart extends Component<HTMLDivElement>{
-    
-    viewCartEl: HTMLDivElement;
-    checkoutBtn: HTMLLinkElement;
-    constructor() {
-        super('main');
-        this.hostEl.innerHTML = templateHTML;
-        this.viewCartEl = document.getElementById('view-cart') as HTMLDivElement;
-        this.checkoutBtn = document.getElementById('checkoutBtn') as HTMLLinkElement;
-        this.renderCart();
+export default class ShopCart extends Component<HTMLDivElement> {
+  viewCartEl: HTMLDivElement;
+  checkoutBtn: HTMLLinkElement;
 
-        this.attach();
-    }
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
+    this.viewCartEl = document.getElementById('view-cart') as HTMLDivElement;
+    this.checkoutBtn = document.getElementById('checkoutBtn') as HTMLLinkElement;
+    this.renderCart();
 
-    attach() {
-        this.viewCartEl.addEventListener('click', this.clickHandler);
-        this.checkoutBtn.addEventListener('click', this.moveToCheckout);
-    }
+    this.attach();
+  }
 
-    renderCart(){
+  attach() {
+    this.viewCartEl.addEventListener('click', this.clickHandler);
+    this.checkoutBtn.addEventListener('click', this.moveToCheckout);
+  }
 
-        (async() => {
-        
-        const localCart = localStorage.getItem("cart");
-        if(!localCart) return;
-        
-        const cart = JSON.parse(localCart) as ICart;
-      
-        const cartList = cart.cartList as CartItem[];
-      
-        await Helper.listCartHandler(cartList, this.viewCartEl, this.insertCart);
-      
-        // Calculate cart Item and number of items in cart!.
-        const { totalPrice, cartLength } = Helper.calcTotalAndLengthOfCart(cartList);
-      
-        Helper.textContent("cartQty", cartLength.toString());
-        Helper.textContent("summaryTotal", `$${totalPrice.toFixed(2)}`);
-        Helper.textContent("totalCost", `$${totalPrice.toFixed(2)}`);
-      
-        const continueShopEl = `
+  renderCart() {
+    (async () => {
+      const localCart = localStorage.getItem('cart');
+      if (!localCart) return;
+
+      const cart = JSON.parse(localCart) as ICart;
+
+      const cartList = cart.cartList as CartItem[];
+
+      await Helper.listCartHandler(cartList, this.viewCartEl, this.insertCart);
+
+      // Calculate cart Item and number of items in cart!.
+      const { totalPrice, cartLength } = Helper.calcTotalAndLengthOfCart(cartList);
+
+      Helper.textContent('cartQty', cartLength.toString());
+      Helper.textContent('summaryTotal', `$${totalPrice.toFixed(2)}`);
+      Helper.textContent('totalCost', `$${totalPrice.toFixed(2)}`);
+
+      const continueShopEl = `
           <a  href="./shop.html" class="flex font-semibold text-indigo-600 text-sm my-5">
       
           <svg class="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512">
@@ -114,15 +112,21 @@ export default class ShopCart extends Component<HTMLDivElement>{
             Continue Shopping
           </a>
         `;
-      
-        this.viewCartEl.insertAdjacentHTML("beforeend", continueShopEl);
 
-        })()
-        
-    };
+      this.viewCartEl.insertAdjacentHTML('beforeend', continueShopEl);
+    })();
+  }
 
-    insertCart(prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number) {
-        const cartItemHtml = `
+  insertCart(
+    prodId: string,
+    name: string,
+    thumbnail: string,
+    cateName: string,
+    qty: number,
+    price: number,
+    totalItem: number,
+  ) {
+    const cartItemHtml = `
             <div prod-id=${prodId} class="cart-row flex items-center hover:bg-gray-100 -mx-8 px-6 py-3">
                 <div class="flex w-2/5">
                     <div class="w-20">
@@ -149,100 +153,100 @@ export default class ShopCart extends Component<HTMLDivElement>{
                             d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
                     </svg>
                 </div>
-                <span class="text-center w-1/5 font-semibold text-sm">$<span class="price-item">${price.toFixed(2)}</span> </span>
-                <span class="text-center w-1/5 font-semibold text-sm">$<span class="total-item">${totalItem.toFixed(2)}</span></span>
+                <span class="text-center w-1/5 font-semibold text-sm">$<span class="price-item">${price.toFixed(
+                  2,
+                )}</span> </span>
+                <span class="text-center w-1/5 font-semibold text-sm">$<span class="total-item">${totalItem.toFixed(
+                  2,
+                )}</span></span>
             </div>
             `;
 
-        return cartItemHtml;
+    return cartItemHtml;
+  }
+
+  @autobind
+  clickHandler(e: Event) {
+    e.preventDefault();
+
+    const actionBtn = e.target as HTMLElement;
+
+    if (actionBtn && actionBtn.classList.contains('remove-link')) {
+      this.removeCart(actionBtn);
     }
 
-    @autobind
-    clickHandler(e: Event) {
-        e.preventDefault();
-
-        const actionBtn = e.target as HTMLElement;
-
-        if(actionBtn && actionBtn.classList.contains("remove-link")) {
-            this.removeCart(actionBtn);
-        }
-
-        if(actionBtn && actionBtn.classList.contains("change-qty-btn")) {
-            this.updateCart(actionBtn);
-        }
-
-
+    if (actionBtn && actionBtn.classList.contains('change-qty-btn')) {
+      this.updateCart(actionBtn);
     }
+  }
 
-    removeCart(actionBtn: HTMLElement) {
-        const cartRow = actionBtn.closest(".cart-row");
-      const prodId = cartRow?.getAttribute("prod-id");
+  removeCart(actionBtn: HTMLElement) {
+    const cartRow = actionBtn.closest('.cart-row');
+    const prodId = cartRow?.getAttribute('prod-id');
 
-      // Remove out of DOM
-      cartRow?.remove();
+    // Remove out of DOM
+    cartRow?.remove();
 
-      // Remove out of localstorage
+    // Remove out of localstorage
 
-      const localCart = localStorage.getItem("cart");
+    const localCart = localStorage.getItem('cart');
 
-        if(!localCart) return;
+    if (!localCart) return;
 
-      const currentCartList = (JSON.parse(localCart) as ICart).cartList;
+    const currentCartList = (JSON.parse(localCart) as ICart).cartList;
 
-      const updatedCartList = currentCartList.filter((cartItem) => cartItem.prodId !== prodId);
+    const updatedCartList = currentCartList.filter(cartItem => cartItem.prodId !== prodId);
 
-      const updatedCart = {
-        cartList: updatedCartList,
-      };
+    const updatedCart = {
+      cartList: updatedCartList,
+    };
 
-      // Update Top UI number of cart items
-      const { cartLength } = Helper.calcTotalAndLengthOfCart(updatedCartList);
-      Helper.textContent("numberCartItems", cartLength.toString());
-      // Update Cart view ui
+    // Update Top UI number of cart items
+    const { cartLength } = Helper.calcTotalAndLengthOfCart(updatedCartList);
+    Helper.textContent('numberCartItems', cartLength.toString());
+    // Update Cart view ui
 
-      this.updateUiViewCart(updatedCartList);
+    this.updateUiViewCart(updatedCartList);
 
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-    }
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  }
 
-    updateLocalStorageCart(currProdId: string, newQty: number){
+  updateLocalStorageCart(currProdId: string, newQty: number) {
+    const localCart = localStorage.getItem('cart');
 
-        const localCart = localStorage.getItem("cart");
+    if (!localCart) return;
 
-        if(!localCart) return; 
+    const { cartList } = JSON.parse(localCart) as ICart;
 
-        const { cartList } = JSON.parse(localCart) as ICart;
-      
-        const updatedCartList = [...cartList];
-      
-        const cartItemIndex = updatedCartList.findIndex((cartItem) => cartItem.prodId === currProdId);
-      
-        updatedCartList[cartItemIndex].qty = newQty;
-      
-        const updatedCart = {
-          cartList: updatedCartList,
-        };
-      
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-      
-        return updatedCart;
-      };
+    const updatedCartList = [...cartList];
 
-    @autobind
-    updateCart(actionBtn: HTMLElement) {
+    const cartItemIndex = updatedCartList.findIndex(cartItem => cartItem.prodId === currProdId);
 
-        const cartRow = actionBtn.closest(".cart-row");
-        const currQtyEl = cartRow?.querySelector(".cart-qty") as HTMLInputElement;
-        const currQty = +currQtyEl.value;
+    updatedCartList[cartItemIndex].qty = newQty;
 
-        const priceItem = cartRow?.querySelector(".price-item") as HTMLElement;
-        const priceItemVal = +(priceItem.textContent || 0);
-        const totalItem = cartRow?.querySelector(".total-item") as HTMLElement;
-        // const totalItemVal = +(totalItem.textContent || 0 );
-        const currProdId = cartRow?.getAttribute("prod-id") as string;
+    const updatedCart = {
+      cartList: updatedCartList,
+    };
+
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+    return updatedCart;
+  }
+
+  @autobind
+  updateCart(actionBtn: HTMLElement) {
+    const cartRow = actionBtn.closest('.cart-row');
+    const currQtyEl = cartRow?.querySelector('.cart-qty') as HTMLInputElement;
+    const currQty = +currQtyEl.value;
+
+    const priceItem = cartRow?.querySelector('.price-item') as HTMLElement;
+    const priceItemVal = +(priceItem.textContent || 0);
+    const totalItem = cartRow?.querySelector('.total-item') as HTMLElement;
+    // const totalItemVal = +(totalItem.textContent || 0 );
+    const currProdId = cartRow?.getAttribute('prod-id') as string;
 
     // Increase quanity number of cart
-    if (actionBtn && actionBtn.classList.contains("increase-btn")) {
+    if (actionBtn && actionBtn.classList.contains('increase-btn')) {
       // const increaseBtn = e.target.closest(".increase-btn");
       // const descreaseBtn = e.target.closest(".descrease-btn");
       const newQty = currQty + 1;
@@ -260,7 +264,7 @@ export default class ShopCart extends Component<HTMLDivElement>{
     }
 
     // Descrease quantity number of cart
-    if (actionBtn && actionBtn.classList.contains("descrease-btn")) {
+    if (actionBtn && actionBtn.classList.contains('descrease-btn')) {
       // Handle error
       if (currQty <= 1) return;
       const newQty = currQty - 1;
@@ -277,23 +281,20 @@ export default class ShopCart extends Component<HTMLDivElement>{
       totalItem.textContent = currTotalItemVal.toFixed(2);
 
       this.updateUiViewCart(updatedCart.cartList);
-
-      }  
-
     }
+  }
 
-    updateUiViewCart(cartList: CartItem[]) {
-        const { totalPrice, cartLength } = Helper.calcTotalAndLengthOfCart(cartList);
-        Helper.textContent("cartQty", cartLength.toString());
-        Helper.textContent("summaryTotal", `$${totalPrice.toFixed(2)}`);
-        Helper.textContent("totalCost", `$${totalPrice.toFixed(2)}`);
-    }
+  updateUiViewCart(cartList: CartItem[]) {
+    const { totalPrice, cartLength } = Helper.calcTotalAndLengthOfCart(cartList);
+    Helper.textContent('cartQty', cartLength.toString());
+    Helper.textContent('summaryTotal', `$${totalPrice.toFixed(2)}`);
+    Helper.textContent('totalCost', `$${totalPrice.toFixed(2)}`);
+  }
 
-    @autobind
-    moveToCheckout(e: Event) {
-        e.preventDefault();
-        history.pushState({}, "", "/checkout");
-        new Router();
-    }
-
+  @autobind
+  moveToCheckout(e: Event) {
+    e.preventDefault();
+    history.pushState({}, '', '/checkout');
+    new Router();
+  }
 }

@@ -1,14 +1,14 @@
 // import DataTables from "datatables.net-responsive-dt";
-import DataTables from "datatables.net-dt";
-import ProductsApi from "../../../api/productsApi";
-import { Productable } from "../../../interface/Product";
-import { BACKEND_URL } from "../../../constant/backend-domain";
-import { autobind } from "../../../decorators/autobind";
-import ModalForm from "./components/ModalForm";
-import AdminBaseComponent from "../AdminComponent";
-import Editor from "./components/Editor";
-import CategoriesApi from "../../../api/categoriesApi";
-import { CategoryInterface } from "../../../interface/Category";
+import DataTables from 'datatables.net-dt';
+import ProductsApi from '../../../api/productsApi';
+import { Productable } from '../../../interface/Product';
+import { BACKEND_URL } from '../../../constant/backend-domain';
+import { autobind } from '../../../decorators/autobind';
+import ModalForm from './components/ModalForm';
+import AdminBaseComponent from '../AdminComponent';
+import Editor from './components/Editor';
+import CategoriesApi from '../../../api/categoriesApi';
+import { CategoryInterface } from '../../../interface/Category';
 
 //@ts-ignore
 import JustValidate from 'just-validate';
@@ -265,72 +265,62 @@ const templateHTML = `
 
 </main>
 `;
-export default class Products extends AdminBaseComponent{
-    validator: any;
-    fullDescEditor: any;
-    shortDescEditor: any;
+export default class Products extends AdminBaseComponent {
+  validator: any;
+  fullDescEditor: any;
+  shortDescEditor: any;
 
-    constructor() {
-        super(
-            'product',
-            'table-products',
-             'createProductModal', 
-             'toast-success', 
-             'ProductModalButton', 
-             'closeModalForm', 
-             'closeToast', 
-             'deleteProductBtn', 
-             'delete-product-btn', 
-             'add-product-form'
-            );
+  constructor() {
+    super(
+      'product',
+      'table-products',
+      'createProductModal',
+      'toast-success',
+      'ProductModalButton',
+      'closeModalForm',
+      'closeToast',
+      'deleteProductBtn',
+      'delete-product-btn',
+      'add-product-form',
+    );
 
-        this.tableEl.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end',
-        })
+    this.tableEl.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }
 
-    }
+  // override method
+  render(): void {
+    const renderProductsList = async () => {
+      try {
+        const response = await ProductsApi.getAll({});
 
-    // override method
-    render() : void {
-        const renderProductsList = async () => {
-            try {
-              const response = await ProductsApi.getAll({});
-          
-            const {products} = response.data;
+        const { products } = response.data;
 
-              const tableRows = products.map((product : Productable) => {
-                
-                const {
-                  _id,
-                  name,
-                  oldPrice,
-                  thumbnail,
-                  stockQty,
-                  categoryId,
-                  discount,
-                } = product;
+        const tableRows = products.map((product: Productable) => {
+          const { _id, name, oldPrice, thumbnail, stockQty, categoryId, discount } = product;
 
-                let imageUrl;
+          let imageUrl;
 
-                if (thumbnail) {
-                  imageUrl = thumbnail.startsWith("http") ? thumbnail : `${BACKEND_URL}/${thumbnail}`;
-                } else {
-                  imageUrl = `https://placehold.co/358x358`;
-                }
-          
-                const imageHtml = `<img src="${imageUrl}" alt="${name}" class="w-12 h-12 object-cover" />`;
+          if (thumbnail) {
+            imageUrl = thumbnail.startsWith('http') ? thumbnail : `${BACKEND_URL}/${thumbnail}`;
+          } else {
+            imageUrl = `https://placehold.co/358x358`;
+          }
 
-                return [
-                  `<p class="truncate-id">${_id}</p>`,
-                  name,
-                  imageHtml,
-                  categoryId,
-                  oldPrice,
-                  discount,
-                  0,
-                  stockQty,
-                  `
+          const imageHtml = `<img src="${imageUrl}" alt="${name}" class="w-12 h-12 object-cover" />`;
+
+          return [
+            `<p class="truncate-id">${_id}</p>`,
+            name,
+            imageHtml,
+            categoryId?.name,
+            oldPrice,
+            discount,
+            0,
+            stockQty,
+            `
                   <div class="flex space-x-2 w-10 h-full">
                     <button class="update-modal-trigger" product-id="${_id}" type="button">
                       <i class="update-modal-trigger fa-solid fa-pen-to-square text-primary-700"></i>
@@ -343,319 +333,308 @@ export default class Products extends AdminBaseComponent{
                    
                   </div>
                   `,
-                ];
-              });
-              this.clearTableData();
-              this.dataTable = new DataTables("#table-products", {
-                dom: '<"top"<"row"<"col-md-6"l><"col-md-6 text-right"f>>B>rt<"bottom"p>',
-                data: tableRows,
-                columns: [
-                  { title: "ID" },
-                  { title: "Name" },
-                  { title: "Image" },
-                  { title: "Category" },
-                  { title: "Old Price" },
-                  { title: "Discount" },
-                  { title: "Rating" },
-                  { title: "Stock Qty" },
-                  { title: "Actions" },
-                ],
-              });
-            } catch (error) {
-              console.log(error);
-            }
-          };
-
-          renderProductsList();
-    }
-
-    @autobind
-    submitHandler(e: Event) {
-
-        e.preventDefault();
-
-        // Add/update category logic
-        (async () => {
-            
-            const ProductForm = e.target as HTMLFormElement;
-
-            const typeForm = ProductForm.getAttribute('id');
-    
-            const shortDesc = this.shortDescEditor.getData;
-    
-            const fullDesc = this.fullDescEditor.getData;
-    
-            const elements = (ProductForm).elements as unknown as {
-                [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | HTMLAreaElement | File
-              };
-    
-              let images: File[] | any;
-    
-              if (elements["images"]) {
-                images = (elements["images"] as HTMLInputElement).files;
-              }
-    
-              const name = (elements["name"] as HTMLInputElement).value as string;
-              const stockQty = (elements["quantity"] as HTMLInputElement).value as string;
-              const oldPrice = (elements["price"] as HTMLInputElement).value as string;
-              const categoryId = (elements["category"] as HTMLSelectElement).value as string;
-              const discount = (elements["discount"] as HTMLSelectElement).value as string;
-    
-              const formData = new FormData();
-    
-              formData.append("name", name);
-              formData.append("stockQty", stockQty);
-              formData.append("oldPrice", oldPrice);
-              formData.append('shortDesc', shortDesc);
-              formData.append('fullDesc', fullDesc);
-              formData.append('categoryId', categoryId);
-              formData.append('discount', discount);
-    
-                console.log(images);
-    
-              for (let i = 0; i < images.length; i++) {
-                formData.append("images[]", images[i]);
-              }
-    
-              console.log(this.validator);
-              
-              console.log(this.validator.isValid);
-    
-              if(!this.validator.isValid) return; 
-
-              try {
-
-                let response: any;
-
-                if(typeForm === "update-product-form") {
-                    
-                    const oldImage = (elements['oldImages'] as HTMLInputElement).value as string;
-                    
-                    formData.append("oldImages", oldImage);
-
-                    // Update cate call API
-                    response = await ProductsApi.update(formData, this._currentId);
-
-                }else {
-                    // Add cate Call API
-                    response = await ProductsApi.add(formData);
-                }
-
-                console.log(response.data);
-                const {message} = response.data;
-
-                // Handle add toast here!!
-
-                this.render();
-                this.closeFormModal();                
-                this.showToast('success', 'Success', message);
-                this.removeBackdrop();
-                // Show Toast to notify here
-              } catch (error) {
-                
-                console.log(error);
-              }
-
-        })()
-
-    }
-
-    configEditorData() {
-        this.shortDescEditor = new Editor('#shortDescription');
-        this.fullDescEditor = new Editor('#fullDescription');
-    }
-
-
-    async renderCateList () {
-            const selectElement = document.getElementById("categorySelectId")! as HTMLSelectElement;
-            console.log(selectElement);
-            const response = await CategoriesApi.getAll();
-            
-            const {categories} = response.data;
-
-            const categoryHtmls = categories.map((cate: CategoryInterface) => {
-              return `
-                <option value="${cate._id}">${cate.name}</option>
-              `;
-            });
-            categoryHtmls.unshift(`<option value="">Select Category</option>`);
-          
-            selectElement.innerHTML = categoryHtmls;
+          ];
+        });
+        this.clearTableData();
+        this.dataTable = new DataTables('#table-products', {
+          dom: '<"top"<"row"<"col-md-6"l><"col-md-6 text-right"f>>B>rt<"bottom"p>',
+          data: tableRows,
+          columns: [
+            { title: 'ID' },
+            { title: 'Name' },
+            { title: 'Image' },
+            { title: 'Category' },
+            { title: 'Old Price' },
+            { title: 'Discount' },
+            { title: 'Rating' },
+            { title: 'Stock Qty' },
+            { title: 'Actions' },
+          ],
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    @autobind
-    // CRUD
-    addHandler(): void {
-        new ModalForm('add');
-        this.showModal('add');
-          // get editor Value
-        this.configEditorData();
+    renderProductsList();
+  }
 
-        this.formValidator("add-product-form");
-      
-       (async () => {
-        await this.renderCateList();
-       })()
+  @autobind
+  submitHandler(e: Event) {
+    e.preventDefault();
 
-    }
+    // Add/update category logic
+    (async () => {
+      const ProductForm = e.target as HTMLFormElement;
 
+      const typeForm = ProductForm.getAttribute('id');
 
-    @autobind
-    editHandler(): void {
-        new ModalForm('update');
-        this.showModal('update');
+      const shortDesc = this.shortDescEditor.getData;
 
-        this.configEditorData();
+      const fullDesc = this.fullDescEditor.getData;
 
-        const updateProductForm = document.getElementById('update-product-form') as HTMLFormElement;
+      const elements = ProductForm.elements as unknown as {
+        [key: string]:
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | HTMLSelectElement
+          | HTMLAreaElement
+          | File;
+      };
 
-        (async () => {
+      let images: File[] | any;
 
-            try {
-                const response = await ProductsApi.getById(this._currentId);
-                const {product} = response.data;
+      if (elements['images']) {
+        images = (elements['images'] as HTMLInputElement).files;
+      }
 
-                const {name, discount, stockQty, oldPrice, categoryId, images, shortDesc, fullDesc} =
-                  product;
-        
-                // const selectCateEl = document.querySelector("#update-product-form #categorySelectId");
-                // await renderCateList(selectCateEl);
-                const elements = updateProductForm.elements as unknown as {
-                    [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-                  };
+      const name = (elements['name'] as HTMLInputElement).value as string;
+      const stockQty = (elements['quantity'] as HTMLInputElement).value as string;
+      const oldPrice = (elements['price'] as HTMLInputElement).value as string;
+      const categoryId = (elements['category'] as HTMLSelectElement).value as string;
+      const discount = (elements['discount'] as HTMLSelectElement).value as string;
 
-                await this.renderCateList();
+      const formData = new FormData();
 
-                elements["name"].value = name;
-                elements["quantity"].value = stockQty;
-                elements["price"].value = oldPrice;
-                elements["discount"].value = discount;
-                elements["category"].value = categoryId;
-                elements["oldImages"].value = images;
-                this.shortDescEditor.setData = shortDesc;
-                this.fullDescEditor.setData = fullDesc;
-  
-              } catch (error) {
-                console.log(error);
-              }
+      formData.append('name', name);
+      formData.append('stockQty', stockQty);
+      formData.append('oldPrice', oldPrice);
+      formData.append('shortDesc', shortDesc);
+      formData.append('fullDesc', fullDesc);
+      formData.append('categoryId', categoryId);
+      formData.append('discount', discount);
 
-        })()
+      console.log(images);
 
-        this.formValidator('update-product-form');
-        this.validator.removeField("#images");
-    }
+      for (let i = 0; i < images.length; i++) {
+        formData.append('images[]', images[i]);
+      }
 
-    @autobind
-    deleteHandler(): void {
-        (async() => {
-            try {
-                const response = await ProductsApi.delete(this._currentId);
-                
-                // Remove out of DOM
+      console.log(this.validator);
 
-                console.log(response.data);
+      console.log(this.validator.isValid);
 
-                const {message, productId} = response.data;
-             
-                this.showToast('success', `Delete #id: ${productId}`, message);
-                this.hideDeleteModal();
-                this.render();
-                this.removeBackdrop();
-                // Remove product from DOM here!!!
-                // Should i use websocket.io ?
-              } catch (error) {
-                console.log(error);
-              }
-        })()
-    }
+      if (!this.validator.isValid) return;
 
-    get component() {
-        return templateHTML;
-    }
+      try {
+        let response: any;
 
-    formValidator(formId: string) {
-        this.validator = new JustValidate(`#${formId}`, {
-            validateBeforeSubmitting: true,
-          });
-        
-        this.validator
-        .addField("#name", [
-            {
-                rule: "required",
-            }, 
-            {
-                rule: "minLength",
-                value: 3,
-            }
-        ])
-        .addField("#quantity", [
-            {
-                rule: "required",
-            },
-            {
-                rule: "minNumber",
-                value: 1,
-                errorMessage: "Quantity must be greater than 0"                
-            }
-        ])
-        .addField("#price", [
-            {
-                rule: "required",
-            },
-            {
-                rule: "minNumber",
-                value: 1,
-                errorMessage: "Price must be greater than 0"
-            }
-        ])
-        .addField("#discount", [
-            {
-                rule: "required",
-            },
-            {
-                rule: "minNumber",
-                value: 0,
-                errorMessage: "Discount must be greater or equal than 0"
-            }
-        ])
-        .addField("#categorySelectId", [
-            {
-                rule: "required",
-            },
-        ])
-        .addField("#images", [
-            {
-                rule: "minFilesCount",
-                value: 1
-            },
-        ])
-        // Wrong here!!!
-        // .addField("#shortDescription ", [
-        //     {
-        //         rule: "required",
-        //     },
-        //     {
-        //         rule: "minLength",
-        //         value: 10
-        //     }
-        // ]).
-        // addField("#fullDescription", [
-        //     {
-        //         rule: "required",
-        //     },
-        //     {
-        //         rule: "minLength",
-        //         value: 10
-        //     }
-        // ])
-        
-    }
+        if (typeForm === 'update-product-form') {
+          const oldImage = (elements['oldImages'] as HTMLInputElement).value as string;
 
-    removeBackdrop() {
-        const modalBackdropEl = document.querySelector("div[modal-backdrop]") as HTMLDivElement;
-        if(modalBackdropEl) {
-            modalBackdropEl.remove();
+          formData.append('oldImages', oldImage);
+
+          // Update cate call API
+          response = await ProductsApi.update(formData, this._currentId);
+        } else {
+          // Add cate Call API
+          response = await ProductsApi.add(formData);
         }
-    }
 
+        console.log(response.data);
+        const { message } = response.data;
+
+        // Handle add toast here!!
+
+        this.render();
+        this.closeFormModal();
+        this.showToast('success', 'Success', message);
+        this.removeBackdrop();
+        // Show Toast to notify here
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  configEditorData() {
+    this.shortDescEditor = new Editor('#shortDescription');
+    this.fullDescEditor = new Editor('#fullDescription');
+  }
+
+  async renderCateList() {
+    const selectElement = document.getElementById('categorySelectId')! as HTMLSelectElement;
+    console.log(selectElement);
+    const response = await CategoriesApi.getAll();
+
+    const { categories } = response.data;
+
+    const categoryHtmls = categories.map((cate: CategoryInterface) => {
+      return `
+                <option value="${cate._id}">${cate.name}</option>
+              `;
+    });
+    categoryHtmls.unshift(`<option value="">Select Category</option>`);
+
+    selectElement.innerHTML = categoryHtmls;
+  }
+
+  @autobind
+  // CRUD
+  addHandler(): void {
+    new ModalForm('add');
+    this.showModal('add');
+    // get editor Value
+    this.configEditorData();
+
+    this.formValidator('add-product-form');
+
+    (async () => {
+      await this.renderCateList();
+    })();
+  }
+
+  @autobind
+  editHandler(): void {
+    new ModalForm('update');
+    this.showModal('update');
+
+    this.configEditorData();
+
+    const updateProductForm = document.getElementById('update-product-form') as HTMLFormElement;
+
+    (async () => {
+      try {
+        const response = await ProductsApi.getById(this._currentId);
+        const { product } = response.data;
+
+        const { name, discount, stockQty, oldPrice, categoryId, images, shortDesc, fullDesc } =
+          product;
+
+        // const selectCateEl = document.querySelector("#update-product-form #categorySelectId");
+        // await renderCateList(selectCateEl);
+        const elements = updateProductForm.elements as unknown as {
+          [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+        };
+
+        await this.renderCateList();
+
+        elements['name'].value = name;
+        elements['quantity'].value = stockQty;
+        elements['price'].value = oldPrice;
+        elements['discount'].value = discount;
+        elements['category'].value = categoryId;
+        elements['oldImages'].value = images;
+        this.shortDescEditor.setData = shortDesc;
+        this.fullDescEditor.setData = fullDesc;
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    this.formValidator('update-product-form');
+    this.validator.removeField('#images');
+  }
+
+  @autobind
+  deleteHandler(): void {
+    (async () => {
+      try {
+        const response = await ProductsApi.delete(this._currentId);
+
+        // Remove out of DOM
+
+        console.log(response.data);
+
+        const { message, productId } = response.data;
+
+        this.showToast('success', `Delete #id: ${productId}`, message);
+        this.hideDeleteModal();
+        this.render();
+        this.removeBackdrop();
+        // Remove product from DOM here!!!
+        // Should i use websocket.io ?
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  get component() {
+    return templateHTML;
+  }
+
+  formValidator(formId: string) {
+    this.validator = new JustValidate(`#${formId}`, {
+      validateBeforeSubmitting: true,
+    });
+
+    this.validator
+      .addField('#name', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 3,
+        },
+      ])
+      .addField('#quantity', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minNumber',
+          value: 1,
+          errorMessage: 'Quantity must be greater than 0',
+        },
+      ])
+      .addField('#price', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minNumber',
+          value: 1,
+          errorMessage: 'Price must be greater than 0',
+        },
+      ])
+      .addField('#discount', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minNumber',
+          value: 0,
+          errorMessage: 'Discount must be greater or equal than 0',
+        },
+      ])
+      .addField('#categorySelectId', [
+        {
+          rule: 'required',
+        },
+      ])
+      .addField('#images', [
+        {
+          rule: 'minFilesCount',
+          value: 1,
+        },
+      ]);
+    // Wrong here!!!
+    // .addField("#shortDescription ", [
+    //     {
+    //         rule: "required",
+    //     },
+    //     {
+    //         rule: "minLength",
+    //         value: 10
+    //     }
+    // ]).
+    // addField("#fullDescription", [
+    //     {
+    //         rule: "required",
+    //     },
+    //     {
+    //         rule: "minLength",
+    //         value: 10
+    //     }
+    // ])
+  }
+
+  removeBackdrop() {
+    const modalBackdropEl = document.querySelector('div[modal-backdrop]') as HTMLDivElement;
+    if (modalBackdropEl) {
+      modalBackdropEl.remove();
+    }
+  }
 }

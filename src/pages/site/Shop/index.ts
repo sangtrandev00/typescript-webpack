@@ -1,18 +1,18 @@
 // import ShopApi from "../../../api/shopApi";
-import CategoriesApi from "../../../api/categoriesApi";
-import ShopApi from "../../../api/shopApi";
-import Component from "../../../components/base-component";
-import { autobind } from "../../../decorators/autobind";
-import { CategoryInterface } from "../../../interface/Category";
-import { ParamInterface } from "../../../interface/Params";
-import { Productable } from "../../../interface/Product";
-import Helper from "../../../util/helper";
+import CategoriesApi from '../../../api/categoriesApi';
+import ShopApi from '../../../api/shopApi';
+import Component from '../../../components/base-component';
+import { autobind } from '../../../decorators/autobind';
+import { CategoryInterface } from '../../../interface/Category';
+import { ParamInterface } from '../../../interface/Params';
+import { Productable } from '../../../interface/Product';
+import Helper from '../../../util/helper';
 // import { BACKEND_URL } from "../../../constant/backend-domain";
 // import { Productable } from "../../../interface/Product";
-import Filter from "./components/Filter";
-import ProductCardList from "./components/ProductList";
-import Search from "./components/Search";
-import Sort from "./components/Sort";
+import Filter from './components/Filter';
+import ProductCardList from './components/ProductList';
+import Search from './components/Search';
+import Sort from './components/Sort';
 
 const FilterInstance = new Filter();
 const SearchInstance = new Search();
@@ -685,273 +685,260 @@ const templateHTML = `
     </div>
 `;
 
+export default class Shop extends Component<HTMLDivElement> {
+  prodListEl: HTMLDivElement;
+  cateListEl: HTMLDivElement;
+  sortGlobalValue: string = '';
+  pagination: HTMLDivElement;
+  products: Productable[] = [];
+  sortBarEl: HTMLDivElement;
+  searchInputEl: HTMLInputElement;
+  searchBtn: HTMLButtonElement;
+  filterEl: HTMLDivElement;
+  applyFilterBtn: HTMLButtonElement;
+  prodListInstance?: ProductCardList;
 
-export default class Shop extends Component<HTMLDivElement>{
+  showResultByCateEl: HTMLParagraphElement;
+  showResultByRangeEl: HTMLParagraphElement;
+  showResultBySortEl: HTMLParagraphElement;
+  showResultBySearchEl: HTMLParagraphElement;
+  keywordQueryEl: HTMLSpanElement;
 
-    prodListEl: HTMLDivElement;
-    cateListEl: HTMLDivElement;
-    sortGlobalValue: string = '';
-    pagination: HTMLDivElement;
-    products: Productable[] = [];
-    sortBarEl: HTMLDivElement;
-    searchInputEl: HTMLInputElement;
-    searchBtn: HTMLButtonElement;
-    filterEl: HTMLDivElement;
-    applyFilterBtn: HTMLButtonElement;
-    prodListInstance?: ProductCardList;
+  constructor() {
+    super('main');
 
-    showResultByCateEl: HTMLParagraphElement;
-    showResultByRangeEl: HTMLParagraphElement;
-    showResultBySortEl: HTMLParagraphElement;
-    showResultBySearchEl: HTMLParagraphElement;
-    keywordQueryEl: HTMLSpanElement;
+    this.hostEl.innerHTML = templateHTML;
+    this.sortBarEl = document.getElementById('sortBarEl') as HTMLDivElement;
+    this.prodListEl = document.getElementById('product-list') as HTMLDivElement; // aldready been declare (remember to customize later!)
+    this.pagination = document.getElementById('pagination') as HTMLDivElement;
+    this.searchInputEl = document.getElementById('searchInput') as HTMLInputElement;
+    this.searchBtn = document.getElementById('search-btn') as HTMLButtonElement;
+    this.cateListEl = document.getElementById('cate-list') as HTMLDivElement;
+    this.filterEl = document.getElementById('shop-content__filter-bar') as HTMLDivElement;
+    this.applyFilterBtn = document.getElementById('apply-filter-btn') as HTMLButtonElement;
+    this.showResultByCateEl = document.querySelector(
+      '.show-result-text__by-cate',
+    ) as HTMLParagraphElement;
+    this.showResultByRangeEl = document.querySelector(
+      '.show-result-text__by-range',
+    ) as HTMLParagraphElement;
+    this.showResultBySortEl = document.querySelector(
+      '.show-result-text__by-sort',
+    ) as HTMLParagraphElement;
+    this.keywordQueryEl = document.getElementById('keyword') as HTMLSpanElement;
+    this.showResultBySearchEl = document.getElementById('show-result-text') as HTMLDivElement;
 
-    constructor() {
-        super('main');
+    this.renderProdList();
+    this.renderCateList();
+    this.attach();
+  }
 
-        this.hostEl.innerHTML = templateHTML;
-        this.sortBarEl = document.getElementById("sortBarEl") as HTMLDivElement;
-        this.prodListEl = document.getElementById('product-list') as HTMLDivElement; // aldready been declare (remember to customize later!)
-        this.pagination = document.getElementById('pagination') as HTMLDivElement;
-        this.searchInputEl = document.getElementById("searchInput") as HTMLInputElement;
-        this.searchBtn = document.getElementById("search-btn") as HTMLButtonElement;
-        this.cateListEl = document.getElementById("cate-list") as HTMLDivElement;
-        this.filterEl = document.getElementById("shop-content__filter-bar") as HTMLDivElement;
-        this.applyFilterBtn = document.getElementById("apply-filter-btn") as HTMLButtonElement;
-        this.showResultByCateEl = document.querySelector(".show-result-text__by-cate") as HTMLParagraphElement;
-        this.showResultByRangeEl = document.querySelector(".show-result-text__by-range") as HTMLParagraphElement;
-        this.showResultBySortEl = document.querySelector(".show-result-text__by-sort") as HTMLParagraphElement;
-        this.keywordQueryEl = document.getElementById('keyword') as HTMLSpanElement;
-        this.showResultBySearchEl = document.getElementById('show-result-text') as HTMLDivElement;
+  attach() {
+    this.pagination.addEventListener('click', this.paginationHandler);
+    this.sortBarEl.addEventListener('click', this.sortHandler);
+    this.searchBtn.addEventListener('click', this.searchHandler);
+    this.cateListEl.addEventListener('click', this.cateFilterHandler);
+    this.applyFilterBtn.addEventListener('click', this.priceFilterHanlder);
+  }
 
-        this.renderProdList();
-        this.renderCateList();
-        this.attach();
+  @autobind
+  sortHandler(e: Event) {
+    const sortBtn = e.target as HTMLLinkElement;
 
-    }
+    console.log('sortBtn', sortBtn);
 
-    attach() {
-        this.pagination.addEventListener('click', this.paginationHandler);
-        this.sortBarEl.addEventListener('click', this.sortHandler);
-        this.searchBtn.addEventListener('click', this.searchHandler);
-        this.cateListEl.addEventListener('click', this.cateFilterHandler);
-        this.applyFilterBtn.addEventListener('click', this.priceFilterHanlder);
-    }
+    if (sortBtn && sortBtn.nodeName === 'A') {
+      const sortVal = sortBtn.dataset.sort;
+      switch (sortVal) {
+        case 'pricedesc':
+          Helper.setParams('_sort', 'oldPrice');
+          Helper.setParams('_order', 'desc');
+          this.sortGlobalValue = 'Price descrease';
+          break;
 
-    @autobind
-    sortHandler(e: Event) {
-        
-        const sortBtn = e.target as HTMLLinkElement;
+        case 'priceasc':
+          Helper.setParams('_sort', 'oldPrice');
+          Helper.setParams('_order', 'asc');
 
-        console.log("sortBtn", sortBtn);
+          this.sortGlobalValue = 'Price ascending';
 
-          if (sortBtn && sortBtn.nodeName === "A") {
-            
-            const sortVal = sortBtn.dataset.sort;
-            switch (sortVal) {
-              case "pricedesc":
-                Helper.setParams("_sort", "oldPrice");
-                Helper.setParams("_order", "desc");
-                this.sortGlobalValue = "Price descrease";
-                break;
+          break;
+        case 'oldest':
+          Helper.setParams('_sort', 'createdAt');
+          Helper.setParams('_order', 'asc');
+          this.sortGlobalValue = 'Oldest products';
+          break;
+        case 'latest':
+          Helper.setParams('_sort', 'createdAt');
+          Helper.setParams('_order', 'desc');
 
-              case "priceasc":
-                Helper.setParams("_sort", "oldPrice");
-                Helper.setParams("_order", "asc");
-      
-                this.sortGlobalValue = "Price ascending";
+          this.sortGlobalValue = 'Latest products';
 
-                break;
-              case "oldest":
-                Helper.setParams("_sort", "createdAt");
-                Helper.setParams("_order", "asc");
-                this.sortGlobalValue = "Oldest products";
-                break;
-              case "latest":
-                Helper.setParams("_sort", "createdAt");
-                Helper.setParams("_order", "desc");
-      
-                this.sortGlobalValue = "Latest products";
-      
-                break;
-      
-              default:
-                break;
-            }
+          break;
 
-            console.log(this.sortGlobalValue);
-      
-            // Generate Product list here!!!
-
-            this.renderProdList();
-        }
-      };
-
-    @autobind
-    searchHandler() {
-      
-        this.searchInputEl = document.getElementById("searchInput") as HTMLInputElement;
-        console.log("click search", this.searchInputEl.value);
-        const searchVal = this.searchInputEl.value;
-        
-        Helper.setParams("_q", searchVal);
-        
-        // Update UI and pagination
-        // await renderProdList();
-        // Reset Input:
-
-        this.searchInputEl.value = "";
-        this.renderProdList();
-    }
-
-    @autobind
-    priceFilterHanlder() {
-        const priceFromEl = document.getElementById("price-from") as HTMLInputElement;
-        const priceToEl = document.getElementById("price-to") as HTMLInputElement;
-        const _min = priceFromEl.value;
-        const _max = priceToEl.value;
-
-        Helper.setParams("_min", _min);
-        Helper.setParams("_max", _max);
-    
-        this.renderProdList();
-    }
-    @autobind
-    paginationHandler(e: Event) {
-
-      console.log(e.target);
-
-      e.preventDefault();
-
-      console.log('paginationHandler');
-
-      const paginationBtn = e.target as HTMLLinkElement | HTMLLIElement;
-
-      const page = paginationBtn.getAttribute('href');
-
-      if(page) {
-        const pageNum = page.slice(-1);
-        Helper.setParams('_page', pageNum);
-
-        this.renderProdList();
+        default:
+          break;
       }
 
+      console.log(this.sortGlobalValue);
+
+      // Generate Product list here!!!
+
+      this.renderProdList();
     }
+  }
 
-    renderProdList() {
-        (async() => {
-            const _q = Helper.getParams("_q");
-            const _limit = +(Helper.getParams("_limit") || 12);
-            const _page = +(Helper.getParams("_page") || 1);
-            const _sort = Helper.getParams("_sort");
-            const _order = Helper.getParams("_order");
-            const _min = Helper.getParams("_min");
-            const _max = Helper.getParams("_max");
-            const _cateIds = Helper.getParams("_cateIds");
+  @autobind
+  searchHandler() {
+    this.searchInputEl = document.getElementById('searchInput') as HTMLInputElement;
+    console.log('click search', this.searchInputEl.value);
+    const searchVal = this.searchInputEl.value;
 
-            // const showResultTextEl = document.getElementById("show-result-text");
-            // const keyword = document.getElementById("keyword");
-            
-            try {
-              const query: ParamInterface = {
-                _limit,
-                _page,
-              };
-          
-              if (_sort && _order) {
-                query._sort = _sort;
-                query._order = _order;
+    Helper.setParams('_q', searchVal);
 
+    // Update UI and pagination
+    // await renderProdList();
+    // Reset Input:
 
-                const sort = Helper.getParams('_sort');
-                const order = Helper.getParams("_order");
+    this.searchInputEl.value = '';
+    this.renderProdList();
+  }
 
-                let sortValueText = "";
+  @autobind
+  priceFilterHanlder() {
+    const priceFromEl = document.getElementById('price-from') as HTMLInputElement;
+    const priceToEl = document.getElementById('price-to') as HTMLInputElement;
+    const _min = priceFromEl.value;
+    const _max = priceToEl.value;
 
-                if(sort === "createdAt") {
+    Helper.setParams('_min', _min);
+    Helper.setParams('_max', _max);
 
-                    if(order === "asc") {
-                        sortValueText = "Oldest products";
-                    }else if(order === "desc") {
-                        sortValueText = "Latest products";
-                    }
+    this.renderProdList();
+  }
+  @autobind
+  paginationHandler(e: Event) {
+    console.log(e.target);
 
-                }else if(sort === "oldPrice") {
+    e.preventDefault();
 
-                    if(order === "asc") {
-                        sortValueText = "Price ascending";
-                    }else if(order === "desc") {
-                        sortValueText = "Price descending";
-                        
-                    }
+    console.log('paginationHandler');
 
-                }
+    const paginationBtn = e.target as HTMLLinkElement | HTMLLIElement;
 
-                this.showBySort(this.showResultBySortEl,sortValueText);
-              }
-          
-              if (_q) {
-                query._q = _q;
-                this.showResultBySearchEl.classList.remove("hidden");
-                this.keywordQueryEl.innerText = _q;
-              }else {
-                this.keywordQueryEl.innerText = "";
-              }
-          
-              if (_min) {
-                query._min = +_min;
-          
-                // this.showByRange(this.showResultByRangeEl, +_min, +_max || 0);
-              }
-          
-              if (_max) {
-                query._max = +_max;
-          
-                // this.showByRange(this.showResultByRangeEl, _min || 0, +_max);
-              }
-          
-              if (_cateIds) {
-                query._cateIds = _cateIds;
-          
-                this.showByCate(this.showResultByCateEl, _cateIds);
-              } else {
-                // Reset show cate
-                this.showResultByCateEl.innerHTML = "";
-              }
-          
-              console.log("query: ", query);
-              this.prodListInstance = new ProductCardList(query);
-               this.prodListInstance.load();
-              
-              console.log(this.sortGlobalValue);
+    const page = paginationBtn.getAttribute('href');
 
-            } catch (error) {
-              console.log(error);
+    if (page) {
+      const pageNum = page.slice(-1);
+      Helper.setParams('_page', pageNum);
+
+      this.renderProdList();
+    }
+  }
+
+  renderProdList() {
+    (async () => {
+      const _q = Helper.getParams('_q');
+      const _limit = +(Helper.getParams('_limit') || 12);
+      const _page = +(Helper.getParams('_page') || 1);
+      const _sort = Helper.getParams('_sort');
+      const _order = Helper.getParams('_order');
+      const _min = Helper.getParams('_min');
+      const _max = Helper.getParams('_max');
+      const _cateIds = Helper.getParams('_cateIds');
+
+      // const showResultTextEl = document.getElementById("show-result-text");
+      // const keyword = document.getElementById("keyword");
+
+      try {
+        const query: ParamInterface = {
+          _limit,
+          _page,
+        };
+
+        if (_sort && _order) {
+          query._sort = _sort;
+          query._order = _order;
+
+          const sort = Helper.getParams('_sort');
+          const order = Helper.getParams('_order');
+
+          let sortValueText = '';
+
+          if (sort === 'createdAt') {
+            if (order === 'asc') {
+              sortValueText = 'Oldest products';
+            } else if (order === 'desc') {
+              sortValueText = 'Latest products';
             }
-        })()
-        
-    }
+          } else if (sort === 'oldPrice') {
+            if (order === 'asc') {
+              sortValueText = 'Price ascending';
+            } else if (order === 'desc') {
+              sortValueText = 'Price descending';
+            }
+          }
 
-    renderCateList() {
+          this.showBySort(this.showResultBySortEl, sortValueText);
+        }
 
-        (async () => {
-            
-            try {
+        if (_q) {
+          query._q = _q;
+          this.showResultBySearchEl.classList.remove('hidden');
+          this.keywordQueryEl.innerText = _q;
+        } else {
+          this.keywordQueryEl.innerText = '';
+        }
 
-            const response = await CategoriesApi.getAll();
+        if (_min) {
+          query._min = +_min;
 
-            const { categories } = response.data;
-          
-            const viewAllEl = ` 
+          // this.showByRange(this.showResultByRangeEl, +_min, +_max || 0);
+        }
+
+        if (_max) {
+          query._max = +_max;
+
+          // this.showByRange(this.showResultByRangeEl, _min || 0, +_max);
+        }
+
+        if (_cateIds) {
+          query._cateIds = _cateIds;
+
+          this.showByCate(this.showResultByCateEl, _cateIds);
+        } else {
+          // Reset show cate
+          this.showResultByCateEl.innerHTML = '';
+        }
+
+        console.log('query: ', query);
+        this.prodListInstance = new ProductCardList(query);
+        this.prodListInstance.load();
+
+        console.log(this.sortGlobalValue);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  renderCateList() {
+    (async () => {
+      try {
+        const response = await CategoriesApi.getAll();
+
+        const { categories } = response.data;
+
+        const viewAllEl = ` 
             <a href="#"
                 class="flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline">
                 View all
              </a>`;
-          
-            categories.forEach((cate: CategoryInterface) => {
-              const { _id, name } = cate;
-          
-              const cateItem = `
+
+        categories.forEach((cate: CategoryInterface) => {
+          const { _id, name } = cate;
+
+          const cateItem = `
               <div data-id=${_id} class="flex items-center cate-item">
                 <input id="${_id}" type="checkbox" value=""
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
@@ -961,110 +948,109 @@ export default class Shop extends Component<HTMLDivElement>{
                 </label>
               </div>
             `;
-          
-              this.cateListEl.insertAdjacentHTML("beforeend", cateItem);
-            });
-          
-            this.cateListEl.insertAdjacentHTML("beforeend", viewAllEl);
-          
-            // Render range [minvalue - maxvalue];
-          
-            const resMinPrice = await ShopApi.getMinPrice();
 
-            const resMaxPrice = await ShopApi.getMaxPrice();
-            
-            const {
-              result: [{ minFieldValue }],
-            } = resMinPrice.data;
-          
-            const {
-              result: [{ maxFieldValue }],
-            } = resMaxPrice.data;
-          
-            Helper.inputValue("price-from", minFieldValue);
-            Helper.inputValue("price-to", maxFieldValue);
-          
-            // console.log(minFieldValue);
-            // console.log(maxFieldValue);
+          this.cateListEl.insertAdjacentHTML('beforeend', cateItem);
+        });
 
-            } catch (error) {
-                console.log(error);
-            }
+        this.cateListEl.insertAdjacentHTML('beforeend', viewAllEl);
 
-        })()
-    }
+        // Render range [minvalue - maxvalue];
 
-    @autobind
-    cateFilterHandler(e: Event) {
+        const resMinPrice = await ShopApi.getMinPrice();
 
-        const checkBoxInput = e.target as HTMLInputElement;
-
-        if (checkBoxInput && checkBoxInput.nodeName === "INPUT") {
-            const isChecked = checkBoxInput.checked;
-
-            const cateId = checkBoxInput.id;
-      
-            const cateIds = Helper.getParams("_cateIds")?.split(",");
-      
-            console.log(cateIds);
-            
-            let cateIdsQuery;
-
-            if (cateIds && cateIds.length > 0) {
-              if (!isChecked) {
-                cateIdsQuery = (Helper.getParams("_cateIds") as string)
-                  .split(",")
-                  .filter((ci) => ci !== cateId);
-              } else {
-                cateIdsQuery = [...(Helper.getParams("_cateIds") as string ).split(","), cateId].join(",");
-              }
-
-              Helper.setParams("_cateIds", cateIdsQuery as string);
-            } else {
-              Helper.setParams("_cateIds", cateId);
-              cateIdsQuery = cateId;
-            }
-      
-            // Render products here
-            this.renderProdList();
-          }
-    }
-
-    showByRange(resultEl: HTMLDivElement, _min: number = 0, _max: number = 1140){
-        resultEl.innerHTML = `Theo giá từ: $${_min} -> $${_max}`;
-        resultEl.classList.remove("hidden");
-      };
-      
-    showByCate = async (resultEl: HTMLDivElement, _cateIds: string) => {
-        // <i class="fa-solid fa-check"></i> Oppo <i class="fa-solid fa-check"></i> Samsung
-      
-        // How to get cateName ?
-      
-        const cateIdList = _cateIds.split(",");
-        const showResult = cateIdList.map(async (cateId: string) => {
-
-        const shopResponse = await ShopApi.getCategoryById(cateId);
+        const resMaxPrice = await ShopApi.getMaxPrice();
 
         const {
-            category: { name },
-          } = shopResponse.data;
-      
-          return `
-          <i class="fa-solid fa-check"></i> ${name}
+          result: [{ minFieldValue }],
+        } = resMinPrice.data;
+
+        const {
+          result: [{ maxFieldValue }],
+        } = resMaxPrice.data;
+
+        Helper.inputValue('price-from', minFieldValue);
+        Helper.inputValue('price-to', maxFieldValue);
+
+        // console.log(minFieldValue);
+        // console.log(maxFieldValue);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  @autobind
+  cateFilterHandler(e: Event) {
+    const checkBoxInput = e.target as HTMLInputElement;
+
+    if (checkBoxInput && checkBoxInput.nodeName === 'INPUT') {
+      const isChecked = checkBoxInput.checked;
+
+      const cateId = checkBoxInput.id;
+
+      const cateIds = Helper.getParams('_cateIds')?.split(',');
+
+      console.log(cateIds);
+
+      let cateIdsQuery;
+
+      if (cateIds && cateIds.length > 0) {
+        if (!isChecked) {
+          cateIdsQuery = (Helper.getParams('_cateIds') as string)
+            .split(',')
+            .filter(ci => ci !== cateId);
+        } else {
+          cateIdsQuery = [...(Helper.getParams('_cateIds') as string).split(','), cateId].join(',');
+        }
+
+        Helper.setParams('_cateIds', cateIdsQuery as string);
+      } else {
+        Helper.setParams('_cateIds', cateId);
+        cateIdsQuery = cateId;
+      }
+
+      // Render products here
+      this.renderProdList();
+    }
+  }
+
+  showByRange(resultEl: HTMLDivElement, _min: number = 0, _max: number = 1140) {
+    resultEl.innerHTML = `Theo giá từ: $${_min} -> $${_max}`;
+    resultEl.classList.remove('hidden');
+  }
+
+  showByCate = async (resultEl: HTMLDivElement, _cateIds: string) => {
+    // <i class="fa-solid fa-check"></i> Oppo <i class="fa-solid fa-check"></i> Samsung
+
+    // How to get cateName ?
+
+    const cateIdList = _cateIds.split(',');
+    const showResult = cateIdList.map(async (cateId: string) => {
+      const shopResponse = await ShopApi.getCategoryById(cateId);
+
+      const { category } = shopResponse.data;
+
+      let cateName = '';
+
+      if (category) {
+        cateName = category.name;
+      }
+
+      return `
+          <i class="fa-solid fa-check"></i> ${cateName}
           `;
-        });
-      
-        resultEl.innerHTML = `
-        Trong danh mục: ${(await Promise.all(showResult)).join(", ")}
+    });
+
+    resultEl.innerHTML = `
+        Trong danh mục: ${(await Promise.all(showResult)).join(', ')}
         `;
-        resultEl.classList.remove("hidden");
-      };
-      
-    showBySort(resultEl: HTMLDivElement, sortValue: string){
-        resultEl.innerHTML = `
+    resultEl.classList.remove('hidden');
+  };
+
+  showBySort(resultEl: HTMLDivElement, sortValue: string) {
+    resultEl.innerHTML = `
         Lọc sản phẩm: <i class="fa-solid fa-filter-circle-xmark"></i> ${sortValue}
         `;
-        resultEl.classList.remove("hidden");
-      };
-
-}    
+    resultEl.classList.remove('hidden');
+  }
+}

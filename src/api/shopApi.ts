@@ -1,26 +1,24 @@
-import axiosClient from "./axiosClient";
+import axiosClient from './axiosClient';
 const { token } = localStorage;
-import { ParamInterface } from "../interface/Params";
-import { OrderInterface } from "../interface/Order";
-import { Productable } from "../interface/Product";
-
+import { ParamInterface } from '../interface/Params';
+import { OrderInterface } from '../interface/Order';
+import { Productable } from '../interface/Product';
 
 type pagination = {
   _limit: number;
   _page: number;
   _totalRows: number;
-}
+};
 
-type GetProductsResponse  = {
+type GetProductsResponse = {
   message: string;
   pagination: pagination;
   products: Productable[];
-}
-
+};
 
 class ShopApi {
   static getCategories(params: ParamInterface) {
-    const url = "/categories";
+    const url = '/categories';
     return axiosClient.get(url, { params });
   }
 
@@ -30,16 +28,16 @@ class ShopApi {
   }
 
   static getProductById(id: string) {
-    const url = "/products/" + id;
+    const url = '/products/' + id;
     return axiosClient.get(url);
   }
 
   static getMinPrice() {
-    const url = "/product-min-price";
+    const url = '/product-min-price';
     return axiosClient.get(url);
   }
   static getMaxPrice() {
-    const url = "/product-max-price";
+    const url = '/product-max-price';
     return axiosClient.get(url);
   }
 
@@ -48,14 +46,14 @@ class ShopApi {
     return axiosClient.get(url);
   }
 
-  static getProducts(params: ParamInterface)  {
-    const url = "/products";
+  static getProducts(params: ParamInterface) {
+    const url = '/products';
     return axiosClient.get<GetProductsResponse>(url, { params });
   }
 
   // When create order
   static createOrder(data: OrderInterface) {
-    const url = "/order";
+    const url = '/order';
     return axiosClient.post(url, data);
   }
 
@@ -63,7 +61,7 @@ class ShopApi {
     const url = `/users/${userId}`;
     return axiosClient.get(url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     });
   }

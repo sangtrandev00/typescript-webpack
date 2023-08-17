@@ -90,7 +90,7 @@ var ShopCart = /** @class */ (function (_super) {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        localCart = localStorage.getItem("cart");
+                        localCart = localStorage.getItem('cart');
                         if (!localCart)
                             return [2 /*return*/];
                         cart = JSON.parse(localCart);
@@ -99,17 +99,16 @@ var ShopCart = /** @class */ (function (_super) {
                     case 1:
                         _b.sent();
                         _a = helper_1["default"].calcTotalAndLengthOfCart(cartList), totalPrice = _a.totalPrice, cartLength = _a.cartLength;
-                        helper_1["default"].textContent("cartQty", cartLength.toString());
-                        helper_1["default"].textContent("summaryTotal", "$" + totalPrice.toFixed(2));
-                        helper_1["default"].textContent("totalCost", "$" + totalPrice.toFixed(2));
+                        helper_1["default"].textContent('cartQty', cartLength.toString());
+                        helper_1["default"].textContent('summaryTotal', "$" + totalPrice.toFixed(2));
+                        helper_1["default"].textContent('totalCost', "$" + totalPrice.toFixed(2));
                         continueShopEl = "\n          <a  href=\"./shop.html\" class=\"flex font-semibold text-indigo-600 text-sm my-5\">\n      \n          <svg class=\"fill-current mr-2 text-indigo-600 w-4\" viewBox=\"0 0 448 512\">\n              <path\n                  d=\"M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z\" />\n          </svg>\n            Continue Shopping\n          </a>\n        ";
-                        this.viewCartEl.insertAdjacentHTML("beforeend", continueShopEl);
+                        this.viewCartEl.insertAdjacentHTML('beforeend', continueShopEl);
                         return [2 /*return*/];
                 }
             });
         }); })();
     };
-    ;
     ShopCart.prototype.insertCart = function (prodId, name, thumbnail, cateName, qty, price, totalItem) {
         var cartItemHtml = "\n            <div prod-id=" + prodId + " class=\"cart-row flex items-center hover:bg-gray-100 -mx-8 px-6 py-3\">\n                <div class=\"flex w-2/5\">\n                    <div class=\"w-20\">\n                        <img class=\"h-24\"\n                            src=\"" + backend_domain_1.BACKEND_URL + "/" + thumbnail + "\" alt=\"" + name + "\">\n                    </div>\n                    <div class=\"flex flex-col justify-between ml-4 flex-grow\">\n                        <a href=\"./detail-product.html?id=" + prodId + "\" class=\"font-bold text-sm\">" + name + "</a>\n                        <span class=\"text-red-500 text-xs\">" + cateName + "</span>\n                        <a href=\"#\"\n                            class=\"remove-link font-semibold hover:text-red-500 text-gray-500 text-xs\">Remove</a>\n                    </div>\n                </div>\n                <div class=\"flex justify-center w-1/5\">\n                    <svg class=\"descrease-btn change-qty-btn fill-current text-gray-600 w-3 cursor-pointer\" viewBox=\"0 0 448 512\">\n                        <path class=\"descrease-btn change-qty-btn\"\n                            d=\"M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\" />\n                    </svg>\n\n                    <input class=\"cart-qty mx-2 border text-center w-12\" type=\"text\" value=\"" + qty + "\">\n\n                    <svg class=\"increase-btn change-qty-btn fill-current text-gray-600 w-3 cursor-pointer\" viewBox=\"0 0 448 512\">\n                        <path class=\"increase-btn change-qty-btn\"\n                            d=\"M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\" />\n                    </svg>\n                </div>\n                <span class=\"text-center w-1/5 font-semibold text-sm\">$<span class=\"price-item\">" + price.toFixed(2) + "</span> </span>\n                <span class=\"text-center w-1/5 font-semibold text-sm\">$<span class=\"total-item\">" + totalItem.toFixed(2) + "</span></span>\n            </div>\n            ";
         return cartItemHtml;
@@ -117,20 +116,20 @@ var ShopCart = /** @class */ (function (_super) {
     ShopCart.prototype.clickHandler = function (e) {
         e.preventDefault();
         var actionBtn = e.target;
-        if (actionBtn && actionBtn.classList.contains("remove-link")) {
+        if (actionBtn && actionBtn.classList.contains('remove-link')) {
             this.removeCart(actionBtn);
         }
-        if (actionBtn && actionBtn.classList.contains("change-qty-btn")) {
+        if (actionBtn && actionBtn.classList.contains('change-qty-btn')) {
             this.updateCart(actionBtn);
         }
     };
     ShopCart.prototype.removeCart = function (actionBtn) {
-        var cartRow = actionBtn.closest(".cart-row");
-        var prodId = cartRow === null || cartRow === void 0 ? void 0 : cartRow.getAttribute("prod-id");
+        var cartRow = actionBtn.closest('.cart-row');
+        var prodId = cartRow === null || cartRow === void 0 ? void 0 : cartRow.getAttribute('prod-id');
         // Remove out of DOM
         cartRow === null || cartRow === void 0 ? void 0 : cartRow.remove();
         // Remove out of localstorage
-        var localCart = localStorage.getItem("cart");
+        var localCart = localStorage.getItem('cart');
         if (!localCart)
             return;
         var currentCartList = JSON.parse(localCart).cartList;
@@ -140,13 +139,13 @@ var ShopCart = /** @class */ (function (_super) {
         };
         // Update Top UI number of cart items
         var cartLength = helper_1["default"].calcTotalAndLengthOfCart(updatedCartList).cartLength;
-        helper_1["default"].textContent("numberCartItems", cartLength.toString());
+        helper_1["default"].textContent('numberCartItems', cartLength.toString());
         // Update Cart view ui
         this.updateUiViewCart(updatedCartList);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
     ShopCart.prototype.updateLocalStorageCart = function (currProdId, newQty) {
-        var localCart = localStorage.getItem("cart");
+        var localCart = localStorage.getItem('cart');
         if (!localCart)
             return;
         var cartList = JSON.parse(localCart).cartList;
@@ -156,21 +155,20 @@ var ShopCart = /** @class */ (function (_super) {
         var updatedCart = {
             cartList: updatedCartList
         };
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
         return updatedCart;
     };
-    ;
     ShopCart.prototype.updateCart = function (actionBtn) {
-        var cartRow = actionBtn.closest(".cart-row");
-        var currQtyEl = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector(".cart-qty");
+        var cartRow = actionBtn.closest('.cart-row');
+        var currQtyEl = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector('.cart-qty');
         var currQty = +currQtyEl.value;
-        var priceItem = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector(".price-item");
+        var priceItem = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector('.price-item');
         var priceItemVal = +(priceItem.textContent || 0);
-        var totalItem = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector(".total-item");
+        var totalItem = cartRow === null || cartRow === void 0 ? void 0 : cartRow.querySelector('.total-item');
         // const totalItemVal = +(totalItem.textContent || 0 );
-        var currProdId = cartRow === null || cartRow === void 0 ? void 0 : cartRow.getAttribute("prod-id");
+        var currProdId = cartRow === null || cartRow === void 0 ? void 0 : cartRow.getAttribute('prod-id');
         // Increase quanity number of cart
-        if (actionBtn && actionBtn.classList.contains("increase-btn")) {
+        if (actionBtn && actionBtn.classList.contains('increase-btn')) {
             // const increaseBtn = e.target.closest(".increase-btn");
             // const descreaseBtn = e.target.closest(".descrease-btn");
             var newQty = currQty + 1;
@@ -184,7 +182,7 @@ var ShopCart = /** @class */ (function (_super) {
             this.updateUiViewCart(updatedCart.cartList);
         }
         // Descrease quantity number of cart
-        if (actionBtn && actionBtn.classList.contains("descrease-btn")) {
+        if (actionBtn && actionBtn.classList.contains('descrease-btn')) {
             // Handle error
             if (currQty <= 1)
                 return;
@@ -201,13 +199,13 @@ var ShopCart = /** @class */ (function (_super) {
     };
     ShopCart.prototype.updateUiViewCart = function (cartList) {
         var _a = helper_1["default"].calcTotalAndLengthOfCart(cartList), totalPrice = _a.totalPrice, cartLength = _a.cartLength;
-        helper_1["default"].textContent("cartQty", cartLength.toString());
-        helper_1["default"].textContent("summaryTotal", "$" + totalPrice.toFixed(2));
-        helper_1["default"].textContent("totalCost", "$" + totalPrice.toFixed(2));
+        helper_1["default"].textContent('cartQty', cartLength.toString());
+        helper_1["default"].textContent('summaryTotal', "$" + totalPrice.toFixed(2));
+        helper_1["default"].textContent('totalCost', "$" + totalPrice.toFixed(2));
     };
     ShopCart.prototype.moveToCheckout = function (e) {
         e.preventDefault();
-        history.pushState({}, "", "/checkout");
+        history.pushState({}, '', '/checkout');
         new router_1["default"]();
     };
     __decorate([

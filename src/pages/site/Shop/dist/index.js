@@ -90,16 +90,20 @@ var Shop = /** @class */ (function (_super) {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        cateIdList = _cateIds.split(",");
+                        cateIdList = _cateIds.split(',');
                         showResult = cateIdList.map(function (cateId) { return __awaiter(_this, void 0, void 0, function () {
-                            var shopResponse, name;
+                            var shopResponse, category, cateName;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0: return [4 /*yield*/, shopApi_1["default"].getCategoryById(cateId)];
                                     case 1:
                                         shopResponse = _a.sent();
-                                        name = shopResponse.data.category.name;
-                                        return [2 /*return*/, "\n          <i class=\"fa-solid fa-check\"></i> " + name + "\n          "];
+                                        category = shopResponse.data.category;
+                                        cateName = '';
+                                        if (category) {
+                                            cateName = category.name;
+                                        }
+                                        return [2 /*return*/, "\n          <i class=\"fa-solid fa-check\"></i> " + cateName + "\n          "];
                                 }
                             });
                         }); });
@@ -107,24 +111,24 @@ var Shop = /** @class */ (function (_super) {
                         _b = "\n        Trong danh m\u1EE5c: ";
                         return [4 /*yield*/, Promise.all(showResult)];
                     case 1:
-                        _a.innerHTML = _b + (_c.sent()).join(", ") + "\n        ";
-                        resultEl.classList.remove("hidden");
+                        _a.innerHTML = _b + (_c.sent()).join(', ') + "\n        ";
+                        resultEl.classList.remove('hidden');
                         return [2 /*return*/];
                 }
             });
         }); };
         _this.hostEl.innerHTML = templateHTML;
-        _this.sortBarEl = document.getElementById("sortBarEl");
+        _this.sortBarEl = document.getElementById('sortBarEl');
         _this.prodListEl = document.getElementById('product-list'); // aldready been declare (remember to customize later!)
         _this.pagination = document.getElementById('pagination');
-        _this.searchInputEl = document.getElementById("searchInput");
-        _this.searchBtn = document.getElementById("search-btn");
-        _this.cateListEl = document.getElementById("cate-list");
-        _this.filterEl = document.getElementById("shop-content__filter-bar");
-        _this.applyFilterBtn = document.getElementById("apply-filter-btn");
-        _this.showResultByCateEl = document.querySelector(".show-result-text__by-cate");
-        _this.showResultByRangeEl = document.querySelector(".show-result-text__by-range");
-        _this.showResultBySortEl = document.querySelector(".show-result-text__by-sort");
+        _this.searchInputEl = document.getElementById('searchInput');
+        _this.searchBtn = document.getElementById('search-btn');
+        _this.cateListEl = document.getElementById('cate-list');
+        _this.filterEl = document.getElementById('shop-content__filter-bar');
+        _this.applyFilterBtn = document.getElementById('apply-filter-btn');
+        _this.showResultByCateEl = document.querySelector('.show-result-text__by-cate');
+        _this.showResultByRangeEl = document.querySelector('.show-result-text__by-range');
+        _this.showResultBySortEl = document.querySelector('.show-result-text__by-sort');
         _this.keywordQueryEl = document.getElementById('keyword');
         _this.showResultBySearchEl = document.getElementById('show-result-text');
         _this.renderProdList();
@@ -141,29 +145,29 @@ var Shop = /** @class */ (function (_super) {
     };
     Shop.prototype.sortHandler = function (e) {
         var sortBtn = e.target;
-        console.log("sortBtn", sortBtn);
-        if (sortBtn && sortBtn.nodeName === "A") {
+        console.log('sortBtn', sortBtn);
+        if (sortBtn && sortBtn.nodeName === 'A') {
             var sortVal = sortBtn.dataset.sort;
             switch (sortVal) {
-                case "pricedesc":
-                    helper_1["default"].setParams("_sort", "oldPrice");
-                    helper_1["default"].setParams("_order", "desc");
-                    this.sortGlobalValue = "Price descrease";
+                case 'pricedesc':
+                    helper_1["default"].setParams('_sort', 'oldPrice');
+                    helper_1["default"].setParams('_order', 'desc');
+                    this.sortGlobalValue = 'Price descrease';
                     break;
-                case "priceasc":
-                    helper_1["default"].setParams("_sort", "oldPrice");
-                    helper_1["default"].setParams("_order", "asc");
-                    this.sortGlobalValue = "Price ascending";
+                case 'priceasc':
+                    helper_1["default"].setParams('_sort', 'oldPrice');
+                    helper_1["default"].setParams('_order', 'asc');
+                    this.sortGlobalValue = 'Price ascending';
                     break;
-                case "oldest":
-                    helper_1["default"].setParams("_sort", "createdAt");
-                    helper_1["default"].setParams("_order", "asc");
-                    this.sortGlobalValue = "Oldest products";
+                case 'oldest':
+                    helper_1["default"].setParams('_sort', 'createdAt');
+                    helper_1["default"].setParams('_order', 'asc');
+                    this.sortGlobalValue = 'Oldest products';
                     break;
-                case "latest":
-                    helper_1["default"].setParams("_sort", "createdAt");
-                    helper_1["default"].setParams("_order", "desc");
-                    this.sortGlobalValue = "Latest products";
+                case 'latest':
+                    helper_1["default"].setParams('_sort', 'createdAt');
+                    helper_1["default"].setParams('_order', 'desc');
+                    this.sortGlobalValue = 'Latest products';
                     break;
                 default:
                     break;
@@ -173,25 +177,24 @@ var Shop = /** @class */ (function (_super) {
             this.renderProdList();
         }
     };
-    ;
     Shop.prototype.searchHandler = function () {
-        this.searchInputEl = document.getElementById("searchInput");
-        console.log("click search", this.searchInputEl.value);
+        this.searchInputEl = document.getElementById('searchInput');
+        console.log('click search', this.searchInputEl.value);
         var searchVal = this.searchInputEl.value;
-        helper_1["default"].setParams("_q", searchVal);
+        helper_1["default"].setParams('_q', searchVal);
         // Update UI and pagination
         // await renderProdList();
         // Reset Input:
-        this.searchInputEl.value = "";
+        this.searchInputEl.value = '';
         this.renderProdList();
     };
     Shop.prototype.priceFilterHanlder = function () {
-        var priceFromEl = document.getElementById("price-from");
-        var priceToEl = document.getElementById("price-to");
+        var priceFromEl = document.getElementById('price-from');
+        var priceToEl = document.getElementById('price-to');
         var _min = priceFromEl.value;
         var _max = priceToEl.value;
-        helper_1["default"].setParams("_min", _min);
-        helper_1["default"].setParams("_max", _max);
+        helper_1["default"].setParams('_min', _min);
+        helper_1["default"].setParams('_max', _max);
         this.renderProdList();
     };
     Shop.prototype.paginationHandler = function (e) {
@@ -211,14 +214,14 @@ var Shop = /** @class */ (function (_super) {
         (function () { return __awaiter(_this, void 0, void 0, function () {
             var _q, _limit, _page, _sort, _order, _min, _max, _cateIds, query, sort, order, sortValueText;
             return __generator(this, function (_a) {
-                _q = helper_1["default"].getParams("_q");
-                _limit = +(helper_1["default"].getParams("_limit") || 12);
-                _page = +(helper_1["default"].getParams("_page") || 1);
-                _sort = helper_1["default"].getParams("_sort");
-                _order = helper_1["default"].getParams("_order");
-                _min = helper_1["default"].getParams("_min");
-                _max = helper_1["default"].getParams("_max");
-                _cateIds = helper_1["default"].getParams("_cateIds");
+                _q = helper_1["default"].getParams('_q');
+                _limit = +(helper_1["default"].getParams('_limit') || 12);
+                _page = +(helper_1["default"].getParams('_page') || 1);
+                _sort = helper_1["default"].getParams('_sort');
+                _order = helper_1["default"].getParams('_order');
+                _min = helper_1["default"].getParams('_min');
+                _max = helper_1["default"].getParams('_max');
+                _cateIds = helper_1["default"].getParams('_cateIds');
                 // const showResultTextEl = document.getElementById("show-result-text");
                 // const keyword = document.getElementById("keyword");
                 try {
@@ -230,33 +233,33 @@ var Shop = /** @class */ (function (_super) {
                         query._sort = _sort;
                         query._order = _order;
                         sort = helper_1["default"].getParams('_sort');
-                        order = helper_1["default"].getParams("_order");
-                        sortValueText = "";
-                        if (sort === "createdAt") {
-                            if (order === "asc") {
-                                sortValueText = "Oldest products";
+                        order = helper_1["default"].getParams('_order');
+                        sortValueText = '';
+                        if (sort === 'createdAt') {
+                            if (order === 'asc') {
+                                sortValueText = 'Oldest products';
                             }
-                            else if (order === "desc") {
-                                sortValueText = "Latest products";
+                            else if (order === 'desc') {
+                                sortValueText = 'Latest products';
                             }
                         }
-                        else if (sort === "oldPrice") {
-                            if (order === "asc") {
-                                sortValueText = "Price ascending";
+                        else if (sort === 'oldPrice') {
+                            if (order === 'asc') {
+                                sortValueText = 'Price ascending';
                             }
-                            else if (order === "desc") {
-                                sortValueText = "Price descending";
+                            else if (order === 'desc') {
+                                sortValueText = 'Price descending';
                             }
                         }
                         this.showBySort(this.showResultBySortEl, sortValueText);
                     }
                     if (_q) {
                         query._q = _q;
-                        this.showResultBySearchEl.classList.remove("hidden");
+                        this.showResultBySearchEl.classList.remove('hidden');
                         this.keywordQueryEl.innerText = _q;
                     }
                     else {
-                        this.keywordQueryEl.innerText = "";
+                        this.keywordQueryEl.innerText = '';
                     }
                     if (_min) {
                         query._min = +_min;
@@ -272,9 +275,9 @@ var Shop = /** @class */ (function (_super) {
                     }
                     else {
                         // Reset show cate
-                        this.showResultByCateEl.innerHTML = "";
+                        this.showResultByCateEl.innerHTML = '';
                     }
-                    console.log("query: ", query);
+                    console.log('query: ', query);
                     this.prodListInstance = new ProductList_1["default"](query);
                     this.prodListInstance.load();
                     console.log(this.sortGlobalValue);
@@ -303,9 +306,9 @@ var Shop = /** @class */ (function (_super) {
                         categories.forEach(function (cate) {
                             var _id = cate._id, name = cate.name;
                             var cateItem = "\n              <div data-id=" + _id + " class=\"flex items-center cate-item\">\n                <input id=\"" + _id + "\" type=\"checkbox\" value=\"\"\n                    class=\"w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600\" />\n          \n                <label for=\"" + _id + "\" class=\"ml-2 text-sm font-medium text-gray-900 dark:text-gray-300\">\n                   " + name + "\n                </label>\n              </div>\n            ";
-                            _this.cateListEl.insertAdjacentHTML("beforeend", cateItem);
+                            _this.cateListEl.insertAdjacentHTML('beforeend', cateItem);
                         });
-                        this.cateListEl.insertAdjacentHTML("beforeend", viewAllEl);
+                        this.cateListEl.insertAdjacentHTML('beforeend', viewAllEl);
                         return [4 /*yield*/, shopApi_1["default"].getMinPrice()];
                     case 2:
                         resMinPrice = _a.sent();
@@ -314,8 +317,8 @@ var Shop = /** @class */ (function (_super) {
                         resMaxPrice = _a.sent();
                         minFieldValue = resMinPrice.data.result[0].minFieldValue;
                         maxFieldValue = resMaxPrice.data.result[0].maxFieldValue;
-                        helper_1["default"].inputValue("price-from", minFieldValue);
-                        helper_1["default"].inputValue("price-to", maxFieldValue);
+                        helper_1["default"].inputValue('price-from', minFieldValue);
+                        helper_1["default"].inputValue('price-to', maxFieldValue);
                         return [3 /*break*/, 5];
                     case 4:
                         error_1 = _a.sent();
@@ -329,25 +332,25 @@ var Shop = /** @class */ (function (_super) {
     Shop.prototype.cateFilterHandler = function (e) {
         var _a;
         var checkBoxInput = e.target;
-        if (checkBoxInput && checkBoxInput.nodeName === "INPUT") {
+        if (checkBoxInput && checkBoxInput.nodeName === 'INPUT') {
             var isChecked = checkBoxInput.checked;
             var cateId_1 = checkBoxInput.id;
-            var cateIds = (_a = helper_1["default"].getParams("_cateIds")) === null || _a === void 0 ? void 0 : _a.split(",");
+            var cateIds = (_a = helper_1["default"].getParams('_cateIds')) === null || _a === void 0 ? void 0 : _a.split(',');
             console.log(cateIds);
             var cateIdsQuery = void 0;
             if (cateIds && cateIds.length > 0) {
                 if (!isChecked) {
-                    cateIdsQuery = helper_1["default"].getParams("_cateIds")
-                        .split(",")
+                    cateIdsQuery = helper_1["default"].getParams('_cateIds')
+                        .split(',')
                         .filter(function (ci) { return ci !== cateId_1; });
                 }
                 else {
-                    cateIdsQuery = __spreadArrays(helper_1["default"].getParams("_cateIds").split(","), [cateId_1]).join(",");
+                    cateIdsQuery = __spreadArrays(helper_1["default"].getParams('_cateIds').split(','), [cateId_1]).join(',');
                 }
-                helper_1["default"].setParams("_cateIds", cateIdsQuery);
+                helper_1["default"].setParams('_cateIds', cateIdsQuery);
             }
             else {
-                helper_1["default"].setParams("_cateIds", cateId_1);
+                helper_1["default"].setParams('_cateIds', cateId_1);
                 cateIdsQuery = cateId_1;
             }
             // Render products here
@@ -358,14 +361,12 @@ var Shop = /** @class */ (function (_super) {
         if (_min === void 0) { _min = 0; }
         if (_max === void 0) { _max = 1140; }
         resultEl.innerHTML = "Theo gi\u00E1 t\u1EEB: $" + _min + " -> $" + _max;
-        resultEl.classList.remove("hidden");
+        resultEl.classList.remove('hidden');
     };
-    ;
     Shop.prototype.showBySort = function (resultEl, sortValue) {
         resultEl.innerHTML = "\n        L\u1ECDc s\u1EA3n ph\u1EA9m: <i class=\"fa-solid fa-filter-circle-xmark\"></i> " + sortValue + "\n        ";
-        resultEl.classList.remove("hidden");
+        resultEl.classList.remove('hidden');
     };
-    ;
     __decorate([
         autobind_1.autobind
     ], Shop.prototype, "sortHandler");

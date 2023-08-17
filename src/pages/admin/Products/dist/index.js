@@ -95,7 +95,7 @@ var Products = /** @class */ (function (_super) {
                             var _id = product._id, name = product.name, oldPrice = product.oldPrice, thumbnail = product.thumbnail, stockQty = product.stockQty, categoryId = product.categoryId, discount = product.discount;
                             var imageUrl;
                             if (thumbnail) {
-                                imageUrl = thumbnail.startsWith("http") ? thumbnail : backend_domain_1.BACKEND_URL + "/" + thumbnail;
+                                imageUrl = thumbnail.startsWith('http') ? thumbnail : backend_domain_1.BACKEND_URL + "/" + thumbnail;
                             }
                             else {
                                 imageUrl = "https://placehold.co/358x358";
@@ -105,7 +105,7 @@ var Products = /** @class */ (function (_super) {
                                 "<p class=\"truncate-id\">" + _id + "</p>",
                                 name,
                                 imageHtml,
-                                categoryId,
+                                categoryId === null || categoryId === void 0 ? void 0 : categoryId.name,
                                 oldPrice,
                                 discount,
                                 0,
@@ -114,19 +114,19 @@ var Products = /** @class */ (function (_super) {
                             ];
                         });
                         this.clearTableData();
-                        this.dataTable = new datatables_net_dt_1["default"]("#table-products", {
+                        this.dataTable = new datatables_net_dt_1["default"]('#table-products', {
                             dom: '<"top"<"row"<"col-md-6"l><"col-md-6 text-right"f>>B>rt<"bottom"p>',
                             data: tableRows,
                             columns: [
-                                { title: "ID" },
-                                { title: "Name" },
-                                { title: "Image" },
-                                { title: "Category" },
-                                { title: "Old Price" },
-                                { title: "Discount" },
-                                { title: "Rating" },
-                                { title: "Stock Qty" },
-                                { title: "Actions" },
+                                { title: 'ID' },
+                                { title: 'Name' },
+                                { title: 'Image' },
+                                { title: 'Category' },
+                                { title: 'Old Price' },
+                                { title: 'Discount' },
+                                { title: 'Rating' },
+                                { title: 'Stock Qty' },
+                                { title: 'Actions' },
                             ]
                         });
                         return [3 /*break*/, 3];
@@ -153,26 +153,26 @@ var Products = /** @class */ (function (_super) {
                         typeForm = ProductForm.getAttribute('id');
                         shortDesc = this.shortDescEditor.getData;
                         fullDesc = this.fullDescEditor.getData;
-                        elements = (ProductForm).elements;
-                        if (elements["images"]) {
-                            images = elements["images"].files;
+                        elements = ProductForm.elements;
+                        if (elements['images']) {
+                            images = elements['images'].files;
                         }
-                        name = elements["name"].value;
-                        stockQty = elements["quantity"].value;
-                        oldPrice = elements["price"].value;
-                        categoryId = elements["category"].value;
-                        discount = elements["discount"].value;
+                        name = elements['name'].value;
+                        stockQty = elements['quantity'].value;
+                        oldPrice = elements['price'].value;
+                        categoryId = elements['category'].value;
+                        discount = elements['discount'].value;
                         formData = new FormData();
-                        formData.append("name", name);
-                        formData.append("stockQty", stockQty);
-                        formData.append("oldPrice", oldPrice);
+                        formData.append('name', name);
+                        formData.append('stockQty', stockQty);
+                        formData.append('oldPrice', oldPrice);
                         formData.append('shortDesc', shortDesc);
                         formData.append('fullDesc', fullDesc);
                         formData.append('categoryId', categoryId);
                         formData.append('discount', discount);
                         console.log(images);
                         for (i = 0; i < images.length; i++) {
-                            formData.append("images[]", images[i]);
+                            formData.append('images[]', images[i]);
                         }
                         console.log(this.validator);
                         console.log(this.validator.isValid);
@@ -182,9 +182,9 @@ var Products = /** @class */ (function (_super) {
                     case 1:
                         _a.trys.push([1, 6, , 7]);
                         response = void 0;
-                        if (!(typeForm === "update-product-form")) return [3 /*break*/, 3];
+                        if (!(typeForm === 'update-product-form')) return [3 /*break*/, 3];
                         oldImage = elements['oldImages'].value;
-                        formData.append("oldImages", oldImage);
+                        formData.append('oldImages', oldImage);
                         return [4 /*yield*/, productsApi_1["default"].update(formData, this._currentId)];
                     case 2:
                         // Update cate call API
@@ -223,7 +223,7 @@ var Products = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        selectElement = document.getElementById("categorySelectId");
+                        selectElement = document.getElementById('categorySelectId');
                         console.log(selectElement);
                         return [4 /*yield*/, categoriesApi_1["default"].getAll()];
                     case 1:
@@ -239,7 +239,6 @@ var Products = /** @class */ (function (_super) {
             });
         });
     };
-    ;
     // CRUD
     Products.prototype.addHandler = function () {
         var _this = this;
@@ -247,7 +246,7 @@ var Products = /** @class */ (function (_super) {
         this.showModal('add');
         // get editor Value
         this.configEditorData();
-        this.formValidator("add-product-form");
+        this.formValidator('add-product-form');
         (function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -280,12 +279,12 @@ var Products = /** @class */ (function (_super) {
                         return [4 /*yield*/, this.renderCateList()];
                     case 2:
                         _a.sent();
-                        elements["name"].value = name;
-                        elements["quantity"].value = stockQty;
-                        elements["price"].value = oldPrice;
-                        elements["discount"].value = discount;
-                        elements["category"].value = categoryId;
-                        elements["oldImages"].value = images;
+                        elements['name'].value = name;
+                        elements['quantity'].value = stockQty;
+                        elements['price'].value = oldPrice;
+                        elements['discount'].value = discount;
+                        elements['category'].value = categoryId;
+                        elements['oldImages'].value = images;
                         this.shortDescEditor.setData = shortDesc;
                         this.fullDescEditor.setData = fullDesc;
                         return [3 /*break*/, 4];
@@ -298,7 +297,7 @@ var Products = /** @class */ (function (_super) {
             });
         }); })();
         this.formValidator('update-product-form');
-        this.validator.removeField("#images");
+        this.validator.removeField('#images');
     };
     Products.prototype.deleteHandler = function () {
         var _this = this;
@@ -340,53 +339,53 @@ var Products = /** @class */ (function (_super) {
             validateBeforeSubmitting: true
         });
         this.validator
-            .addField("#name", [
+            .addField('#name', [
             {
-                rule: "required"
+                rule: 'required'
             },
             {
-                rule: "minLength",
+                rule: 'minLength',
                 value: 3
-            }
+            },
         ])
-            .addField("#quantity", [
+            .addField('#quantity', [
             {
-                rule: "required"
+                rule: 'required'
             },
             {
-                rule: "minNumber",
+                rule: 'minNumber',
                 value: 1,
-                errorMessage: "Quantity must be greater than 0"
-            }
+                errorMessage: 'Quantity must be greater than 0'
+            },
         ])
-            .addField("#price", [
+            .addField('#price', [
             {
-                rule: "required"
+                rule: 'required'
             },
             {
-                rule: "minNumber",
+                rule: 'minNumber',
                 value: 1,
-                errorMessage: "Price must be greater than 0"
-            }
+                errorMessage: 'Price must be greater than 0'
+            },
         ])
-            .addField("#discount", [
+            .addField('#discount', [
             {
-                rule: "required"
+                rule: 'required'
             },
             {
-                rule: "minNumber",
+                rule: 'minNumber',
                 value: 0,
-                errorMessage: "Discount must be greater or equal than 0"
-            }
-        ])
-            .addField("#categorySelectId", [
-            {
-                rule: "required"
+                errorMessage: 'Discount must be greater or equal than 0'
             },
         ])
-            .addField("#images", [
+            .addField('#categorySelectId', [
             {
-                rule: "minFilesCount",
+                rule: 'required'
+            },
+        ])
+            .addField('#images', [
+            {
+                rule: 'minFilesCount',
                 value: 1
             },
         ]);
@@ -411,7 +410,7 @@ var Products = /** @class */ (function (_super) {
         // ])
     };
     Products.prototype.removeBackdrop = function () {
-        var modalBackdropEl = document.querySelector("div[modal-backdrop]");
+        var modalBackdropEl = document.querySelector('div[modal-backdrop]');
         if (modalBackdropEl) {
             modalBackdropEl.remove();
         }

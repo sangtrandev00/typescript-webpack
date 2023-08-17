@@ -97,7 +97,7 @@ var Dashboard = /** @class */ (function (_super) {
         _this.attach();
         _this.renderSumarizedData();
         // Init table
-        _this._tableId = "table-orders-status-1";
+        _this._tableId = 'table-orders-status-1';
         _this._currentOrderStatus = Order_1.OrderStatus.UNCONFIRMED;
         _this.render(Order_1.OrderStatus.UNCONFIRMED);
         _this.renderChart();
@@ -125,7 +125,7 @@ var Dashboard = /** @class */ (function (_super) {
             this._currentOrderStatus = status;
             this.tableEl = document.getElementById(tableId);
             console.log(this.tableEl);
-            console.log("order status: ", status);
+            console.log('order status: ', status);
             this._tableId = tableId;
             this.render(status);
             this.attach();
@@ -133,35 +133,35 @@ var Dashboard = /** @class */ (function (_super) {
     };
     Dashboard.prototype.selectedOrderStatus = function (status) {
         switch (status) {
-            case "Waiting to Confirm":
+            case 'Waiting to Confirm':
                 return {
                     status: Order_1.OrderStatus.UNCONFIRMED,
-                    tableId: "table-orders-status-1"
+                    tableId: 'table-orders-status-1'
                 };
-            case "confirmed":
+            case 'confirmed':
                 return {
                     status: Order_1.OrderStatus.CONFIRMED,
-                    tableId: "table-orders-status-2"
+                    tableId: 'table-orders-status-2'
                 };
-            case "shipping":
+            case 'shipping':
                 return {
                     status: Order_1.OrderStatus.SHIPPING,
-                    tableId: "table-orders-status-3"
+                    tableId: 'table-orders-status-3'
                 };
-            case "success":
+            case 'success':
                 return {
                     status: Order_1.OrderStatus.SUCCESS,
-                    tableId: "table-orders-status-4"
+                    tableId: 'table-orders-status-4'
                 };
-            case "failed":
+            case 'failed':
                 return {
                     status: Order_1.OrderStatus.FAILED,
-                    tableId: "table-orders-status-5"
+                    tableId: 'table-orders-status-5'
                 };
             default:
                 return {
                     status: Order_1.OrderStatus.ALL,
-                    tableId: "table-orders-status-1"
+                    tableId: 'table-orders-status-1'
                 };
         }
     };
@@ -179,9 +179,12 @@ var Dashboard = /** @class */ (function (_super) {
                 return i === createdAtMonth;
             })
                 .reduce(function (acc, order) {
-                return acc + order.products.totalPrice + (order.vatFee || 0) + (order.shippingFee || 0);
+                return (acc +
+                    order.products.totalPrice +
+                    (order.vatFee || 0) +
+                    (order.shippingFee || 0));
             }, 0);
-            monthLabels.push("Month " + i);
+            monthLabels.push('Month ' + i);
             summarizedData.push(currTotalSaleMonth);
         };
         for (var i = 1; i <= 12; i++) {
@@ -191,7 +194,7 @@ var Dashboard = /** @class */ (function (_super) {
             this.myChart.destroy();
         }
         this.myChart = new chart_js_1.Chart(this.myChartEl, {
-            type: "bar",
+            type: 'bar',
             data: {
                 labels: monthLabels,
                 datasets: [
@@ -200,32 +203,32 @@ var Dashboard = /** @class */ (function (_super) {
                         data: summarizedData,
                         borderWidth: 1,
                         backgroundColor: [
-                            "rgba(255, 99, 132, 0.2)",
-                            "rgba(255, 159, 64, 0.2)",
-                            "rgba(255, 205, 86, 0.2)",
-                            "rgba(75, 192, 192, 0.2)",
-                            "rgba(54, 162, 235, 0.2)",
-                            "rgba(153, 102, 255, 0.2)",
-                            "rgba(201, 203, 207, 0.2)",
-                            "rgba(210,105,30, 0.2)",
-                            "rgba	(112,128,144, 0.2)",
-                            "rgba(0,128,128, 0.2)",
-                            "rgba(46,139,87, 0.2)",
-                            "rgba(138,43,226, 0.2)",
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 205, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(201, 203, 207, 0.2)',
+                            'rgba(210,105,30, 0.2)',
+                            'rgba	(112,128,144, 0.2)',
+                            'rgba(0,128,128, 0.2)',
+                            'rgba(46,139,87, 0.2)',
+                            'rgba(138,43,226, 0.2)',
                         ],
                         borderColor: [
-                            "rgb(255, 99, 132)",
-                            "rgb(255, 159, 64)",
-                            "rgb(255, 205, 86)",
-                            "rgb(75, 192, 192)",
-                            "rgb(54, 162, 235)",
-                            "rgb(153, 102, 255)",
-                            "rgb(201, 203, 207)",
-                            "rgb(210,105,30)",
-                            "rgb(112,128,144)",
-                            "rgb(0,128,128)",
-                            "rgb(46,139,87)",
-                            "rgb(138,43,226)",
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)',
+                            'rgb(210,105,30)',
+                            'rgb(112,128,144)',
+                            'rgb(0,128,128)',
+                            'rgb(46,139,87)',
+                            'rgb(138,43,226)',
                         ]
                     },
                 ]
@@ -239,7 +242,6 @@ var Dashboard = /** @class */ (function (_super) {
             }
         });
     };
-    ;
     // Render chart and sales and qty orders by status (confirmed, unconfirm,...)
     Dashboard.prototype.renderChart = function () {
         var _this = this;
@@ -258,15 +260,20 @@ var Dashboard = /** @class */ (function (_super) {
                         qtyOrdersUnconfirmed = orders.filter(function (order) { return order.status === Order_1.OrderStatus.UNCONFIRMED; }).length;
                         qtyOrdersConfirmed = orders.filter(function (order) { return order.status === Order_1.OrderStatus.CONFIRMED; }).length;
                         qtyOrdersShipping = orders.filter(function (order) { return order.status === Order_1.OrderStatus.SHIPPING; }).length;
-                        helper_1["default"].textContent("failedQty", qtyOrdersFailed);
-                        helper_1["default"].textContent("successQty", this.ordersSuccess.length.toString());
-                        helper_1["default"].textContent("confirmedQty", qtyOrdersConfirmed);
-                        helper_1["default"].textContent("unconfirmedQty", qtyOrdersUnconfirmed);
-                        helper_1["default"].textContent("shippingQty", qtyOrdersShipping);
+                        helper_1["default"].textContent('failedQty', qtyOrdersFailed);
+                        helper_1["default"].textContent('successQty', this.ordersSuccess.length.toString());
+                        helper_1["default"].textContent('confirmedQty', qtyOrdersConfirmed);
+                        helper_1["default"].textContent('unconfirmedQty', qtyOrdersUnconfirmed);
+                        helper_1["default"].textContent('shippingQty', qtyOrdersShipping);
                         this.createChartByYear(this.ordersSuccess, this.selectedYear);
-                        totalSales = this.ordersSuccess.reduce(function (acc, order) { return acc + order.products.totalPrice + (order.vatFee || 0) + (order.shippingFee || 0); }, 0);
+                        totalSales = this.ordersSuccess.reduce(function (acc, order) {
+                            return acc +
+                                order.products.totalPrice +
+                                (order.vatFee || 0) +
+                                (order.shippingFee || 0);
+                        }, 0);
                         this.totalSales = totalSales;
-                        helper_1["default"].textContent("totalSale", "$" + totalSales.toFixed(2) + " ");
+                        helper_1["default"].textContent('totalSale', "$" + totalSales.toFixed(2) + " ");
                         return [3 /*break*/, 3];
                     case 2:
                         error_1 = _a.sent();
@@ -302,7 +309,7 @@ var Dashboard = /** @class */ (function (_super) {
     Dashboard.prototype.calcTotalViews = function () {
         var totalViews = this.products.reduce(function (acc, product) { return acc + (product.views || 0); }, 0);
         this.totalViews = totalViews;
-        helper_1["default"].textContent("totalViews", totalViews.toString());
+        helper_1["default"].textContent('totalViews', totalViews.toString());
     };
     Dashboard.prototype.calcTotalUsers = function () {
         var _this = this;
@@ -315,7 +322,7 @@ var Dashboard = /** @class */ (function (_super) {
                         response = _a.sent();
                         users = response.data.users;
                         this.totalUsers = users.length;
-                        helper_1["default"].textContent("totalUsers", users.length);
+                        helper_1["default"].textContent('totalUsers', users.length);
                         return [2 /*return*/];
                 }
             });
@@ -332,7 +339,7 @@ var Dashboard = /** @class */ (function (_super) {
                         products = response.data.products;
                         this.products = products;
                         this.totalProducts = products.length;
-                        helper_1["default"].textContent("totalProducts", products.length);
+                        helper_1["default"].textContent('totalProducts', products.length);
                         return [2 /*return*/];
                 }
             });
