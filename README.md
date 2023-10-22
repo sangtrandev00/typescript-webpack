@@ -2,8 +2,9 @@
 
 ### Links to websites:
 
-+ Site:  https://techspace-ts-production.netlify.app/
-+ Admin: https://techspace-ts-production.netlify.app/admin
++ Site:  https://techspace-store.online
++ Admin: https://techspace-store.online/admin-login
+
 
 ### Technology and tools: 
 + Html, CSS, Resposive Web Design, Tailwind CSS, Typescript (OOP )
