@@ -931,7 +931,7 @@ export default class Shop extends Component<HTMLDivElement> {
 
         const viewAllEl = ` 
             <a href="#"
-                class="flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline">
+                class="flex items-center text-sm font-medium text-primary-color dark:text-secondary-color hover:underline">
                 View all
              </a>`;
 

@@ -1,12 +1,8 @@
-
-
 export default class Filter {
-    constructor() {
+  constructor() {}
 
-    }
-
-    render() {
-        return `
+  render() {
+    return `
         <div class="shop-content__sidebar hidden md:w-1/4 md:block ">
 
             <div action="#" method="get" id="shop-content__filter-bar" class="w-full h-40rem max-w-xs p-4 overflow-y-auto bg-white dark:bg-gray-800 border shadow">
@@ -57,10 +53,10 @@ export default class Filter {
                     </div>
         
                     <div class="bottom-0 left-0 flex justify-center w-full pb-4 mt-6 space-x-4 md:px-4 ">
-                        <button id="apply-filter-btn" type="submit" class="w-full px-5 py-2 text-sm font-medium text-center text-white rounded-lg bg-slate-600 hover:bg-slate-600-800 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-slate-600 dark:hover:bg-slate-600-800 dark:focus:ring-primary-800">
+                        <button id="apply-filter-btn" type="submit" class="w-full px-5 py-2 text-sm font-medium text-center text-white rounded-lg bg-secondary-color hover:bg-tertiary-color focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-tertiary-color dark:hover:bg-tertiary-color dark:focus:bg-tertiary-color">
                             Apply filters
                         </button>
-                        <button id="reset-filter-btn" type="reset" class="w-full px-5 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                        <button id="reset-filter-btn" type="reset" class="w-full px-5 py-2 text-sm font-medium text-primary-color bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-secondary-color focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:bg-tertiary-color dark:bg-primary-color dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-tertiary-color">
                             Clear all
                         </button>
                     </div>
@@ -68,7 +64,6 @@ export default class Filter {
             </div>
         
             </div>
-        `
-    }
-
+        `;
+  }
 }

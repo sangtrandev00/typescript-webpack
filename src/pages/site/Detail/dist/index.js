@@ -65,16 +65,16 @@ var Detail = /** @class */ (function (_super) {
     __extends(Detail, _super);
     function Detail() {
         var _this = _super.call(this, 'main') || this;
-        _this._id = "";
+        _this._id = '';
         _this.hostEl.innerHTML = templateHTML;
         _this._id = helper_1["default"].getParams('id');
-        _this.smallThumbsEle = document.getElementById("small-thumbnails");
-        _this.addCartBtn = document.getElementById("addToCartBtn");
+        _this.smallThumbsEle = document.getElementById('small-thumbnails');
+        _this.addCartBtn = document.getElementById('addToCartBtn');
         _this.qtyEl = document.getElementById('Quantity');
         _this.productQtyWrapEl = document.getElementById('productQuantityWrap');
         _this.render();
         _this.attach();
-        _this.hostEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        _this.hostEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return _this;
     }
     Detail.prototype.render = function () {
@@ -91,24 +91,24 @@ var Detail = /** @class */ (function (_super) {
                         thumbnail = product.thumbnail, images = product.images, name = product.name, oldPrice = product.oldPrice, discount = product.discount, shortDesc = product.shortDesc, fullDesc = product.fullDesc, stockQty = product.stockQty, views = product.views;
                         newPrice = oldPrice * (1 - discount / 100);
                         if (thumbnail) {
-                            imageUrl = thumbnail.startsWith("http") ? thumbnail : backend_domain_1.BACKEND_URL + "/" + thumbnail;
+                            imageUrl = thumbnail.startsWith('http') ? thumbnail : backend_domain_1.BACKEND_URL + "/" + thumbnail;
                         }
                         else {
                             imageUrl = "https://placehold.co/358x358";
                         }
-                        helper_1["default"].textContent("product-title", name);
-                        helper_1["default"].textContent("oldPrice", "$" + oldPrice);
-                        helper_1["default"].textContent("newPrice", "$" + newPrice.toFixed(2));
-                        helper_1["default"].textContent("stockQty", "" + stockQty);
-                        helper_1["default"].innerHTML("shortDesc", "" + shortDesc);
-                        helper_1["default"].innerHTML("tabs-description", "" + fullDesc);
-                        helper_1["default"].textContent("views", views || 0);
-                        helper_1["default"].imageContent("thumbnail", "" + imageUrl);
-                        this.smallThumbsEle.innerHTML = "";
-                        images.split(", ").forEach(function (image) {
-                            var imageUrl = image.startsWith("http") ? image : backend_domain_1.BACKEND_URL + "/" + image;
+                        helper_1["default"].textContent('product-title', name);
+                        helper_1["default"].textContent('oldPrice', "$" + oldPrice);
+                        helper_1["default"].textContent('newPrice', "$" + newPrice.toFixed(2));
+                        helper_1["default"].textContent('stockQty', "" + stockQty);
+                        helper_1["default"].innerHTML('shortDesc', "" + shortDesc);
+                        helper_1["default"].innerHTML('tabs-description', "" + fullDesc);
+                        helper_1["default"].textContent('views', views || 0);
+                        helper_1["default"].imageContent('thumbnail', "" + imageUrl);
+                        this.smallThumbsEle.innerHTML = '';
+                        images.split(', ').forEach(function (image) {
+                            var imageUrl = image.startsWith('http') ? image : backend_domain_1.BACKEND_URL + "/" + image;
                             var smallThubHtml = "\n              <div class=\"swiper-slide cursor-pointer\">\n                <img alt=\"Error image\"\n                    src=\"" + imageUrl + "\"\n                    class=\"aspect-square w-full rounded-xl object-cover\" />\n            </div>\n          ";
-                            _this.smallThumbsEle.insertAdjacentHTML("beforeend", smallThubHtml);
+                            _this.smallThumbsEle.insertAdjacentHTML('beforeend', smallThubHtml);
                         });
                         return [2 /*return*/];
                 }
@@ -117,7 +117,7 @@ var Detail = /** @class */ (function (_super) {
         asyncRender();
     };
     Detail.prototype.attach = function () {
-        this.addCartBtn.addEventListener("click", this.addCartHandler);
+        this.addCartBtn.addEventListener('click', this.addCartHandler);
         this.smallThumbsEle.addEventListener('click', this.triggerViewSmallThumbs);
         this.productQtyWrapEl.addEventListener('click', this.changeQtyHandler);
     };
@@ -137,19 +137,18 @@ var Detail = /** @class */ (function (_super) {
     };
     Detail.prototype.triggerViewSmallThumbs = function (e) {
         var thumbEl = e.target;
-        if (thumbEl && thumbEl.nodeName === "IMG") {
-            var imgUrl = thumbEl.getAttribute("src");
-            helper_1["default"].imageContent("thumbnail", imgUrl || "");
+        if (thumbEl && thumbEl.nodeName === 'IMG') {
+            var imgUrl = thumbEl.getAttribute('src');
+            helper_1["default"].imageContent('thumbnail', imgUrl || '');
         }
     };
-    ;
     Detail.prototype.changeQtyHandler = function (e) {
         var btn = e.target;
         var currQty = +this.qtyEl.value;
-        if (btn && btn.dataset.change === "minus") {
-            currQty <= 1 ? this.qtyEl.value = "1" : this.qtyEl.value = "" + (currQty - 1);
+        if (btn && btn.dataset.change === 'minus') {
+            currQty <= 1 ? (this.qtyEl.value = '1') : (this.qtyEl.value = "" + (currQty - 1));
         }
-        else if (btn && btn.dataset.change === "plus") {
+        else if (btn && btn.dataset.change === 'plus') {
             this.qtyEl.value = "" + (currQty + 1);
         }
     };

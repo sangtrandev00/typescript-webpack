@@ -302,7 +302,7 @@ var Shop = /** @class */ (function (_super) {
                     case 1:
                         response = _a.sent();
                         categories = response.data.categories;
-                        viewAllEl = " \n            <a href=\"#\"\n                class=\"flex items-center text-sm font-medium text-primary-600 dark:text-primary-500 hover:underline\">\n                View all\n             </a>";
+                        viewAllEl = " \n            <a href=\"#\"\n                class=\"flex items-center text-sm font-medium text-primary-color dark:text-secondary-color hover:underline\">\n                View all\n             </a>";
                         categories.forEach(function (cate) {
                             var _id = cate._id, name = cate.name;
                             var cateItem = "\n              <div data-id=" + _id + " class=\"flex items-center cate-item\">\n                <input id=\"" + _id + "\" type=\"checkbox\" value=\"\"\n                    class=\"w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:bg-slate-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600\" />\n          \n                <label for=\"" + _id + "\" class=\"ml-2 text-sm font-medium text-gray-900 dark:text-gray-300\">\n                   " + name + "\n                </label>\n              </div>\n            ";

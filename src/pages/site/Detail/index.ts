@@ -1,8 +1,8 @@
-import ProductsApi from "../../../api/productsApi";
-import Component from "../../../components/base-component";
-import { BACKEND_URL } from "../../../constant/backend-domain";
-import { autobind } from "../../../decorators/autobind";
-import Helper from "../../../util/helper";
+import ProductsApi from '../../../api/productsApi';
+import Component from '../../../components/base-component';
+import { BACKEND_URL } from '../../../constant/backend-domain';
+import { autobind } from '../../../decorators/autobind';
+import Helper from '../../../util/helper';
 
 const templateHTML = `
     <div class="product-detail mt-8">
@@ -777,85 +777,84 @@ const templateHTML = `
 
     </div>
 
-`
-export default class Detail extends Component<HTMLDivElement>  {
+`;
+export default class Detail extends Component<HTMLDivElement> {
+  _id: string = '';
+  smallThumbsEle: HTMLElement;
+  addCartBtn: HTMLButtonElement;
+  qtyEl: HTMLInputElement;
+  productQtyWrapEl: HTMLDivElement;
 
-    _id: string = "";
-    smallThumbsEle: HTMLElement;
-    addCartBtn: HTMLButtonElement;
-    qtyEl: HTMLInputElement;
-    productQtyWrapEl: HTMLDivElement;
+  constructor() {
+    super('main');
 
-    constructor() {
-        super('main');
+    this.hostEl.innerHTML = templateHTML;
+    this._id = Helper.getParams('id') as string;
+    this.smallThumbsEle = document.getElementById('small-thumbnails') as HTMLDivElement;
+    this.addCartBtn = document.getElementById('addToCartBtn')! as HTMLButtonElement;
+    this.qtyEl = document.getElementById('Quantity')! as HTMLInputElement;
+    this.productQtyWrapEl = document.getElementById('productQuantityWrap')! as HTMLDivElement;
+    this.render();
+    this.attach();
 
-        this.hostEl.innerHTML = templateHTML;
-        this._id = Helper.getParams('id') as string;
-        this.smallThumbsEle = document.getElementById("small-thumbnails") as HTMLDivElement;
-        this.addCartBtn = document.getElementById("addToCartBtn") ! as HTMLButtonElement;
-        this.qtyEl = document.getElementById('Quantity') ! as HTMLInputElement;
-        this.productQtyWrapEl = document.getElementById('productQuantityWrap') ! as HTMLDivElement;
-        this.render();
-        this.attach();
+    this.hostEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
-        this.hostEl.scrollIntoView({behavior: "smooth", block: "start"});
-    }
+  render(): void {
+    const asyncRender = async () => {
+      const response = await ProductsApi.getById(this._id);
 
-    render(): void {
-        const asyncRender = async () => {
-        const response = await ProductsApi.getById(this._id);
-            
-            const {product} = response.data;
-        const { thumbnail, images, name, oldPrice, discount, shortDesc, fullDesc, stockQty, views } = product;
-        const newPrice = oldPrice * (1 - discount / 100);
-        
-        let imageUrl;
-      
-        if (thumbnail) {
-          imageUrl = thumbnail.startsWith("http") ? thumbnail : `${BACKEND_URL}/${thumbnail}`;
-        } else {
-          imageUrl = `https://placehold.co/358x358`;
-        }
-      
-        Helper.textContent("product-title", name);
-        Helper.textContent("oldPrice", `$${oldPrice}`);
-        Helper.textContent("newPrice", `$${newPrice.toFixed(2)}`);
-        Helper.textContent("stockQty", `${stockQty}`);
-        Helper.innerHTML("shortDesc", `${shortDesc}`);
-        Helper.innerHTML("tabs-description", `${fullDesc}`);
-      
-        Helper.textContent("views", views || 0);
-      
-        Helper.imageContent("thumbnail", `${imageUrl}`);
-      
-        this.smallThumbsEle.innerHTML = "";
-        images.split(", ").forEach((image: string) => {
-          const imageUrl = image.startsWith("http") ? image : `${BACKEND_URL}/${image}`;
-      
-          const smallThubHtml = `
+      const { product } = response.data;
+      const { thumbnail, images, name, oldPrice, discount, shortDesc, fullDesc, stockQty, views } =
+        product;
+      const newPrice = oldPrice * (1 - discount / 100);
+
+      let imageUrl;
+
+      if (thumbnail) {
+        imageUrl = thumbnail.startsWith('http') ? thumbnail : `${BACKEND_URL}/${thumbnail}`;
+      } else {
+        imageUrl = `https://placehold.co/358x358`;
+      }
+
+      Helper.textContent('product-title', name);
+      Helper.textContent('oldPrice', `$${oldPrice}`);
+      Helper.textContent('newPrice', `$${newPrice.toFixed(2)}`);
+      Helper.textContent('stockQty', `${stockQty}`);
+      Helper.innerHTML('shortDesc', `${shortDesc}`);
+      Helper.innerHTML('tabs-description', `${fullDesc}`);
+
+      Helper.textContent('views', views || 0);
+
+      Helper.imageContent('thumbnail', `${imageUrl}`);
+
+      this.smallThumbsEle.innerHTML = '';
+      images.split(', ').forEach((image: string) => {
+        const imageUrl = image.startsWith('http') ? image : `${BACKEND_URL}/${image}`;
+
+        const smallThubHtml = `
               <div class="swiper-slide cursor-pointer">
                 <img alt="Error image"
                     src="${imageUrl}"
                     class="aspect-square w-full rounded-xl object-cover" />
             </div>
           `;
-      
-          this.smallThumbsEle.insertAdjacentHTML("beforeend", smallThubHtml);
-        });
-        }
-        asyncRender();
 
-    }
+        this.smallThumbsEle.insertAdjacentHTML('beforeend', smallThubHtml);
+      });
+    };
+    asyncRender();
+  }
 
-    attach() {
-        this.addCartBtn.addEventListener("click", this.addCartHandler);
-        this.smallThumbsEle.addEventListener('click', this.triggerViewSmallThumbs);
-        this.productQtyWrapEl.addEventListener('click',this.changeQtyHandler)
-    }
+  attach() {
+    this.addCartBtn.addEventListener('click', this.addCartHandler);
+    this.smallThumbsEle.addEventListener('click', this.triggerViewSmallThumbs);
+    this.productQtyWrapEl.addEventListener('click', this.changeQtyHandler);
+  }
 
-    @autobind
-    addCartHandler(e: Event) {
-        e.preventDefault();
+  @autobind
+  addCartHandler(e: Event) {
+    e.preventDefault();
 
     const qtyValue = this.qtyEl.value;
 
@@ -872,33 +871,26 @@ export default class Detail extends Component<HTMLDivElement>  {
     // Helper.innerHTML("modalTitle", `Add Product to cart successfully!`);
 
     // Helper.toggleModal("toggleModalBtn");
+  }
 
-
+  triggerViewSmallThumbs(e: Event) {
+    const thumbEl = e.target as HTMLImageElement;
+    if (thumbEl && thumbEl.nodeName === 'IMG') {
+      const imgUrl = thumbEl.getAttribute('src');
+      Helper.imageContent('thumbnail', imgUrl || '');
     }
+  }
 
-    triggerViewSmallThumbs(e: Event){
-        const thumbEl = e.target as HTMLImageElement;
-          if (thumbEl && thumbEl.nodeName === "IMG") {
-            const imgUrl = thumbEl.getAttribute("src");
-            Helper.imageContent("thumbnail", imgUrl || "");
-          }
-    };
+  @autobind
+  changeQtyHandler(e: Event) {
+    const btn = e.target as HTMLButtonElement;
 
-    @autobind
-    changeQtyHandler(e: Event) {
+    const currQty = +this.qtyEl.value;
 
-        const btn = e.target as HTMLButtonElement;
-
-        const currQty = +this.qtyEl.value;
-
-        if(btn && btn.dataset.change ==="minus") {
-
-            currQty <= 1 ? this.qtyEl.value = "1" : this.qtyEl.value = `${currQty - 1}`;
-        }else if(btn && btn.dataset.change === "plus") {
-            this.qtyEl.value = `${currQty + 1}`
-        }
-
+    if (btn && btn.dataset.change === 'minus') {
+      currQty <= 1 ? (this.qtyEl.value = '1') : (this.qtyEl.value = `${currQty - 1}`);
+    } else if (btn && btn.dataset.change === 'plus') {
+      this.qtyEl.value = `${currQty + 1}`;
     }
-
-
+  }
 }

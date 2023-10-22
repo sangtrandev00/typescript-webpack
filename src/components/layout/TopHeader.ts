@@ -1,10 +1,9 @@
-import Auth from "../../pages/site/Auth";
-import Router from "../../router/router";
-import Component from "../base-component";
-
+import Auth from '../../pages/site/Auth';
+import Router from '../../router/router';
+import Component from '../base-component';
 
 const templateHTML = `
-<nav class="before:flex-no-wrap fixed z-20 left-0 right-0 top-0 flex items-center justify-between bg-slate-300 text-white py-2 shadow-md shadow-black/5 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4 xl:px-20 mx-auto"
+<nav class="before:flex-no-wrap fixed z-20 left-0 right-0 top-0 flex items-center justify-between bg-quaternary-color text-white py-2 shadow-md shadow-black/5 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4 xl:px-20 mx-auto"
 data-te-navbar-ref>
 
 <div class="flex w-full flex-wrap items-center justify-between px-3 container">
@@ -110,49 +109,46 @@ data-te-navbar-ref>
     </div>
 </div>
 </nav>
-`
+`;
 
+export default class TopHeader extends Component<HTMLDivElement> {
+  viewCartBtnEl: HTMLLinkElement;
+  logoutBtn: HTMLAnchorElement;
+  constructor() {
+    super('top-header');
+    this.render();
+    this.hostEl.innerHTML = templateHTML;
+    this.viewCartBtnEl = document.getElementById('viewCartBtn')! as HTMLLinkElement;
+    this.logoutBtn = document.getElementById('logoutBtn')! as HTMLAnchorElement;
+    this.attach();
+  }
 
-export default class TopHeader extends Component<HTMLDivElement>  {
-    viewCartBtnEl: HTMLLinkElement;
-    logoutBtn: HTMLAnchorElement;
-    constructor() {
-        super('top-header');
-        this.render();
-        this.hostEl.innerHTML = templateHTML;
-        this.viewCartBtnEl = document.getElementById("viewCartBtn") ! as HTMLLinkElement;
-        this.logoutBtn = document.getElementById("logoutBtn") ! as HTMLAnchorElement;
-        this.attach();
-    }
+  render() {
+    console.log('Top header rendered!');
+  }
 
-    render() {
-        console.log("Top header rendered!");
-    }
+  attach() {
+    this.hostEl.addEventListener('click', this.navigateHandler);
+    this.viewCartBtnEl.addEventListener('click', this.viewCartHandler);
+    this.logoutBtn.addEventListener('click', this.logoutHandler);
+  }
 
-    attach() {
-        this.hostEl.addEventListener('click', this.navigateHandler);
-        this.viewCartBtnEl.addEventListener('click', this.viewCartHandler);
-        this.logoutBtn.addEventListener('click', this.logoutHandler);
-    }
-
-    navigateHandler(e: Event) {
-        e.preventDefault();
-        console.log(e.target);
-    }
-
-    viewCartHandler(e: Event) {
-        e.preventDefault();
-
-        history.pushState({}, "", "./cart");
-        new Router();
-    }
-
-   logoutHandler(e: Event) {
+  navigateHandler(e: Event) {
     e.preventDefault();
-    
+    console.log(e.target);
+  }
+
+  viewCartHandler(e: Event) {
+    e.preventDefault();
+
+    history.pushState({}, '', './cart');
+    new Router();
+  }
+
+  logoutHandler(e: Event) {
+    e.preventDefault();
+
     const userAuth = new Auth();
     userAuth.logout();
-   }
-
+  }
 }
-

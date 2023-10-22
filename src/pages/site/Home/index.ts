@@ -1,26 +1,26 @@
-import ShopApi from "../../../api/shopApi";
-import ProductList from "../../../components/ProductList";
-import Component from "../../../components/base-component";
-import { autobind } from "../../../decorators/autobind";
-import Router from "../../../router/router";
-import Helper from "../../../util/helper";
+import ShopApi from '../../../api/shopApi';
+import ProductList from '../../../components/ProductList';
+import Component from '../../../components/base-component';
+import { autobind } from '../../../decorators/autobind';
+import Router from '../../../router/router';
+import Helper from '../../../util/helper';
 import KeenSlider from 'keen-slider';
-import CategoryList from "./components/CategoryList";
-import SideNavBanner from "./components/SideNavBanner";
+import CategoryList from './components/CategoryList';
+import SideNavBanner from './components/SideNavBanner';
 
 const templateHTML = `
 <div id="carousel-section" class="carousel-section flex relative mt-8 gap-x-3">
 <div class="carousel-section__block-left md:w-3/12 lg:w-2/12 xl:w-3/12 relative">
     <!-- Sidenav -->
     <nav id="sidenavBanner"
-        class="max-[755px]:hidden rounded-[20px] absolute left-0 top-0 z-8 h-full w-full -translate-x-full overflow-hidden bg-slate-300/50 shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 dark:bg-zinc-800"
+        class="max-[755px]:hidden rounded-[20px] absolute left-0 top-0 z-8 h-full w-full -translate-x-full overflow-hidden bg-tertiary-color shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] data-[te-sidenav-hidden='false']:translate-x-0 "
         data-te-sidenav-hidden="false" data-te-sidenav-position="absolute">
         
     </nav>
     <!-- Sidenav -->
 </div>
 <div
-    class="carousel-section__block-center lg:w-7/12 md:w-10/12 sm:w-full max-[700px]:w-full border p-3 rounded-[20px] pb-12 shadow bg-slate-300/50">
+    class="carousel-section__block-center lg:w-7/12 md:w-10/12 sm:w-full max-[700px]:w-full border p-3 rounded-[20px] pb-12 shadow bg-tertiary-color">
     <!-- Carousel for header -->
     <div id="carouselExampleCaptions" class="relative" data-te-carousel-init data-te-carousel-slide>
         <!--Carousel indicators-->
@@ -127,7 +127,7 @@ const templateHTML = `
         role="tablist" data-te-nav-ref>
         <li role="presentation" class="w-1/4 flex-auto text-center">
             <a href="#tabs-home01"
-                class="h-full my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 min-[0]:text-sm md:text-xs  font-medium  leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class=" h-full my-2 flex flex-col justify-between border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 min-[0]:text-sm md:text-xs  font-medium  leading-tight text-impress-bold-color hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
                 data-te-toggle="pill" data-te-target="#tabs-home01" role="tab"
                 aria-controls="tabs-home01" aria-selected="true">
                 <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">Iphone 14
@@ -137,7 +137,7 @@ const templateHTML = `
         </li>
         <li role="presentation" class="w-1/4 flex-auto text-center">
             <a href="#tabs-profile01"
-                class="focus:border-transparen h-full my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class="focus:border-transparen  h-full my-2 flex flex-col justify-between border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-impress-bold-color hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
                 data-te-toggle="pill" data-te-target="#tabs-profile01" role="tab"
                 aria-controls="tabs-profile01" aria-selected="false">
                 <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">Galaxy S23
@@ -147,7 +147,7 @@ const templateHTML = `
         </li>
         <li role="presentation" class="w-1/4 flex-auto text-center">
             <a href="#tabs-messages01"
-                class="h-full my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class=" h-full my-2 flex flex-col justify-between border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-impress-bold-color hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
                 data-te-toggle="pill" data-te-target="#tabs-messages01" role="tab"
                 aria-controls="tabs-messages01" aria-selected="false">
                 <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">readmi Note 12
@@ -157,7 +157,7 @@ const templateHTML = `
         </li>
         <li role="presentation" class="w-1/4 flex-auto text-center">
             <a href="#tabs-contact01"
-                class="h-full my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class=" h-full my-2 flex flex-col justify-between border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium leading-tight text-impress-bold-color hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
                 data-te-toggle="pill" data-te-target="#tabs-contact01" role="tab"
                 aria-controls="tabs-contact01" aria-selected="false">
                 <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">Nord CE 3 Lite
@@ -171,7 +171,7 @@ const templateHTML = `
 </div>
 <div class="carousel-section__block-right xl:w-3/12 sm:hidden lg:block max-[700px]:hidden">
 
-    <div class="block-top-home__right-banner shadow border h-full flex rounded-[20px] bg-slate-300/50 p-3">
+    <div class="block-top-home__right-banner shadow border h-full flex rounded-[20px] bg-tertiary-color p-3">
         <div class="right-banner"><a href="#" class="right-banner__item mb-3 button__link  "><img
                     id="right-banner-image-1"
                     src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-1-right.jpg" width="312"
@@ -192,8 +192,9 @@ const templateHTML = `
 </div>
 
 <!-- Catalog for website -->
-<div class="uppercase text-2xl mt-10 font-bold p-3">CATALOG</div>
-<div id="catalog-section" class="flex items-center justify-center w-full h-full py-24 sm:py-8 ">
+<div class="uppercase text-2xl mt-10 font-bold py-3 text-impress-color">CATALOG</div>
+<h4 class="text-md text-neutral-400">All of our catalog</h4>
+<div id="catalog-section" class="flex items-center justify-center w-full h-full py-20 sm:py-8 ">
 <div class="w-full relative flex items-center justify-center">
     <button id="prevCatalogBtn" aria-label="slide backward" class="absolute z-30 left-0 ml-10 focus:outline-none focus:bg-gray-400 focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 cursor-pointer" id="prev">
             <i class="fa-solid fa-circle-chevron-left text-slate-700 text-3xl"></i>
@@ -311,7 +312,7 @@ const templateHTML = `
 
 <div class="2xl:container">
 <div class="dark:bg-gray-900 lg:py-10 md:py-8 py-6 uppercase">
-    <p class="w-10/12 md:w-full font-bold lg:text-2xl text-xl dark:text-white">
+    <p class="w-10/12 md:w-full font-bold lg:text-2xl text-xl dark:text-white text-impress-color">
         Our Collections</p>
 </div>
 <div class="py-6 border rounded-lg shadow lg:px-4">
@@ -552,7 +553,7 @@ const templateHTML = `
 
 <!-- Testimonial -->
 <div class="md:max-w-xl lg:max-w-3xl mt-10 ">
-<h3 class="mb-6 text-2xl font-bold text-neutral-800 dark:text-neutral-200 uppercase">
+<h3 class="mb-6 text-2xl font-bold text-impress-color dark:text-neutral-200 uppercase">
     Testimonials
 </h3>
 <p class="mb-6 pb-2 md:mb-12 md:pb-0">
@@ -715,7 +716,7 @@ const templateHTML = `
 </div>
 
 <!-- Blog section -->
-<div class="uppercase text-2xl mt-10 font-bold">BLOG</div>
+<div class="uppercase text-2xl mt-10 font-bold text-impress-color">BLOG</div>
 <section class="text-gray-600 body-font pt-8 ">
 <div class="md:container pb-16 mx-auto">
     <div class="flex flex-wrap -m-4 ">
@@ -843,144 +844,136 @@ const templateHTML = `
 </div>
 </section>
 
-`
+`;
 
 export default class Homepage extends Component<HTMLDivElement> {
-    
-    prodListInstance: ProductList;
-    nextBtn: HTMLSpanElement;
-    prevBtn: HTMLSpanElement;
-    showResultProductsEl: HTMLParagraphElement;
-    loadMoreBtn: HTMLAnchorElement;
-    slider: any;
-    prevCatalogBtn: HTMLButtonElement;
-    nextCatalogBtn: HTMLButtonElement;
-    constructor(
+  prodListInstance: ProductList;
+  nextBtn: HTMLSpanElement;
+  prevBtn: HTMLSpanElement;
+  showResultProductsEl: HTMLParagraphElement;
+  loadMoreBtn: HTMLAnchorElement;
+  slider: any;
+  prevCatalogBtn: HTMLButtonElement;
+  nextCatalogBtn: HTMLButtonElement;
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
+    this.prodListInstance = new ProductList('show-product');
+    this.prodListInstance.load();
 
-    ) {
-        super('main');
-        this.hostEl.innerHTML = templateHTML;
-        this.prodListInstance = new ProductList('show-product');
-        this.prodListInstance.load();
-   
-        this.nextBtn = document.getElementById("nextBtn") as HTMLSpanElement;
-        this.prevBtn = document.getElementById("prevBtn") as HTMLSpanElement;
-        this.showResultProductsEl = document.getElementById("show-result-products") as HTMLParagraphElement;
-        this.showResultProductsEl.innerText = `Showing ${8} products`;
-        this.loadMoreBtn = document.getElementById("loadMoreBtn") as HTMLAnchorElement;
+    this.nextBtn = document.getElementById('nextBtn') as HTMLSpanElement;
+    this.prevBtn = document.getElementById('prevBtn') as HTMLSpanElement;
+    this.showResultProductsEl = document.getElementById(
+      'show-result-products',
+    ) as HTMLParagraphElement;
+    this.showResultProductsEl.innerText = `Showing ${8} products`;
+    this.loadMoreBtn = document.getElementById('loadMoreBtn') as HTMLAnchorElement;
 
-        this.prevCatalogBtn = document.getElementById('prevCatalogBtn') as HTMLButtonElement;
-        this.nextCatalogBtn = document.getElementById('nextCatalogBtn') as HTMLButtonElement;
+    this.prevCatalogBtn = document.getElementById('prevCatalogBtn') as HTMLButtonElement;
+    this.nextCatalogBtn = document.getElementById('nextCatalogBtn') as HTMLButtonElement;
 
-        new SideNavBanner();
-        new CategoryList();
+    new SideNavBanner();
+    new CategoryList();
 
-        this.initCateSlider();
-        this.attach();
-    }
+    this.initCateSlider();
+    this.attach();
+  }
 
-    attach() {
-        this.nextBtn.addEventListener('click', this.nextProductsHandler);
-        this.prevBtn.addEventListener('click', this.prevProductsHandler);
-        this.loadMoreBtn.addEventListener('click', this.loadMoreHandler);
-        this.prevCatalogBtn.addEventListener('click', this.prevCatalogHandler);
-        this.nextCatalogBtn.addEventListener('click', this.nextCatalogHandler);
-    }
+  attach() {
+    this.nextBtn.addEventListener('click', this.nextProductsHandler);
+    this.prevBtn.addEventListener('click', this.prevProductsHandler);
+    this.loadMoreBtn.addEventListener('click', this.loadMoreHandler);
+    this.prevCatalogBtn.addEventListener('click', this.prevCatalogHandler);
+    this.nextCatalogBtn.addEventListener('click', this.nextCatalogHandler);
+  }
 
-    @autobind
-    nextProductsHandler() {
+  @autobind
+  nextProductsHandler() {
+    (async () => {
+      const currPage = +(Helper.getParams('_page') || 1);
+      const limitProducts = +(Helper.getParams('_limit') || 8);
 
-       (async() => {
+      const response = await ShopApi.getProducts({ _page: currPage, _limit: limitProducts });
 
-        const currPage = +(Helper.getParams("_page") || 1);
-        const limitProducts = +(Helper.getParams("_limit") || 8);
+      const {
+        pagination: { _totalRows, _limit },
+      } = response.data;
+      const maxPage = Math.ceil(_totalRows / _limit);
 
-        const response = await ShopApi.getProducts({ _page: currPage, _limit: limitProducts});
+      console.log('total rows: ', response.data);
 
-        const {
-          pagination: { _totalRows, _limit },
-        } = response.data;
-        const maxPage = Math.ceil(_totalRows / _limit);
-    
-        console.log("total rows: ",  response.data);
+      console.log('max page: ', maxPage);
 
-        console.log("max page: ", maxPage);
+      if (currPage >= maxPage) return;
 
-  
+      Helper.setParams('_page', (currPage + 1).toString());
+      this.prodListInstance.load();
 
-        if (currPage >= maxPage) return;
-        
-        Helper.setParams("_page", (currPage + 1).toString());
-        this.prodListInstance.load();
-    
-        // await renderProducts({ _page: currPage + 1, _limit: 12 });
-      
-        this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+      // await renderProducts({ _page: currPage + 1, _limit: 12 });
 
-       })()
-    }
+      this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+    })();
+  }
 
-    @autobind
-    prevProductsHandler() {
-        const currPage = +(Helper.getParams("_page") || 1);
+  @autobind
+  prevProductsHandler() {
+    const currPage = +(Helper.getParams('_page') || 1);
 
-        if (currPage === 1) return;
+    if (currPage === 1) return;
 
-        Helper.setParams("_page", (currPage - 1).toString());
+    Helper.setParams('_page', (currPage - 1).toString());
 
-        // Render Products
-        this.prodListInstance.load();
-        this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+    // Render Products
+    this.prodListInstance.load();
+    this.showResultProductsEl.innerText = `Showing ${this.prodListInstance.getProducts.length} products`;
+  }
 
-    }
+  @autobind
+  loadMoreHandler(e: Event) {
+    e.preventDefault();
 
-    @autobind
-    loadMoreHandler(e: Event) {
-        e.preventDefault();
+    history.pushState(null, '', '/shop');
+    new Router();
+  }
 
-        history.pushState(null, "", "/shop");
-        new Router();
-    }
+  createSlider(sliderWrapperId: string, itemPerView: number) {
+    var slider = new KeenSlider(`#${sliderWrapperId}`, {
+      slides: {
+        perView: itemPerView,
+      },
+      loop: true,
+    });
 
-    createSlider(sliderWrapperId: string, itemPerView: number ) {
-        var slider = new KeenSlider(`#${sliderWrapperId}`, {
-            slides: {
-              perView: itemPerView,
-            },
-            loop: true,
-          })
+    this.slider = slider;
+  }
 
-        this.slider = slider;
-    }
-    
-    @autobind
-    initCateSlider() {
-      
-          this.slider = new KeenSlider("#categories-slider", {
-            breakpoints: {
-              "(min-width: 768px)": {
-                slides: { perView: 2, spacing: 5, },
-              },
-              "(min-width: 1000px)": {
-                slides: { perView: 3, spacing: 10 },
-              },
-              "(min-width: 1200px)": {
-                slides: { perView: 4, spacing: 12 },
-              },
-            },
-            loop: true,
-          })
-    }
+  @autobind
+  initCateSlider() {
+    this.slider = new KeenSlider('#categories-slider', {
+      breakpoints: {
+        '(min-width: 768px)': {
+          slides: { perView: 2, spacing: 5 },
+        },
+        '(min-width: 1000px)': {
+          slides: { perView: 3, spacing: 10 },
+        },
+        '(min-width: 1200px)': {
+          slides: { perView: 4, spacing: 12 },
+        },
+      },
+      loop: true,
+    });
+  }
 
-    @autobind
-    prevCatalogHandler() {
-        console.log(this.slider);
-        this.slider.prev();
-    }
-    
-    @autobind
-    nextCatalogHandler() {
-        console.log(this.slider);
-        this.slider.next();
-    }
+  @autobind
+  prevCatalogHandler() {
+    console.log(this.slider);
+    this.slider.prev();
+  }
+
+  @autobind
+  nextCatalogHandler() {
+    console.log(this.slider);
+    this.slider.next();
+  }
 }

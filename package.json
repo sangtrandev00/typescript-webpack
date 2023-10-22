@@ -7,7 +7,8 @@
   "scripts": {
     "server": "node server.js",
     "dev": "webpack-dev-server",
-    "build": "webpack --config=webpack.config.prod.js"
+    "build": "webpack --config=webpack.config.prod.js",
+    "css": "npx tailwindcss -i ./src/assets/css/index.css -o ./src/assets/css/app.css --watch"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.37",

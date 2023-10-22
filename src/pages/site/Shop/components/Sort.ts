@@ -1,14 +1,12 @@
 // const templateHTML = ``;
 
 export default class Sort {
-    constructor() {
-        
-    }
+  constructor() {}
 
-    render() {
-        return `
+  render() {
+    return `
         <button
-            class="ml-auto flex items-center whitespace-nowrap rounded bg-slate-600 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[slate-500] transition duration-150 ease-in-out hover:bg-slate-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-slate-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-slate-600 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+            class="ml-auto flex items-center whitespace-nowrap rounded bg-secondary-color px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[bg-tertiary-color] transition duration-150 ease-in-out hover:bg-tertiary-color hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-tertiary-color focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-tertiary-color active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                 type="button" id="dropdownMenuButton1" data-te-dropdown-toggle-ref aria-expanded="false"
                 data-te-ripple-init data-te-ripple-color="light">
                 Lọc sản phẩm
@@ -41,7 +39,6 @@ export default class Sort {
                     href="#" data-sort="pricedesc" data-te-dropdown-item-ref>Giá giảm giần</a>
             </li>
         </ul>
-        `
-    }
-
+        `;
+  }
 }

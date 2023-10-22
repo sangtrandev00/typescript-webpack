@@ -1,8 +1,8 @@
-import { BACKEND_URL } from "../../constant/backend-domain";
-import { CustomComponent } from "../../decorators/component";
+import { BACKEND_URL } from '../../constant/backend-domain';
+import { CustomComponent } from '../../decorators/component';
 
 const templateHTML = `
-<div class="footer-wrapper bg-slate-300 -ms-20 -me-20">
+<div class="footer-wrapper bg-tertiary-color -ms-20 -me-20">
 <div class="mx-auto container py-16 xl:px-20 lg:px-12 sm:px-6 px-4 text-yellow-50 relative ">
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 md:gap-8 gap-4">
         <div class="flex flex-col flex-shrink-0">
@@ -123,16 +123,10 @@ const templateHTML = `
     </div>
 </div>
 </div>
-`
-@CustomComponent("#footer", templateHTML )
+`;
+@CustomComponent('#footer', templateHTML)
 export default class Footer {
+  constructor() {}
 
-    constructor() {
-
-    }
-
-    render():void {
-
-    }
-
+  render(): void {}
 }

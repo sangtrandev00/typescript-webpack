@@ -8,18 +8,21 @@ export default {
     './node_modules/flowbite/**/*.js',
   ],
   theme: {
-    fontFamily: {
-      sans: ['Roboto', 'sans-serif'],
-      body: ['Roboto', 'sans-serif'],
-      mono: ['ui-monospace', 'monospace'],
-      colors: {
-        'main-1': '#9CA871',
-        'main-2': '#E1F598',
-        'main-3': '#F5CEC9',
-      },
-    },
+    // fontFamily: {
+    //   sans: ['Inter', 'sans-serif'],
+    //   body: ['Inter', 'sans-serif'],
+    //   mono: ['ui-monospace', 'monospace'],
+    //   colors: {},
+    // },
     extend: {
-      colors: {},
+      colors: {
+        'primary-color': '#2d6a4f',
+        'secondary-color': '#2d6a4f',
+        'tertiary-color': '#74c69d',
+        'quaternary-color': '#95d5b2',
+        'impress-color': '#BF968F',
+        'impress-bold-color': '#6B362D',
+      },
     },
     variants: {
       extend: {
