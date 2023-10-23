@@ -1,11 +1,7 @@
-// import { BACKEND_URL } from "../../constant/backend-domain";
-
 import Router from '../../router/router';
 import { BACKEND_URL } from '../../constant/backend-domain';
 import { autobind } from '../../decorators/autobind';
 import Component from '../base-component';
-
-// import { CustomComponent } from "../../decorators/component";
 
 const templateHTML = `
 <header class="text-gray-600 body-font relative z-10  mt-14  bg-gradient-to-b from-primary-color to-tertiary-color xl:px-20 mx-auto -ms-20 -me-20">
@@ -57,7 +53,7 @@ const templateHTML = `
                   <li>
                     <a
                       class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                      href="#"
+                      href="./faq"
                       data-te-dropdown-item-ref
                       >FAQ</a
                     >
@@ -65,7 +61,7 @@ const templateHTML = `
                   <li>
                     <a
                       class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                      href="#"
+                      href="./newsletter"
                       data-te-dropdown-item-ref
                       >Newsletter</a
                     >
@@ -73,7 +69,7 @@ const templateHTML = `
                   <li>
                     <a
                       class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                      href="#"
+                      href="./testimonial"
                       data-te-dropdown-item-ref
                       >Testimonial</a
                     >

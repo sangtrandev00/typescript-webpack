@@ -12,6 +12,10 @@ import ResetPass from '../pages/site/Auth/ResetPass';
 import Blog from '../pages/site/Blog';
 import Contact from '../pages/site/Contact';
 import About from '../pages/site/About';
+import FAQ from '../pages/site/FAQ';
+import NewsLetter from '../pages/site/NewsLetter';
+import Testimonial from '../pages/site/Testimonial';
+import Wishlist from '../pages/site/Wishlist';
 
 export default class Router {
   constructor() {
@@ -29,31 +33,24 @@ export default class Router {
         break;
       case '/shop':
         // Render shop page content
-
         new Shop();
         break;
       case '/detail':
-        // Render detail page content
         new Detail();
         break;
       case '/cart':
-        // Render detail page content
         new ShopCart();
         break;
       case '/checkout':
-        // Render detail page content
         new Checkout();
         break;
       case '/order-completed':
-        // Render detail page content
         new OrderCompleted();
         break;
       case '/login':
-        // Render detail page content
         new Login();
         break;
       case '/signup':
-        // Render detail page content
         new Signup();
         break;
       case '/forgot':
@@ -71,6 +68,22 @@ export default class Router {
         break;
       case '/about':
         new About();
+        break;
+
+      case '/faq':
+        new FAQ();
+        break;
+
+      case '/newsletter':
+        new NewsLetter();
+        break;
+
+      case '/testimonial':
+        new Testimonial();
+        break;
+
+      case '/wishlist':
+        new Wishlist();
         break;
 
       default:
