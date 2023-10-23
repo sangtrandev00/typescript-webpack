@@ -71,7 +71,7 @@ data-te-navbar-ref>
         <!-- Container with two dropdown menus -->
         <div class="relative" data-te-dropdown-ref>
             <!-- First dropdown trigger -->
-            <a class="hidden-arrow mr-4 flex items-center text-neutral-800 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+            <a id="wishlistBtn" class="hidden-arrow mr-4 flex items-center text-neutral-800 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
                 href="./wishlist.html">
                 <i class="fa-regular fa-heart"></i>
             </a>
@@ -113,12 +113,14 @@ data-te-navbar-ref>
 
 export default class TopHeader extends Component<HTMLDivElement> {
   viewCartBtnEl: HTMLLinkElement;
+  wishlistBtnEl: HTMLLinkElement;
   logoutBtn: HTMLAnchorElement;
   constructor() {
     super('top-header');
     this.render();
     this.hostEl.innerHTML = templateHTML;
     this.viewCartBtnEl = document.getElementById('viewCartBtn')! as HTMLLinkElement;
+    this.wishlistBtnEl = document.getElementById('wishlistBtn')! as HTMLLinkElement;
     this.logoutBtn = document.getElementById('logoutBtn')! as HTMLAnchorElement;
     this.attach();
   }
@@ -130,6 +132,7 @@ export default class TopHeader extends Component<HTMLDivElement> {
   attach() {
     this.hostEl.addEventListener('click', this.navigateHandler);
     this.viewCartBtnEl.addEventListener('click', this.viewCartHandler);
+    this.wishlistBtnEl.addEventListener('click', this.viewWishlistHandler);
     this.logoutBtn.addEventListener('click', this.logoutHandler);
   }
 
@@ -142,6 +145,13 @@ export default class TopHeader extends Component<HTMLDivElement> {
     e.preventDefault();
 
     history.pushState({}, '', './cart');
+    new Router();
+  }
+
+  viewWishlistHandler(e: Event) {
+    e.preventDefault();
+
+    history.pushState({}, '', './wishlist');
     new Router();
   }
 

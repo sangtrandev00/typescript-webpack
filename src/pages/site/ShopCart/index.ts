@@ -13,7 +13,7 @@ const templateHTML = `
             <div id="view-cart"
                 class="max-[667px]:w-full md:w-3/4 sm:w-full bg-white px-10 py-10 h-auto md:h-[46rem] overflow-y-auto">
                 <div class="flex justify-between border-b pb-8">
-                    <h1 class="font-semibold text-2xl">Shopping Cart</h1>
+                    <h1 class="font-semibold text-4xl">Shopping Cart</h1>
                     <h2 class="font-semibold text-2xl"><span id="cartQty">3</span> Items</h2>
                 </div>
 

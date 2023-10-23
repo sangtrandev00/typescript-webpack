@@ -1,6 +1,6 @@
-import { ParamInterface } from "../interface/Params";
-import axiosClient from "./axiosClient";
-import {AxiosResponse} from 'axios';
+import { ParamInterface } from '../interface/Params';
+import axiosClient from './axiosClient';
+import { AxiosResponse } from 'axios';
 const { adminToken: token } = localStorage;
 
 // type pagination = {
@@ -15,15 +15,14 @@ const { adminToken: token } = localStorage;
 //   products: Productable[];
 // }
 
-
 class ProductsApi {
   // {_limit: 12}
-  static getAll(params: ParamInterface): Promise<AxiosResponse<any, string>>{
-    const url = "/admin/products";
+  static getAll(params: ParamInterface): Promise<AxiosResponse<any, string>> {
+    const url = '/admin/products';
     return axiosClient.get(url, {
       params,
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     });
   }
@@ -32,36 +31,36 @@ class ProductsApi {
     const url = `/admin/products/${id}`;
     return axiosClient.get(url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     });
   }
 
   static add(data: any) {
-    const url = "/admin/product";
+    const url = '/admin/product';
     return axiosClient.post(url, data, {
       headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "multipart/form-data",
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'multipart/form-data',
       },
     });
   }
 
   static update(data: any, productId: string) {
-    const url = "/admin/product/" + productId;
+    const url = '/admin/product/' + productId;
     return axiosClient.put(url, data, {
       headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "multipart/form-data",
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'multipart/form-data',
       },
     });
   }
 
-  static delete(id: string)  {
+  static delete(id: string) {
     const url = `/admin/products/${id}`;
     return axiosClient.delete(url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     });
   }

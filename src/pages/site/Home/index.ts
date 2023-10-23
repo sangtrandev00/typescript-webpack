@@ -7,6 +7,7 @@ import Helper from '../../../util/helper';
 import KeenSlider from 'keen-slider';
 import CategoryList from './components/CategoryList';
 import SideNavBanner from './components/SideNavBanner';
+import BestSellerProducts from './components/BestSeller';
 
 const templateHTML = `
 <div id="carousel-section" class="carousel-section flex relative mt-8 gap-x-3">
@@ -305,7 +306,252 @@ const templateHTML = `
 </div>
 </div>
 
+<div id="best-seller" class="">
+    <div class="uppercase text-2xl font-bold py-3 text-impress-color">BEST SELLER</div>
+    <h4 class="text-md text-neutral-400">These products are best sellers all the time at website</h4>
+    <div id="best-sellers-wrapper" class="mt-10">
 
+    <div class="">
+        <div class="bg-quaternary-color dark:bg-gray-800 flex flex-col justify-center items-center pt-9 sm:pt-12 lg:pt-16 pb-24 sm:pb-52">
+            <div class="2xl:container 2xl:mx-auto flex flex-col justify-center items-center sm:pb-12 lg:pb-0 space-y-4 px-4 md:px-6 2xl:px-0">
+                <div>
+                    <p class="text-3xl lg:text-4xl font-semibold leading-9 text-center text-gray-800 dark:text-gray-50">Best Seller Products</p>
+                </div>
+                <div>
+                    <p class="text-base leading-normal sm:leading-none text-center text-gray-600 dark:text-white ">Explore products that are bought most frequently by people</p>
+                </div>
+            </div>
+        </div>
+        <div class="-mt-16 sm:-mt-48 lg:-mt-32 xl:-mt-40 2xl:container 2xl:mx-auto flex justify-center items-center space-y-4 px-4 md:px-6 2xl:px-0 mb-16">
+            <div id="best-products-seller" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-items-between gap-x-6 gap-y-5">
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/4ZPL5F0/Rectangle-37.png" alt="watch" />
+                        <img class="lg:hidden" src="https://i.ibb.co/h1Vc29G/Rectangle-37.png" alt="watch" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Sony Digital Watch</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$1245</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="lg:block hidden" src="https://i.ibb.co/znBmcWV/Rectangle-37-1.png" alt="headphones" />
+                        <img class="lg:hidden" src="https://i.ibb.co/hBXHm0W/Rectangle-37-1.png" alt="headphones" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Sony Headphones</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$765</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/vHj3fjr/Rectangle-37-2.png" alt="speaker" />
+                        <img class="lg:hidden" src="https://i.ibb.co/QbpT9td/Rectangle-37-2.png" alt="speaker" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Wonderboom Pill</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$550</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/KsbPgh8/Rectangle-37-3.png" alt="game-controller" />
+                        <img class="lg:hidden" src="https://i.ibb.co/QrX9pRv/Rectangle-37-3.png" alt="game-controller" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">PS5 controller</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$550</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/vHj3fjr/Rectangle-37-2.png" alt="speaker" />
+                        <img class="lg:hidden" src="https://i.ibb.co/QbpT9td/Rectangle-37-2.png" alt="speaker" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Wonderboom Pill</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$550</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/KsbPgh8/Rectangle-37-3.png" alt="game-controller" />
+                        <img class="lg:hidden" src="https://i.ibb.co/QrX9pRv/Rectangle-37-3.png" alt="game-controller" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">PS5 controller</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$550</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="hidden lg:block" src="https://i.ibb.co/4ZPL5F0/Rectangle-37.png" alt="watch" />
+                        <img class="lg:hidden" src="https://i.ibb.co/h1Vc29G/Rectangle-37.png" alt="watch" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Sony Digital Watch</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$1245</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-start p-2 bg-white dark:bg-gray-900">
+                    <div class="relative">
+                        <img class="lg:block hidden" src="https://i.ibb.co/znBmcWV/Rectangle-37-1.png" alt="headphones" />
+                        <img class="lg:hidden" src="https://i.ibb.co/hBXHm0W/Rectangle-37-1.png" alt="headphones" />
+
+                        <button class="top-4 right-4 absolute p-3.5 text-gray-600 dark:text-white hover:text-gray-500 flex justify-center items-center bg-white dark:bg-gray-900 rounded-full">
+                            <svg class="fill-stroke" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M6.25 6.875V5.625C6.25 4.63044 6.64509 3.67661 7.34835 2.97335C8.05161 2.27009 9.00544 1.875 10 1.875V1.875C10.9946 1.875 11.9484 2.27009 12.6517 2.97335C13.3549 3.67661 13.75 4.63044 13.75 5.625V6.875M3.125 6.875C2.95924 6.875 2.80027 6.94085 2.68306 7.05806C2.56585 7.17527 2.5 7.33424 2.5 7.5V15.9375C2.5 17.1187 3.50625 18.125 4.6875 18.125H15.3125C16.4937 18.125 17.5 17.1676 17.5 15.9863V7.5C17.5 7.33424 17.4342 7.17527 17.3169 7.05806C17.1997 6.94085 17.0408 6.875 16.875 6.875H3.125Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                                <path d="M6.25 8.75V9.375C6.25 10.3696 6.64509 11.3234 7.34835 12.0267C8.05161 12.7299 9.00544 13.125 10 13.125C10.9946 13.125 11.9484 12.7299 12.6517 12.0267C13.3549 11.3234 13.75 10.3696 13.75 9.375V8.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="flex justify-between mt-4">
+                            <div>
+                                <p class="text-lg font-medium leading-none text-gray-800 dark:text-white">Sony Headphones</p>
+                            </div>
+                            <div>
+                                <p class="text-lg leading-none text-right text-gray-600 dark:text-white">$765</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 
 <!-- Shop grid -->
 
@@ -544,7 +790,7 @@ const templateHTML = `
 
     <div class="flex justify-center items-center">
         <a id="loadMoreBtn" href="shop.html"
-            class="hover:bg-secondary-color dark:text-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-primary-color bg-primary-color py-5 md:px-16 p-2 md:w-auto lg:mt-12 md:mt-12 mt-10 text-white font-medium text-base leading-4">Load
+            class="hover:bg-secondary-color dark:text-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-tertiary-color bg-primary-color py-5 md:px-16 p-2 md:w-auto lg:mt-12 md:mt-12 mt-10 text-white font-medium text-base leading-4">Load
             More</a>
     </div>
 </div>
@@ -715,6 +961,51 @@ const templateHTML = `
 <div class="swiper-scrollbar"></div>
 </div>
 
+<div class="hightlight">
+    <div class="uppercase text-2xl mt-10 font-bold text-impress-color">HIGHLIGHTS</div>
+    
+    <div class="2xl:container 2xl:mx-auto md:py-12 py-9">
+    <div class="bg-gradient-to-r from-gray-50 to-tertiary-color dark:bg-gray-800 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-8 md:gap-12 gap-14 lg:px-20 lg:py-12 py-10 md:px-12 px-4">
+        <!-- Delivery grid Card -->
+        <div class="">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg1.svg" alt="delivery">
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg1dark.svg" alt="delivery">
+            <h3 class="text-xl leading-5 dark:text-white font-semibold text-gray-800 lg:mt-10 mt-8">Delivery</h3>
+            <p class="text-base leading-6 font-normal dark:text-gray-300 text-gray-600 mt-4 lg:w-full md:w-9/12 w-full">Free worldwide delivery over orders above $100</p>
+        </div>
+
+        <!-- customer Grid Card -->
+
+        <div class="">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg2.svg" alt="Customer Care">
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg2dark.svg" alt="Customer Care">
+            <h3 class="text-xl leading-5 dark:text-white font-semibold text-gray-800 lg:mt-10 mt-8">Customer Care</h3>
+            <p class="text-base leading-6 font-normal dark:text-gray-300 text-gray-600 mt-4 lg:w-full md:w-9/12 w-full">Our customer care is available 24/7 at <span class="font-semibold cursor-pointer">+495-589-509</span> and <span class="font-semibold cursor-pointer">customercare@gmail.com</span></p>
+        </div>
+
+        <!-- Recycle Grid Card -->
+
+        <div class="">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg3.svg" alt="Recycle">
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg3dark.svg" alt="Recycle">
+            <h3 class="text-xl leading-5 dark:text-white font-semibold text-gray-800 lg:mt-10 mt-8">Recycle</h3>
+            <p class="text-base leading-6 font-normal dark:text-gray-300 text-gray-600 mt-4 lg:w-full md:w-9/12 w-full">All out products are 100 percent recycable</p>
+        </div>
+
+        <!-- Secure Payment Card -->
+
+        <div class="">
+            <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg4.svg" alt="Secure Payment">
+            <img class="dark:block hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/highlight-1-svg4dark.svg" alt="Secure Payment">
+            <h3 class="text-xl leading-5 dark:text-white font-semibold text-gray-800 lg:mt-10 mt-8">Secure Payment</h3>
+            <p class="text-base leading-6 font-normal dark:text-gray-300 text-gray-600 mt-4 lg:w-full md:w-9/12 w-full">Transaction process has end to end encryption</p>
+        </div>
+    </div>
+</div>
+
+</div>
+
+
 <!-- Blog section -->
 <div class="uppercase text-2xl mt-10 font-bold text-impress-color">BLOG</div>
 <section class="text-gray-600 body-font pt-8 ">
@@ -844,6 +1135,101 @@ const templateHTML = `
 </div>
 </section>
 
+<div id="partner" class="">
+
+    <div class="uppercase text-2xl font-bold text-impress-color">PARTNERS</div>
+
+    <div class="py-12 border shadow-sm my-10 px-4">
+        <div class="w-full flex flex-col justify-center items-center"> 
+            <div class="flex flex-col justify-center items-center text-center space-y-4">
+                <h1 class="text-3xl lg:text-4xl dark:text-white font-semibold leading-9 md:leading-7 lg:leading-9 text-gray-800">Our Trusted Partners</h1>
+                <p class="text-base leading-6 dark:text-gray-400 text-center text-gray-600 w-full md:w-10/12">We just got featured in the following magazines and it has been the most incredible journey. We work with the best fashion magazines across the world</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 w-full lg:grid-cols-3 justify-items-around gap-x-6 gap-y-6 xl:gap-x-8 mt-10">
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg1.svg" alt="marie clarie"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg1dark.svg" alt="marie clarie"/>
+                    
+                </div>
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg2.svg" alt="vogue logo"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg2dark.svg" alt="vogue logo"/>
+                
+                </div>
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg3.svg" alt="esquire logo"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg3dark.svg" alt="esquire logo"/>
+                
+                </div>
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg4.svg" alt="bazaar logo"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg4dark.svg" alt="bazaar logo"/>
+                
+                </div>
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg5.svg" alt="heavy logo"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg5dark.svg" alt="heavy logo"/>
+                
+                </div>
+                <div class="w-full focus:outline-none border focus:border-gray-800 border-transparent bg-gray-50 dark:bg-gray-800 flex justify-center items-center flex-col text-center py-14 px-12 space-y-6">
+                    <img class="dark:hidden" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg6.svg" alt="grazia logo"/>
+                    <img class="hidden dark:block" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/partners8-svg6dark.svg" alt="grazia logo"/>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="socials" class="">
+    <div class="uppercase text-2xl font-bold text-impress-color">Socials</div>
+     
+    <div class="2xl:container 2xl:mx-auto md:py-12 py-10">
+        <div class="text-center">
+            <h2 class="font-semibold dark:text-white lg:text-4xl text-3xl lg:leading-9 md:leading-7 leading-9 text-impress-color md:w-full w-9/12 mx-auto">Follow Us on Instagram</h2>
+            <p class="font-normal text-base leading-6 dark:text-gray-400 text-gray-600 mt-4 lg:w-5/12 md:w-9/12 mx-auto">Follow us on instagram @<span class="underline cursor-pointer">followuspleaseee</span> and tag us to get featured on our timeline</p>
+        </div>
+        <div class="grid lg:grid-cols-4 sm:grid-cols-2 grid-cols-1 lg:grap-8 md:gap-6 gap-4 mt-10">
+            <div class="relative group">
+                <img src="https://i.ibb.co/QHS8Ngp/pexels-alana-sousa-3294250-1.png" alt="A picture of a sitting dog" class="lg:block hidden w-full" />
+                <img src="https://i.ibb.co/mNPBgQN/pexels-alana-sousa-3294250-1-1.png" alt="A picture of a sitting dog" class="lg:hidden block w-full" />
+                <div class="flex justify-center items-center opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full"></div>
+                <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center opacity-0 hover:opacity-100">
+                    <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/social-1-svg1.svg" alt="instagram">
+                </div>
+            </div>
+            <div class="relative group">
+                <img src="https://i.ibb.co/T8jgRy3/pexels-leah-kelley-1449667-1.png" alt="Smiling Girl" class="lg:block hidden w-full" />
+                <img src="https://i.ibb.co/YD8nNMR/pexels-leah-kelley-1449667-1-1.png" alt="Smiling Girl" class="lg:hidden block w-full" />
+                <div class="opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full"></div>
+                <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center opacity-0 hover:opacity-100">
+                    <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/social-1-svg1.svg" alt="instagram">
+                </div>
+            </div>
+            <div class="relative group">
+                <img src="https://i.ibb.co/F3dzNWD/pexels-spencer-selover-775358-1.png" alt="Men Posing" class="lg:block hidden w-full" />
+                <img src="https://i.ibb.co/myWxfSm/pexels-spencer-selover-775358-1-1.png" alt="Men Posing" class="lg:hidden block w-full" />
+                <div class="opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full"></div>
+                <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center opacity-0 hover:opacity-100">
+                    <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/social-1-svg1.svg" alt="instagram">
+                </div>
+            </div>
+            <div class="relative group">
+                <img src="https://i.ibb.co/DwcwgDP/pexels-chevanon-photography-1108099-1.png" alt="2 puppies" class="lg:block hidden w-full" />
+                <img src="https://i.ibb.co/5cDQZ2r/pexels-chevanon-photography-1108099-1-1.png" alt="2 puppies" class="lg:hidden block w-full" />
+                <div class="opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full"></div>
+                <div class="absolute top-0 left-0 w-full h-full flex justify-center items-center opacity-0 hover:opacity-100">
+                    <img src="https://tuk-cdn.s3.amazonaws.com/can-uploader/social-1-svg1.svg" alt="instagram">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
 `;
 
 export default class Homepage extends Component<HTMLDivElement> {
@@ -874,7 +1260,7 @@ export default class Homepage extends Component<HTMLDivElement> {
 
     new SideNavBanner();
     new CategoryList();
-
+    new BestSellerProducts();
     this.initCateSlider();
     this.attach();
   }

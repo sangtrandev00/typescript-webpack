@@ -17,13 +17,15 @@ export default class ProductItem {
     }
 
     return `
-            <div class="relative mb-10 card-product" data-id ="${this._id}">
-                        <div class="absolute top-0 left-0 py-2 px-4 bg-white bg-opacity-50">
-                            <p class="text-xs leading-3 text-gray-800">New</p>
+            <div class="relative mb-10 card-product border p-2 hover:shadow-lg" data-id ="${
+              this._id
+            }">
+                        <div class="absolute z-20 top-2 left-2 py-2 px-4 bg-white bg-opacity-50">
+                            <p class="absolute top-0 left-0 text-xs leading-3 bg-impress-color p-2 text-white">New</p>
                         </div>
                         <div class="relative group h-[240px]">
                             <div
-                                class="flex justify-center items-center opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full">
+                                class="flex justify-center items-center opacity-0 bg-gradient-to-t from-gray-800 via-gray-800 to-opacity-30 group-hover:opacity-50 absolute top-0 left-0 h-full w-full font-bold">
                             </div>
                             <img class="w-full h-full object-contain"
                                 src="${BACKEND_URL}/${this._thumbnail}"
@@ -37,7 +39,7 @@ export default class ProductItem {
                                     View</button>
                             </div>
                         </div>
-                        <p class="font-normal dark:text-white text-xl leading-5 text-gray-800 md:mt-6 mt-4">${
+                        <p class="font-normal dark:text-white text-xl leading-5 text-impress-bold-color md:mt-6 mt-4">${
                           this._name
                         }</p>
                         <div class="flex">

@@ -1,14 +1,14 @@
-import Input from "../components/Input"
-import Button from "../components/Button"
-import Component from "../../../../components/base-component";
-import { autobind } from "../../../../decorators/autobind";
-import AuthApi from "../../../../api/authApi";
+import Input from '../components/Input';
+import Button from '../components/Button';
+import Component from '../../../../components/base-component';
+import { autobind } from '../../../../decorators/autobind';
+import AuthApi from '../../../../api/authApi';
 
 // @ts-ignore
 import JustValidate from 'just-validate';
 
-const EmailInput = new Input("email", "email","email", "Email Address", "", "Email Address");
-const ButtonEl = new Button("submit", "RESET");
+const EmailInput = new Input('email', 'email', 'email', 'Email Address', '', 'Email Address');
+const ButtonEl = new Button('submit', 'RESET');
 
 const templateHTML = `
 <div id="forgot-content">
@@ -19,7 +19,7 @@ const templateHTML = `
             class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between shadow-md border-2 px-10">
             <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
                 <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                    class="w-full" alt="Sample image" />
+                    class="w-full bg-tertiary-color" alt="Sample image" />
             </div>
 
             <!-- Right column container -->
@@ -45,98 +45,86 @@ const templateHTML = `
 </section>
 </div>
 
-`
+`;
 
 export default class Reset extends Component<HTMLDivElement> {
+  resetFormEl: HTMLFormElement;
+  validator: any;
 
-    resetFormEl: HTMLFormElement;
-    validator: any;
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
 
-    constructor() {
-        super('main');
-        this.hostEl.innerHTML = templateHTML;
+    this.resetFormEl = document.getElementById('reset-form') as HTMLFormElement;
+    this.formValidator('reset-form');
+    this.attach();
+  }
 
-        this.resetFormEl = document.getElementById('reset-form') as HTMLFormElement;
-        this.formValidator("reset-form");
-        this.attach();
-    }
+  attach() {
+    this.resetFormEl.addEventListener('submit', this.resetPasswordHandler);
+  }
 
-    attach() {
-        this.resetFormEl.addEventListener('submit', this.resetPasswordHandler);
-    }
+  @autobind
+  resetPasswordHandler(e: Event) {
+    e.preventDefault();
 
-    @autobind
-    resetPasswordHandler(e:Event) {
-        e.preventDefault();
+    const formEls = e.target as unknown as { [key: string]: HTMLInputElement };
 
-            const formEls = e.target as unknown as {[key: string]: HTMLInputElement};
+    const email = formEls['email'].value;
 
-            const email = formEls["email"].value;
+    const rootUrl = window.location.origin;
 
-            const rootUrl = window.location.origin;
-            
-            const resetPassUrl = `${rootUrl}/reset`;
+    const resetPassUrl = `${rootUrl}/reset`;
 
-            if(!this.validator.isValid) return;
-            
-            (async() => {
+    if (!this.validator.isValid) return;
 
-            try {
+    (async () => {
+      try {
+        const isExistingRes = await AuthApi.checkExisingUser({ email, providerId: 'local' });
 
-                const isExistingRes = await AuthApi.checkExisingUser({ email, providerId: "local" });
+        if (isExistingRes.data.result === 'not found') {
+          alert('Email not found at this website');
+          this.validator.showErrors({ '#email': 'Email not found at this website' });
+          return;
+        }
 
-                if(isExistingRes.data.result === "not found") {
-                    alert("Email not found at this website");
-                    this.validator.showErrors({"#email": "Email not found at this website"});
-                    return;
-                }
+        const response = await AuthApi.sendEmailReset({ email, resetPassUrl });
+        const {
+          user: { _id },
+        } = response.data;
 
-                const response = await AuthApi.sendEmailReset({ email, resetPassUrl });
-                const {
-                  user: { _id },
-                } = response.data;
-          
-                localStorage.setItem(
-                  "user",
-                  JSON.stringify({
-                    email,
-                    userId: _id,
-                  })
-                );
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            email,
+            userId: _id,
+          }),
+        );
 
-                alert('Check your email to reset your password!')
-          
-              } catch (error) {
+        alert('Check your email to reset your password!');
+      } catch (error) {
+        //   console.log(error?.response.status);
+        //   if (error.response.status === 402) {
+        //     showToast("");
+        //   }
+        alert(error);
+        console.log(error);
+      }
+    })();
+  }
 
-                  //   console.log(error?.response.status);
-                  //   if (error.response.status === 402) {
-                  //     showToast("");
-                  //   }
-                  alert(error);
-                  console.log(error);
-          
-              }
-            
-        })()
+  formValidator(formId: string) {
+    this.validator = new JustValidate(`#${formId}`, {
+      validateBeforeSubmitting: true,
+    });
 
-    }
-
-    formValidator(formId: string) {
-
-        this.validator = new JustValidate(`#${formId}`, {
-            validateBeforeSubmitting: true,
-        })
-
-        this.validator
-            .addField("#email", [
-                {
-                    rule: "required",
-                },
-                 {
-                    rule: "email",
-                 }
-            ])
-    }
-
-
+    this.validator.addField('#email', [
+      {
+        rule: 'required',
+      },
+      {
+        rule: 'email',
+      },
+    ]);
+  }
 }

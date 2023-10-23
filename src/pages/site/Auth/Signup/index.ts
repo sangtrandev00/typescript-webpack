@@ -1,18 +1,25 @@
-import Input from "../components/Input";
-import Button from "../components/Button";
-import Component from "../../../../components/base-component";
-import { autobind } from "../../../../decorators/autobind";
-import AuthApi from "../../../../api/authApi";
-import Router from "../../../../router/router";
+import Input from '../components/Input';
+import Button from '../components/Button';
+import Component from '../../../../components/base-component';
+import { autobind } from '../../../../decorators/autobind';
+import AuthApi from '../../../../api/authApi';
+import Router from '../../../../router/router';
 
 // @ts-ignore
 import JustValidate from 'just-validate';
 
-const EmailInput = new Input("email","email", "email", "Email Address", "", "Email Address");
-const NameInput = new Input("name", "text", "name", "Full Name", "", "Full Name");
-const PasswordInput = new Input("password","password", "password", "Password", "", "Password");
-const RePasswordInput = new Input("repassword", "password", "repassword", "Re-Password", "", "Re-Password");
-const ButtonEl = new Button("submit", "SIGNUP");
+const EmailInput = new Input('email', 'email', 'email', 'Email Address', '', 'Email Address');
+const NameInput = new Input('name', 'text', 'name', 'Full Name', '', 'Full Name');
+const PasswordInput = new Input('password', 'password', 'password', 'Password', '', 'Password');
+const RePasswordInput = new Input(
+  'repassword',
+  'password',
+  'repassword',
+  'Re-Password',
+  '',
+  'Re-Password',
+);
+const ButtonEl = new Button('submit', 'SIGNUP');
 
 const templateHTML = `
 
@@ -24,7 +31,7 @@ const templateHTML = `
                 class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between shadow border px-4 md:p-10 mb-10">
                 <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
                     <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                        class="w-full" alt="Sample image" />
+                        class="w-full bg-tertiary-color" alt="Sample image" />
                 </div>
 
                 <!-- Right column container -->
@@ -80,150 +87,138 @@ const templateHTML = `
         </div>
     </section>
     </div>
-`
+`;
 
-export default class Signup extends Component<HTMLDivElement>{
-    validator: any;
-    signupFormEl: HTMLFormElement;
-    navigateLoginBtn: HTMLAnchorElement;
-    constructor() {
-        super('main');
-        this.hostEl.innerHTML = templateHTML;
+export default class Signup extends Component<HTMLDivElement> {
+  validator: any;
+  signupFormEl: HTMLFormElement;
+  navigateLoginBtn: HTMLAnchorElement;
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
 
-        this.signupFormEl = document.getElementById('signup-form') as HTMLFormElement;
-        this.navigateLoginBtn = document.getElementById('navigateLogin') as HTMLAnchorElement;
-        this.formValidator("signup-form");
-        this.attach();
+    this.signupFormEl = document.getElementById('signup-form') as HTMLFormElement;
+    this.navigateLoginBtn = document.getElementById('navigateLogin') as HTMLAnchorElement;
+    this.formValidator('signup-form');
+    this.attach();
+  }
 
-    }
+  attach() {
+    this.signupFormEl.addEventListener('submit', this.signupHandler);
+    this.navigateLoginBtn.addEventListener('click', this.navigateLoginHandler);
+  }
 
-    attach() {
-        this.signupFormEl.addEventListener('submit', this.signupHandler);
-        this.navigateLoginBtn.addEventListener('click', this.navigateLoginHandler);   
-    }
+  @autobind
+  signupHandler(e: Event) {
+    e.preventDefault();
+    const formEl = e.target as HTMLFormElement;
 
-    @autobind
-    signupHandler(e: Event){
-   
-          e.preventDefault();
-          const formEl = e.target as HTMLFormElement;
+    (async () => {
+      try {
+        const elements = formEl.elements as unknown as { [key: string]: HTMLInputElement };
 
-            (async () => {
-               
-                try {
-                    const elements = formEl.elements as unknown as {[key: string]: HTMLInputElement};
+        console.log(elements);
 
-                    console.log(elements);
+        const email = elements['email'].value;
+        const fullName = elements['name'].value;
+        const password = elements['password'].value;
+        const repassword = elements['repassword'].value;
 
-                    const email = elements["email"].value;
-                    const fullName = elements["name"].value;
-                    const password = elements["password"].value;
-                    const repassword = elements["repassword"].value;
-                
-                if (password !== repassword) {
-                  console.log("Please enter re password again!");
-            
-                  // Validate here
-                  return;
-                }
-            
-                const user = {
-                  email,
-                  name: fullName,
-                  password,
-                  role: "client",
-                  providerId: "local"
-                };
+        if (password !== repassword) {
+          console.log('Please enter re password again!');
 
-                console.log(this.validator);
+          // Validate here
+          return;
+        }
 
-                if(!this.validator.isValid) return;
-            
-                const authResponse = await AuthApi.signup(user);
-                const { message, userId } = authResponse.data;
-    
-                console.log(message, userId);
-            
-                if (userId) {
-                  history.pushState(null, '', `/login`);
-                  new Router();
-                }
-                
-                } catch (error) {
-                 console.log(error);
-                 
-                 const errorType = (error as any).response.data.errorType;
-                 const errorMessage = (error as any).response.data.message;
- 
-                 console.log(errorType);
-                 console.log(errorMessage);
- 
-                 if(errorType === "email") {
-                     this.validator.showErrors({"#email": errorMessage});
-                 }
+        const user = {
+          email,
+          name: fullName,
+          password,
+          role: 'client',
+          providerId: 'local',
+        };
 
-                }
+        console.log(this.validator);
 
-            })()
+        if (!this.validator.isValid) return;
 
-      };
+        const authResponse = await AuthApi.signup(user);
+        const { message, userId } = authResponse.data;
 
-    navigateLoginHandler(e: Event) {
-        e.preventDefault();
-        history.pushState(null, '', `/login`);
-        new Router();
-    }
+        console.log(message, userId);
 
-    formValidator(formId: string) {
+        if (userId) {
+          history.pushState(null, '', `/login`);
+          new Router();
+        }
+      } catch (error) {
+        console.log(error);
 
-        this.validator = new JustValidate(`#${formId}`, {
-            validateBeforeSubmitting: true,
-        })
+        const errorType = (error as any).response.data.errorType;
+        const errorMessage = (error as any).response.data.message;
 
-        this.validator
-            .addField("#email", [
-                {
-                    rule: "required",
-                },
-                 {
-                    rule: "email",
-                 }
-            ])
-            .addField("#name", [
-                {
-                    rule: "required",
-                }
-                , 
-                {
-                    rule: "minLength",
-                    value: 8
-                }
-            ])
-            .addField("#password", [
-                {
-                    rule: "required",
-                }
-                , 
-                {
-                    rule: "strongPassword",
-                }
-            ])
-            .addField("#repassword", [
-                {
-                    rule: "required",
-                }, 
-                {
-                    validator: (value: string, fields: { [key: string]: { elem: HTMLInputElement} }) => {
+        console.log(errorType);
+        console.log(errorMessage);
 
-                        if(fields["#password"] && fields["#password"].elem) {
-                            const repeatPasswordVal = fields["#password"].elem.value;
-                            return value === repeatPasswordVal;
-                        }
-                        return true;
-                    },
-                    errorMessage: "Passwords do not match!"
-                }
-            ])
-    }
+        if (errorType === 'email') {
+          this.validator.showErrors({ '#email': errorMessage });
+        }
+      }
+    })();
+  }
 
+  navigateLoginHandler(e: Event) {
+    e.preventDefault();
+    history.pushState(null, '', `/login`);
+    new Router();
+  }
+
+  formValidator(formId: string) {
+    this.validator = new JustValidate(`#${formId}`, {
+      validateBeforeSubmitting: true,
+    });
+
+    this.validator
+      .addField('#email', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'email',
+        },
+      ])
+      .addField('#name', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 8,
+        },
+      ])
+      .addField('#password', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'strongPassword',
+        },
+      ])
+      .addField('#repassword', [
+        {
+          rule: 'required',
+        },
+        {
+          validator: (value: string, fields: { [key: string]: { elem: HTMLInputElement } }) => {
+            if (fields['#password'] && fields['#password'].elem) {
+              const repeatPasswordVal = fields['#password'].elem.value;
+              return value === repeatPasswordVal;
+            }
+            return true;
+          },
+          errorMessage: 'Passwords do not match!',
+        },
+      ]);
+  }
 }
