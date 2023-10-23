@@ -1,7 +1,7 @@
-import ShopApi from "../../../api/shopApi";
-import Component from "../../../components/base-component";
-import { BACKEND_URL } from "../../../constant/backend-domain";
-import Helper from "../../../util/helper";
+import ShopApi from '../../../api/shopApi';
+import Component from '../../../components/base-component';
+import { BACKEND_URL } from '../../../constant/backend-domain';
+import Helper from '../../../util/helper';
 
 const templateHTML = `
 <div id="order-completed" class="">
@@ -136,7 +136,7 @@ const templateHTML = `
                         </div>
                         <div class="w-full flex justify-center items-center">
                             <button
-                                class="hover:bg-black dark:bg-white dark:text-gray-800 dark:hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 py-5 w-96 md:w-full bg-slate-800 text-base font-medium leading-4 text-white">View
+                                class="hover:bg-primary-color dark:bg-white dark:text-color-1 dark:hover:bg-quaternary-color focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color py-5 w-96 md:w-full bg-primary-color text-base font-medium leading-4 text-white">View
                                 Carrier Details</button>
                         </div>
                     </div>
@@ -211,69 +211,72 @@ const templateHTML = `
     </div>
 
     </div>
-`
+`;
 
 export default class OrderCompleted extends Component<HTMLDivElement> {
-    
-    _orderId: string;
-    viewCartEl: HTMLDivElement;
+  _orderId: string;
+  viewCartEl: HTMLDivElement;
 
-    constructor() {
-        super('main')
-        this.hostEl.innerHTML = templateHTML;
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
 
-        this._orderId = Helper.getParams('id') as string;
-        this.viewCartEl = document.getElementById("view-history-cart") as HTMLDivElement;
+    this._orderId = Helper.getParams('id') as string;
+    this.viewCartEl = document.getElementById('view-history-cart') as HTMLDivElement;
 
-        this.renderHistoryOrder();
-    }
+    this.renderHistoryOrder();
+  }
 
-    renderHistoryOrder(){
+  renderHistoryOrder() {
+    (async () => {
+      try {
+        const orderResponse = await ShopApi.getOrderById(this._orderId);
 
-        (async () => {
+        const {
+          order: {
+            user: { fullName, email, phone, shippingAddress },
+            products: { items, totalPrice },
+            createdAt,
+          },
+        } = orderResponse.data;
 
-            try {
-                const orderResponse = await ShopApi.getOrderById(this._orderId);
+        const allTotal = (totalPrice + 8).toFixed(2);
 
-            const {
-                order: {
-                  user: { fullName, email, phone, shippingAddress },
-                  products: { items, totalPrice },
-                  createdAt,
-                },
-              } = orderResponse.data;
-            
-              const allTotal = (totalPrice + 8).toFixed(2);
-            
-              Helper.textContent("orderId", `#${this._orderId}`);
-              Helper.textContent("orderCreatedAt", `${createdAt}`);
-              Helper.textContent("subtotal", `$${totalPrice.toFixed(2)}`);
-              Helper.textContent("discount", `0`);
-              Helper.textContent("allTotal", `$${allTotal}`);
-            
-              //   Customer info
-              Helper.textContent("customerName", `${fullName}`);
-              Helper.textContent("shippingAddress", `${shippingAddress}`);
-              Helper.textContent("email", `${email}`);
-              Helper.textContent("phone", `${phone}`);
-            
-              Helper.imageContent("customerAvatar", `${BACKEND_URL}/images/user-avatar.jpg`);
-            
-              const cartList = items;
-            
-              this.viewCartEl.innerHTML = "";
-              
-              Helper.listCartHandler(cartList, this.viewCartEl, this.insertCart);
-            } catch (error) {
-                console.log(error);
-            }
-            
-        })()
+        Helper.textContent('orderId', `#${this._orderId}`);
+        Helper.textContent('orderCreatedAt', `${createdAt}`);
+        Helper.textContent('subtotal', `$${totalPrice.toFixed(2)}`);
+        Helper.textContent('discount', `0`);
+        Helper.textContent('allTotal', `$${allTotal}`);
 
-      };
+        //   Customer info
+        Helper.textContent('customerName', `${fullName}`);
+        Helper.textContent('shippingAddress', `${shippingAddress}`);
+        Helper.textContent('email', `${email}`);
+        Helper.textContent('phone', `${phone}`);
 
-      insertCart(prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number){
-        const cartItemHtml = `
+        Helper.imageContent('customerAvatar', `${BACKEND_URL}/images/user-avatar.jpg`);
+
+        const cartList = items;
+
+        this.viewCartEl.innerHTML = '';
+
+        Helper.listCartHandler(cartList, this.viewCartEl, this.insertCart);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  insertCart(
+    prodId: string,
+    name: string,
+    thumbnail: string,
+    cateName: string,
+    qty: number,
+    price: number,
+    totalItem: number,
+  ) {
+    const cartItemHtml = `
               <div prod-id=${prodId}
               class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
               <div class="pb-4 md:pb-8 w-10 md:w-40 ">
@@ -304,8 +307,7 @@ export default class OrderCompleted extends Component<HTMLDivElement> {
               </div>
               </div>
             `;
-      
-        return cartItemHtml;
-      };
-    
+
+    return cartItemHtml;
+  }
 }

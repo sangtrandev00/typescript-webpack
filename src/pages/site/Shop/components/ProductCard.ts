@@ -1,28 +1,33 @@
 // Write a class component
 
-import ProductItem from "../../../../components/ProductItem"
-import { BACKEND_URL } from "../../../../constant/backend-domain";
-
+import ProductItem from '../../../../components/ProductItem';
+import { BACKEND_URL } from '../../../../constant/backend-domain';
 
 export default class ProductCard extends ProductItem {
-    
-    _newPrice: number = 0;
+  _newPrice: number = 0;
 
-    constructor( _id: string | undefined,  _name: string,  _oldPrice: number | undefined,  _discount: number | undefined,  _thumbnail: string) {
-        // call super to extends from ProductItem class with arguments
-        super(_id, _name, _oldPrice, _discount, _thumbnail);
+  constructor(
+    _id: string | undefined,
+    _name: string,
+    _oldPrice: number | undefined,
+    _discount: number | undefined,
+    _thumbnail: string,
+  ) {
+    // call super to extends from ProductItem class with arguments
+    super(_id, _name, _oldPrice, _discount, _thumbnail);
 
-        if(this._oldPrice) {
-            this._newPrice = this._oldPrice * (1 - 1/(this._discount || 0));
-        }
+    if (this._oldPrice) {
+      this._newPrice = this._oldPrice * (1 - 1 / (this._discount || 0));
     }
-    
-    // Override
-    get component(): string {
+  }
 
-        return `
+  // Override
+  get component(): string {
+    return `
             <div data-id="${this._id}" class="lg:w-1/3 md:w-1/2 p-4 w-full card-product">
-            <a href="./detail?id=${this._id}" class="group relative block overflow-hidden border pt-2 card-product__link">
+            <a href="./detail?id=${
+              this._id
+            }" class="group relative block overflow-hidden border pt-2 card-product__link shadow-lg">
             <button class="card-product__wishlist absolute end-4 top-4 z-4 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
                 <span class="sr-only">Wishlist</span>
 
@@ -31,12 +36,14 @@ export default class ProductCard extends ProductItem {
                 </svg>
             </button>
 
-            <div>
-                <img src="${BACKEND_URL}/${this._thumbnail}" alt="${this._name}" class="h-64 w-full transition duration-500 group-hover:scale-105 sm:h-72 xl:px-4 md:px-2 object-contain sm:object-contain">
+            <div class="pt-4">
+                <img src="${BACKEND_URL}/${this._thumbnail}" alt="${
+      this._name
+    }" class="transition duration-500 group-hover:scale-105 sm:h-72 xl:px-4 md:px-2 object-cover sm:object-cover">
 
             </div>
             <div class="relative border border-gray-100 bg-white p-6">
-                <span class="whitespace-nowrap bg-slate-300 px-3 py-1.5 text-xs font-medium">
+                <span class="whitespace-nowrap bg-impress-color px-3 py-1.5 text-xs font-medium text-white">
                     New
                 </span>
 
@@ -46,7 +53,9 @@ export default class ProductCard extends ProductItem {
 
                 <div class="flex items-center">
                     <p class="mt-1.5 text-xl text-red-500 ">$${this._newPrice.toFixed(2)}</p>
-                    <p class="mt-1.5 text-sm text-gray-700 ms-2 line-through ">$${this._oldPrice}</p>
+                    <p class="mt-1.5 text-sm text-gray-700 ms-2 line-through ">$${
+                      this._oldPrice
+                    }</p>
                 </div>
 
                 <!-- Rating here -->
@@ -79,15 +88,13 @@ export default class ProductCard extends ProductItem {
                 </ul>
 
                 <form class="mt-4">
-                    <button class="add-to-cart block w-full rounded bg-slate-300 p-4 text-sm font-medium transition hover:scale-105">
+                    <button class="add-to-cart block w-full rounded bg-quaternary-color text- p-4 text-text-color-1 font-medium transition hover:scale-105">
                         Add to Cart
                     </button>
                 </form>
             </div>
         </a>
         </div>
-        `
-
-    }
-
+        `;
+  }
 }

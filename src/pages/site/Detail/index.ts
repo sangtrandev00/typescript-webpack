@@ -163,7 +163,7 @@ const templateHTML = `
                         <div class="mt-8 flex gap-4">
 
                             <button id="addToCartBtn" type="submit"
-                                class="block rounded bg-slate-600 px-5 py-3 text-xs font-medium text-white hover:bg-slate-500">
+                                class="block rounded bg-secondary-color px-5 py-3 text-xs font-medium text-white hover:bg-tertiary-color">
                                 Add to Cart
                             </button>
                             <button type="submit">
@@ -181,25 +181,25 @@ const templateHTML = `
     <ul class="mb-5 flex list-none flex-row flex-wrap border-b-0 pl-0" role="tablist" data-te-nav-ref>
         <li role="presentation" class="flex-grow basis-0 text-center">
             <a href="#tabs-description"
-                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary-color data-[te-nav-active]:text-text-color-1 dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-color dark:data-[te-nav-active]:text-text-color-1-400"
                 data-te-toggle="pill" data-te-target="#tabs-description" data-te-nav-active role="tab"
                 aria-controls="tabs-description" aria-selected="true">Description</a>
         </li>
         <li role="presentation" class="flex-grow basis-0 text-center">
             <a href="#tabs-information"
-                class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary-color data-[te-nav-active]:text-text-color-1 dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-color dark:data-[te-nav-active]:text-text-color-1"
                 data-te-toggle="pill" data-te-target="#tabs-information" role="tab"
                 aria-controls="tabs-information" aria-selected="false">Information</a>
         </li>
         <li role="presentation" class="flex-grow basis-0 text-center">
             <a href="#tabs-comments"
-                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary-color data-[te-nav-active]:text-text-color-1 dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-text-color-1"
                 data-te-toggle="pill" data-te-target="#tabs-comments" role="tab" aria-controls="tabs-comments"
                 aria-selected="false">Comments</a>
         </li>
         <li role="presentation" class="flex-grow basis-0 text-center">
             <a href="#tabs-reviews"
-                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 text-xs font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary-color data-[te-nav-active]:text-text-color-1 dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-text-color-1"
                 data-te-toggle="pill" data-te-target="#tabs-reviews" role="tab" aria-controls="tabs-reviews"
                 aria-selected="false">Reviews</a>
         </li>

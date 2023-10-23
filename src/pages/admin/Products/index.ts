@@ -309,13 +309,13 @@ export default class Products extends AdminBaseComponent {
             imageUrl = `https://placehold.co/358x358`;
           }
 
-          const imageHtml = `<img src="${imageUrl}" alt="${name}" class="w-12 h-12 object-cover" />`;
+          const imageHtml = `<img  src="${imageUrl}" alt="${name}" class="w-12 h-12 object-cover" />`;
 
           return [
             `<p class="truncate-id">${_id}</p>`,
             name,
             imageHtml,
-            categoryId?.name,
+            categoryId?.name || '',
             oldPrice,
             discount,
             0,

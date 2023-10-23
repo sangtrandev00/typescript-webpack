@@ -7,9 +7,9 @@
 
 
 ### Technology and tools: 
-+ Html, CSS, Resposive Web Design, Tailwind CSS, Typescript (OOP )
++ Html, CSS, Resposive Web Design, Tailwind CSS, Typescript (OOP priciples)
 + Single page application
-+ Build tool Webpack
++ Build tool: Webpack
 + Deployment: Netlify
 ### Description
 + The updated of [(JS VERSION)](https://github.com/sangtrandev00/frontend-fullstack-es6-techspace-repo)

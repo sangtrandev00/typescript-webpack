@@ -1,18 +1,17 @@
 // import ProductsApi from "../../../api/productsApi";
-import ProductsApi from "../../../api/productsApi";
-import ShopApi from "../../../api/shopApi";
-import UsersApi from "../../../api/userApi";
-import Component from "../../../components/base-component";
-import { BACKEND_URL } from "../../../constant/backend-domain";
-import { autobind } from "../../../decorators/autobind";
-import { CartItem, ICart } from "../../../interface/Cart";
-import { OrderInterface } from "../../../interface/Order";
-import Router from "../../../router/router";
-import Helper from "../../../util/helper";
+import ProductsApi from '../../../api/productsApi';
+import ShopApi from '../../../api/shopApi';
+import UsersApi from '../../../api/userApi';
+import Component from '../../../components/base-component';
+import { BACKEND_URL } from '../../../constant/backend-domain';
+import { autobind } from '../../../decorators/autobind';
+import { CartItem, ICart } from '../../../interface/Cart';
+import { OrderInterface } from '../../../interface/Order';
+import Router from '../../../router/router';
+import Helper from '../../../util/helper';
 
 // @ts-ignore
 import JustValidate from 'just-validate';
-
 
 const templateHTML = `
 <div class="checkout-content py-12">
@@ -125,9 +124,9 @@ const templateHTML = `
                     Address</label>
 
                 <!-- Radio options -->
-                <div class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem] default-shipping-el hidden">
+                <div class="mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem] default-shipping-el">
                     <input
-                        class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary dark:checked:after:border-primary dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+                        class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary-color checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary-color checked:after:bg-primary-color checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary-color checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary-color dark:checked:after:border-primary-color dark:checked:after:bg-primary-color dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary-color dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
                         type="radio" name="shippingRadioInput" id="radioDefault01" checked />
                     <label class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer mb-3"
                         for="radioDefault01">
@@ -141,7 +140,7 @@ const templateHTML = `
 
                 <div class="new-shipping-el mb-[0.125rem] block min-h-[1.5rem] pl-[1.5rem]">
                     <input
-                        class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary dark:checked:after:border-primary dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+                        class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary-color checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary-color checked:after:bg-primary-color checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary-color checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary-color dark:checked:after:border-primary-color dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary-color dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
                         type="radio" name="shippingRadioInput" id="radioDefault02" />
                     <label class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer mb-3"
                         for="radioDefault02">
@@ -201,7 +200,7 @@ const templateHTML = `
                 </div>
             </div>
             <button type="submit"
-                class="mt-4 mb-8 w-full rounded-md bg-slate-900 px-6 py-3 font-medium text-white">Place
+                class="mt-4 mb-8 w-full rounded-md bg-tertiary-color hover:bg-secondary-color px-6 py-3 font-medium text-white">Place
                 Order</button>
 
         </form>
@@ -213,115 +212,127 @@ const templateHTML = `
 `;
 
 export default class Checkout extends Component<HTMLDivElement> {
+  selectProvinceEl: HTMLSelectElement;
+  selectDistrictEl: HTMLSelectElement;
+  selectWardEl: HTMLSelectElement;
+  defaultShippingEl: HTMLDivElement;
+  defaultShippingInput: HTMLInputElement;
+  newShippingAddressRadioInput: HTMLInputElement;
+  defaultShippingAddressRadioInput: HTMLInputElement;
+  viewCartEl: HTMLDivElement;
+  newShippingAddressEl: HTMLDivElement;
+  newShippingSelectAddressEl: HTMLDivElement;
+  checkoutMethod1: HTMLInputElement;
+  checkoutMethod2: HTMLInputElement;
+  orderFormEl: HTMLFormElement;
+  cart?: ICart;
+  cartList?: CartItem[] = [];
+  userId?: string;
+  validator: any;
 
-    selectProvinceEl: HTMLSelectElement;
-    selectDistrictEl: HTMLSelectElement;
-    selectWardEl: HTMLSelectElement;
-    defaultShippingEl: HTMLDivElement;
-    defaultShippingInput: HTMLInputElement;
-    newShippingAddressRadioInput: HTMLInputElement;
-    defaultShippingAddressRadioInput: HTMLInputElement;
-    viewCartEl: HTMLDivElement;
-    newShippingAddressEl: HTMLDivElement;
-    newShippingSelectAddressEl: HTMLDivElement;
-    checkoutMethod1: HTMLInputElement;
-    checkoutMethod2: HTMLInputElement;
-    orderFormEl: HTMLFormElement;
-    cart?: ICart;
-    cartList?: CartItem[] = [];
-    userId?: string;
-    validator: any;
+  constructor() {
+    super('main');
+    this.hostEl.innerHTML = templateHTML;
+    this.selectProvinceEl = document.getElementById('selectProvince') as HTMLSelectElement;
+    this.selectDistrictEl = document.getElementById('selectDistrict') as HTMLSelectElement;
+    this.selectWardEl = document.getElementById('selectWard') as HTMLSelectElement;
+    this.defaultShippingEl = document.querySelector('.default-shipping-el') as HTMLDivElement;
+    this.defaultShippingInput = document.querySelector(
+      '.default-shipping-input',
+    ) as HTMLInputElement;
 
-    constructor() {
-        super("main");
-        this.hostEl.innerHTML = templateHTML;
-        this.selectProvinceEl = document.getElementById("selectProvince") as HTMLSelectElement;
-        this.selectDistrictEl = document.getElementById("selectDistrict") as HTMLSelectElement;
-        this.selectWardEl = document.getElementById("selectWard") as HTMLSelectElement;
-        this.defaultShippingEl = document.querySelector(".default-shipping-el") as HTMLDivElement;
-        this.defaultShippingInput = document.querySelector(".default-shipping-input") as HTMLInputElement;
-        
+    this.newShippingAddressRadioInput = document.getElementById(
+      'radioDefault02',
+    ) as HTMLInputElement;
+    console.log(this.newShippingAddressRadioInput);
 
-        this.newShippingAddressRadioInput = document.getElementById("radioDefault02") as HTMLInputElement;
-        console.log(this.newShippingAddressRadioInput);
+    this.defaultShippingAddressRadioInput = document.getElementById(
+      'radioDefault01',
+    ) as HTMLInputElement;
+    this.viewCartEl = document.getElementById('view-cart') as HTMLDivElement;
+    this.newShippingAddressEl = document.querySelector('.new-shipping-el') as HTMLDivElement;
+    this.newShippingSelectAddressEl = document.querySelector(
+      '.new-shipping-address-select-el',
+    ) as HTMLDivElement;
+    this.checkoutMethod1 = document.getElementById('checkoutMethod1') as HTMLInputElement;
+    this.checkoutMethod2 = document.getElementById('checkoutMethod2') as HTMLInputElement;
+    this.orderFormEl = document.getElementById('order-form') as HTMLFormElement;
 
-        this.defaultShippingAddressRadioInput = document.getElementById("radioDefault01") as HTMLInputElement;
-        this.viewCartEl = document.getElementById("view-cart") as HTMLDivElement;
-        this.newShippingAddressEl = document.querySelector(".new-shipping-el") as HTMLDivElement;
-        this.newShippingSelectAddressEl = document.querySelector(".new-shipping-address-select-el") as HTMLDivElement;
-        this.checkoutMethod1 = document.getElementById("checkoutMethod1") as HTMLInputElement;
-        this.checkoutMethod2 = document.getElementById("checkoutMethod2") as HTMLInputElement;
-        this.orderFormEl = document.getElementById("order-form") as HTMLFormElement;
-
-        const localCart = localStorage.getItem("cart");
-        if(localCart) {
-            this.cart = JSON.parse(localCart);
-            this.cartList = this.cart?.cartList;
-        }
-
-        this.userId = localStorage.getItem("userId") as string;
-
-        this.formValidator('order-form');
-        this.renderOrder();
-        this.attach();
+    const localCart = localStorage.getItem('cart');
+    if (localCart) {
+      this.cart = JSON.parse(localCart);
+      this.cartList = this.cart?.cartList;
     }
 
-    attach() {
-        this.orderFormEl.addEventListener("submit", this.createOrder);
-    }   
+    this.userId = localStorage.getItem('userId') as string;
 
-    renderOrder(){
-       (async () => {
+    this.formValidator('order-form');
+    this.renderOrder();
+    this.attach();
+  }
 
-        this.viewCartEl.innerHTML = "";
-        Helper.listCartHandler(this.cartList || [], this.viewCartEl, this.insertCart);
-      
-        const { totalPrice } = Helper.calcTotalAndLengthOfCart(this.cartList || []);
-      
-        const allTotal = totalPrice + 8;
-      
-        Helper.textContent("subtotal", `$${totalPrice.toFixed(2)}`);
-        Helper.textContent("allTotal", `$${allTotal.toFixed(2)}`);
-      
-        if (!this.userId) {
-          this.newShippingAddressRadioInput.checked = true;
-          return;
+  attach() {
+    this.orderFormEl.addEventListener('submit', this.createOrder);
+  }
+
+  renderOrder() {
+    (async () => {
+      this.viewCartEl.innerHTML = '';
+      Helper.listCartHandler(this.cartList || [], this.viewCartEl, this.insertCart);
+
+      const { totalPrice } = Helper.calcTotalAndLengthOfCart(this.cartList || []);
+
+      const allTotal = totalPrice + 8;
+
+      Helper.textContent('subtotal', `$${totalPrice.toFixed(2)}`);
+      Helper.textContent('allTotal', `$${allTotal.toFixed(2)}`);
+
+      if (!this.userId) {
+        this.newShippingAddressRadioInput.checked = true;
+        return;
+      }
+
+      this.defaultShippingEl.classList.remove('hidden');
+      this.defaultShippingInput.classList.remove('hidden');
+
+      // newShippingAddressEl.classList.add("hidden");
+      this.newShippingSelectAddressEl.classList.add('hidden');
+
+      if (this.userId) {
+        const response = await UsersApi.getById(this.userId);
+
+        const { user } = response.data;
+
+        const { email, name, address, phone } = user;
+
+        if (email) {
+          Helper.inputValue('email', email);
         }
-      
-        this.defaultShippingEl.classList.remove("hidden");
-        this.defaultShippingInput.classList.remove("hidden");
-      
-        // newShippingAddressEl.classList.add("hidden");
-        this.newShippingSelectAddressEl.classList.add("hidden");
-      
-        if(this.userId) {
-            const response = await UsersApi.getById(this.userId);
-
-            const {user} = response.data;
-    
-            const { email, name, address, phone } = user;
-            
-            if(email) {
-                Helper.inputValue("email", email);
-            }
-            if(name) {
-                Helper.inputValue("fullName", name);
-            }
-
-            if(phone) {
-                Helper.inputValue("phone", phone);
-            }
-            if(address) {
-                Helper.inputValue("default-shipping-input", address);
-            }
+        if (name) {
+          Helper.inputValue('fullName', name);
         }
 
-       })()
-    };
+        if (phone) {
+          Helper.inputValue('phone', phone);
+        }
+        if (address) {
+          Helper.inputValue('default-shipping-input', address);
+        }
+      }
+    })();
+  }
 
-    insertCart(prodId: string, name: string, thumbnail: string, cateName: string, qty: number, price: number, totalItem: number){
-        console.log(cateName);
-        const cartItemHtml = `
+  insertCart(
+    prodId: string,
+    name: string,
+    thumbnail: string,
+    cateName: string,
+    qty: number,
+    price: number,
+    totalItem: number,
+  ) {
+    console.log(cateName);
+    const cartItemHtml = `
               <div prod-id=${prodId} class="flex flex-col rounded-lg bg-white sm:flex-row">
                   <img class="m-2 h-24 w-28 rounded-md border object-cover object-center"
                       src="${BACKEND_URL}/${thumbnail}"
@@ -333,184 +344,172 @@ export default class Checkout extends Component<HTMLDivElement> {
                   </div>
               </div>
             `;
-      
-        return cartItemHtml;
-    };
 
-    @autobind
-    createOrder(e: Event){
+    return cartItemHtml;
+  }
 
-        e.preventDefault();
+  @autobind
+  createOrder(e: Event) {
+    e.preventDefault();
 
-        const formEl = e.target as HTMLFormElement;
+    const formEl = e.target as HTMLFormElement;
 
-        (async() => {
-            const currFormEles = formEl.elements as unknown as { [key: string]: HTMLInputElement };
-      
-            console.log(currFormEles);
+    (async () => {
+      const currFormEles = formEl.elements as unknown as { [key: string]: HTMLInputElement };
 
-            const inputSelectShippings = [...document.querySelectorAll("input[data-te-select-input-ref]")] as HTMLInputElement[];
-        
-            let addressShipping = "";
+      console.log(currFormEles);
 
-            if (this.newShippingAddressRadioInput.checked) {
-              addressShipping = inputSelectShippings.map((input) => input.value).join(", ");
-  
-            } else if (this.defaultShippingAddressRadioInput.checked) {
-              addressShipping = this.defaultShippingInput.value;
-            }
+      const inputSelectShippings = [
+        ...document.querySelectorAll('input[data-te-select-input-ref]'),
+      ] as HTMLInputElement[];
 
-            const email = currFormEles["email"].value;
-            const fullName = currFormEles["fullName"].value;
-            const phone = currFormEles["phone"].value;
-            const note = currFormEles["note"].value;
-        
-            let paymentMethod = "COD"; // Default --- Fix here later
-        
-            if (this.checkoutMethod1.checked) {
-              paymentMethod = "COD";
-            } else if (this.checkoutMethod2.checked) {
-              paymentMethod = "VNPAY";
-            }
-        
-            const user = {
-              email,
-              fullName,
-              phone,
-              shippingAddress: addressShipping,
-            };
-        
-            const localCart = localStorage.getItem("cart");
-            if(!localCart) return;
-            const cart = JSON.parse(localCart) as ICart;
+      let addressShipping = '';
 
-            interface IProducts {
-                items: ( CartItem| undefined )[];
-                totalPrice: number;
-            }
+      if (this.newShippingAddressRadioInput.checked) {
+        addressShipping = inputSelectShippings.map(input => input.value).join(', ');
+      } else if (this.defaultShippingAddressRadioInput.checked) {
+        addressShipping = this.defaultShippingInput.value;
+      }
 
-            const products: IProducts = {
-              items: [],
-              totalPrice: 0,
-            };
-        
-            const promisesProducts =  cart.cartList.map(async (cartItem: CartItem) => {
-              const { prodId, qty } = cartItem;
+      const email = currFormEles['email'].value;
+      const fullName = currFormEles['fullName'].value;
+      const phone = currFormEles['phone'].value;
+      const note = currFormEles['note'].value;
 
-              try {
-              
-                  const productResponse = await ProductsApi.getById(prodId as string);
-  
-                const {
-                  product: { name, oldPrice, discount, thumbnail },
-                } = productResponse.data;
-        
-                const productItem: CartItem = {
-                    prodId,
-                    qty,
-                };
+      let paymentMethod = 'COD'; // Default --- Fix here later
 
-                productItem.name = name;
-                productItem.price = oldPrice * (1 - discount / 100);
-                productItem.image = thumbnail;
+      if (this.checkoutMethod1.checked) {
+        paymentMethod = 'COD';
+      } else if (this.checkoutMethod2.checked) {
+        paymentMethod = 'VNPAY';
+      }
 
-                return productItem;
-  
-              } catch (error) {
-                console.log(error);
-                return undefined;
-              }
-            });
-        
-            products.totalPrice = cart.cartList.reduce((acc: number, cartItem: CartItem) => {
-              return acc + (cartItem.qty as number || 0 ) * (cartItem.price as number || 0 );
-            }, 0);
-        
-           
-            try {
-                 // Using Promise.all to resolve concerruntly promises
-                const productsList = await Promise.all(promisesProducts);
-    
-                products.items = productsList;
-    
-                const order : OrderInterface = {
-                paymentMethod,
-                note,
-                user,
-                products: products,
-                };
-
-                if(!this.validator.isValid) return;
-            
-                const response = await ShopApi.createOrder(order);
-            
-                const {
-                order: { _id },
-                } = response.data;
-            
-                // Clear cart
-                localStorage.removeItem("cart");
-            
-                // Minus stockQty at databasae
-    
-                history.pushState(null, "", `./order-completed?id=${_id}`);
-                new Router()
-            } catch (error) {
-                console.log(error);
-            }
-
-        })();
-            
+      const user = {
+        email,
+        fullName,
+        phone,
+        shippingAddress: addressShipping,
       };
 
+      const localCart = localStorage.getItem('cart');
+      if (!localCart) return;
+      const cart = JSON.parse(localCart) as ICart;
 
-      formValidator(formId: string) {
+      interface IProducts {
+        items: (CartItem | undefined)[];
+        totalPrice: number;
+      }
 
-        this.validator = new JustValidate(`#${formId}`, {
-            validateBeforeSubmitting: true,
-        })
+      const products: IProducts = {
+        items: [],
+        totalPrice: 0,
+      };
 
-        this.validator
-            .addField("#email", [
-                {
-                    rule: "required",
-                },
-                 {
-                    rule: "email",
-                 }
-            ])
-            .addField("#fullName", [
-                {
-                    rule: "required",
-                }
-                , 
-                {
-                    rule: "minLength",
-                    value: 8
-                }
-            ])
-            .addField("#phone", [
-                {
-                    rule: "required",
-                }
-                , 
-                {
-                    rule: "minLength",
-                    value: 8
-                }
-            ])
-            .addField("#Note", [
-                {
-                    rule: "required",
-                }, 
+      const promisesProducts = cart.cartList.map(async (cartItem: CartItem) => {
+        const { prodId, qty } = cartItem;
 
-                {
-                    rule: "minLength",
-                    value: 8
-                }
-            ])
-    }
+        try {
+          const productResponse = await ProductsApi.getById(prodId as string);
 
+          const {
+            product: { name, oldPrice, discount, thumbnail },
+          } = productResponse.data;
 
+          const productItem: CartItem = {
+            prodId,
+            qty,
+          };
+
+          productItem.name = name;
+          productItem.price = oldPrice * (1 - discount / 100);
+          productItem.image = thumbnail;
+
+          return productItem;
+        } catch (error) {
+          console.log(error);
+          return undefined;
+        }
+      });
+
+      products.totalPrice = cart.cartList.reduce((acc: number, cartItem: CartItem) => {
+        return acc + ((cartItem.qty as number) || 0) * ((cartItem.price as number) || 0);
+      }, 0);
+
+      try {
+        // Using Promise.all to resolve concerruntly promises
+        const productsList = await Promise.all(promisesProducts);
+
+        products.items = productsList;
+
+        const order: OrderInterface = {
+          paymentMethod,
+          note,
+          user,
+          products: products,
+        };
+
+        if (!this.validator.isValid) return;
+
+        const response = await ShopApi.createOrder(order);
+
+        const {
+          order: { _id },
+        } = response.data;
+
+        // Clear cart
+        localStorage.removeItem('cart');
+
+        // Minus stockQty at databasae
+
+        history.pushState(null, '', `./order-completed?id=${_id}`);
+        new Router();
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }
+
+  formValidator(formId: string) {
+    this.validator = new JustValidate(`#${formId}`, {
+      validateBeforeSubmitting: true,
+    });
+
+    this.validator
+      .addField('#email', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'email',
+        },
+      ])
+      .addField('#fullName', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 8,
+        },
+      ])
+      .addField('#phone', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 8,
+        },
+      ])
+      .addField('#Note', [
+        {
+          rule: 'required',
+        },
+
+        {
+          rule: 'minLength',
+          value: 8,
+        },
+      ]);
+  }
 }
-

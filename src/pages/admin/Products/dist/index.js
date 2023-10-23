@@ -100,12 +100,12 @@ var Products = /** @class */ (function (_super) {
                             else {
                                 imageUrl = "https://placehold.co/358x358";
                             }
-                            var imageHtml = "<img src=\"" + imageUrl + "\" alt=\"" + name + "\" class=\"w-12 h-12 object-cover\" />";
+                            var imageHtml = "<img  src=\"" + imageUrl + "\" alt=\"" + name + "\" class=\"w-12 h-12 object-cover\" />";
                             return [
                                 "<p class=\"truncate-id\">" + _id + "</p>",
                                 name,
                                 imageHtml,
-                                categoryId === null || categoryId === void 0 ? void 0 : categoryId.name,
+                                (categoryId === null || categoryId === void 0 ? void 0 : categoryId.name) || '',
                                 oldPrice,
                                 discount,
                                 0,

@@ -18,13 +18,13 @@ const templateHTML = `
                 </div>
 
                 <!-- Cart heading title -->
-                <div class="flex my-5 bg-slate-300 py-2 px-4">
-                    <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
-                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+                <div class="flex my-5 bg-tertiary-color py-2 px-4">
+                    <h3 class="font-semibold text-color-2 text-xs uppercase w-2/5">Product Details</h3>
+                    <h3 class="font-semibold text-center text-color-2 text-xs uppercase w-1/5">
                         Quantity</h3>
-                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+                    <h3 class="font-semibold text-center text-color-2 text-xs uppercase w-1/5">
                         Price</h3>
-                    <h3 class="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">
+                    <h3 class="font-semibold text-center text-color-2 text-xs uppercase w-1/5">
                         Total</h3>
                 </div>
 
@@ -48,14 +48,14 @@ const templateHTML = `
                     <input type="text" id="promo" placeholder="Enter your code" class="p-2 text-sm w-full">
                 </div>
                 <button
-                    class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase">Apply</button>
+                    class="bg-impress-color hover:bg-impress-bold-color px-5 py-2 text-sm text-white uppercase">Apply</button>
                 <div class="border-t mt-8">
                     <div class="flex font-semibold justify-between py-6 text-sm uppercase">
                         <span>Total cost</span>
                         <span id="totalCost">$600</span>
                     </div>
                     <a href="./checkout.html" id="checkoutBtn"
-                        class="text-center bg-slate-500 font-semibold hover:bg-slate-600 py-3 text-sm text-white uppercase w-full block">Checkout</a>
+                        class="text-center bg-secondary-color font-semibold hover:bg-tertiary-color py-3 text-sm text-white uppercase w-full block">Checkout</a>
                 </div>
             </div>
 
@@ -103,9 +103,9 @@ export default class ShopCart extends Component<HTMLDivElement> {
       Helper.textContent('totalCost', `$${totalPrice.toFixed(2)}`);
 
       const continueShopEl = `
-          <a  href="./shop.html" class="flex font-semibold text-indigo-600 text-sm my-5">
+          <a  href="./shop.html" class="flex font-semibold text-impress-color text-sm my-5">
       
-          <svg class="fill-current mr-2 text-indigo-600 w-4" viewBox="0 0 448 512">
+          <svg class="fill-current mr-2 text-impress-color w-4" viewBox="0 0 448 512">
               <path
                   d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
           </svg>

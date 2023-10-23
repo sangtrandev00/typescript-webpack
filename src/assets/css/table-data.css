@@ -323,7 +323,7 @@ table.dataTable tbody tr.selected a {
 table.dataTable tbody th,
 table.dataTable tbody td {
   /* padding: 8px 10px; */
-  padding: 0px 2px;
+  padding: 4px 2px;
   text-align: center;
 }
 table.dataTable.row-border tbody th,

@@ -130,7 +130,7 @@ const templateHTML = `
                 class=" h-full my-2 flex flex-col justify-between border-x-0 border-b-2 border-t-0 border-transparent px-7 pb-3.5 pt-4 min-[0]:text-sm md:text-xs  font-medium  leading-tight text-impress-bold-color hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
                 data-te-toggle="pill" data-te-target="#tabs-home01" role="tab"
                 aria-controls="tabs-home01" aria-selected="true">
-                <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem]">Iphone 14
+                <p class="uppercase min-[0px]:text-[0.8rem] sm:min-h-[2rem] sm:text-[1.2rem] leading-6">Iphone 14
                     Promax</p>
                 <p class="mt-3 min-[0px]:text-[0.6rem] sm:text-[0.9rem]">Giá siêu ưu đãi</p>
             </a>
@@ -174,15 +174,15 @@ const templateHTML = `
     <div class="block-top-home__right-banner shadow border h-full flex rounded-[20px] bg-tertiary-color p-3">
         <div class="right-banner"><a href="#" class="right-banner__item mb-3 button__link  "><img
                     id="right-banner-image-1"
-                    src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-1-right.jpg" width="312"
+                    src="./src/assets/images/small-picture-banner-1-right.jpg" width="312"
                     height="300" alt="GALAXY S20 FE<br>Giá rẻ ngất ngây" loading="lazy"
                     class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a><a href="#"
                 class="right-banner__item mb-3 button__link "><img id="right-banner-image-2"
-                    src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-2-right.jpg" width="312"
+                    src="./src/assets/images/small-picture-banner-2-right.jpg" width="312"
                     height="300" alt="IPAD CHÍNH HÃNG<br>Lên đời từ 6.49 triệu" loading="lazy"
                     class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a><a href="#"
                 class="right-banner__item mb-3 button__link "><img id="right-banner-image-3"
-                    src="https://fullstack-techspace-es6-api.onrender.com/images/small-picture-banner-3-right.jpg" width="690"
+                    src="./src/assets/images/small-picture-banner-3-right.jpg" width="690"
                     height="300" alt="LENOVO IDEAPAD<br> THIẾT KẾ CỨNG CÁP" loading="lazy"
                     class="right-banner__img mb-4 rounded-[20px] overflow-hidden shadow-md w-[312px]"></a></div>
     </div>
@@ -544,7 +544,7 @@ const templateHTML = `
 
     <div class="flex justify-center items-center">
         <a id="loadMoreBtn" href="shop.html"
-            class="hover:bg-slate-600 dark:text-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 bg-slate-800 py-5 md:px-16 p-2 md:w-auto lg:mt-12 md:mt-12 mt-10 text-white font-medium text-base leading-4">Load
+            class="hover:bg-secondary-color dark:text-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-primary-color bg-primary-color py-5 md:px-16 p-2 md:w-auto lg:mt-12 md:mt-12 mt-10 text-white font-medium text-base leading-4">Load
             More</a>
     </div>
 </div>
@@ -572,7 +572,7 @@ const templateHTML = `
                 class="w-32 rounded-full shadow-lg dark:shadow-black/30" />
         </div>
         <h5 class="mb-4 text-xl font-semibold">Maria Smantha</h5>
-        <h6 class="mb-4 font-semibold text-primary dark:text-primary-500">
+        <h6 class="mb-4 font-semibold text-impress-color">
             Signer
         </h6>
         <p class="mb-4">
@@ -592,7 +592,7 @@ const templateHTML = `
                 class="w-32 rounded-full shadow-lg dark:shadow-black/30" />
         </div>
         <h5 class="mb-4 text-xl font-semibold">Lisa Cudrow</h5>
-        <h6 class="mb-4 font-semibold text-primary dark:text-primary-500">
+        <h6 class="mb-4 font-semibold text-impress-color">
             Graphic Designer
         </h6>
         <p class="mb-4">
@@ -650,7 +650,7 @@ const templateHTML = `
                 class="w-32 rounded-full shadow-lg dark:shadow-black/30" />
         </div>
         <h5 class="mb-4 text-xl font-semibold">David Telex</h5>
-        <h6 class="mb-4 font-semibold text-primary dark:text-primary-400">
+        <h6 class="mb-4 font-semibold text-impress-color ">
             Software architechure
         </h6>
         <p class="mb-4 text-neutral-600 dark:text-neutral-300">
@@ -732,8 +732,8 @@ const templateHTML = `
                     <p class="leading-relaxed mb-3">Switch vs Steam Deck vs ROG Ally: Đâu là máy chơi game
                         cầm tay tốt nhất cho bạn?.</p>
                     <div class="flex items-center flex-wrap ">
-                        <a href="./shop.html"
-                            class="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
+                        <a href="./blogs"
+                            class="text-text-color-2 inline-flex items-center md:mb-2 lg:mb-0">Learn More
                             <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor"
                                 stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"></path>
@@ -772,8 +772,8 @@ const templateHTML = `
                     <p class="leading-relaxed mb-3">Vivo S17e vô tình được liệt kê trên website với đầy đủ
                         thông tin cấu hình và giá bán</p>
                     <div class="flex items-center flex-wrap">
-                        <a href="./shop.html"
-                            class="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
+                        <a href="./blogs"
+                            class="text-text-color-2 inline-flex items-center md:mb-2 lg:mb-0">Learn More
                             <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor"
                                 stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"></path>
@@ -812,8 +812,8 @@ const templateHTML = `
                     <p class="leading-relaxed mb-3">Chi tiết về pin, tốc độ sạc và camera chính của Realme
                         Narzo N53 được tiết lộ</p>
                     <div class="flex items-center flex-wrap ">
-                        <a href="./shop.html"
-                            class="text-blue-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More
+                        <a href="./blogs"
+                            class="text-text-color-2 inline-flex items-center md:mb-2 lg:mb-0">Learn More
                             <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" stroke="currentColor"
                                 stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M5 12h14"></path>

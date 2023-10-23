@@ -29,12 +29,6 @@ const templateHTML = `
                 <div class="flex flex-wrap items-center">
                     <div class="hidden w-full xl:block xl:w-1/2">
                         <div class="py-17.5 px-26 text-center">
-                            <a class="mb-5.5 inline-block" href="index.html">
-                                <img class="hidden dark:block" src="../assets/images/tech-main-logo-bright.png"
-                                    alt="Logo" />
-                                <img class="dark:hidden w-24 h-24" src="../assets/images/tech-main-logo-bright.png"
-                                    alt="Logo" />
-                            </a>
 
                             <p class="font-medium 2xl:px-20 mb-3">
                                 Login to TechSpace Admin
@@ -196,99 +190,91 @@ const templateHTML = `
         </div>
     </main>
     <!-- ===== Main Content End ===== -->
-`
+`;
 export default class AdminLogin extends Component<HTMLDivElement> {
-    validator: any;
-    loginFormEl: HTMLFormElement;
+  validator: any;
+  loginFormEl: HTMLFormElement;
 
-    constructor() {
-        super('admin-app');
-        this.hostEl.innerHTML = this.component;
-        this.loginFormEl = document.getElementById('admin-login-form') as HTMLFormElement; 
-        this.formValidator("admin-login-form");
-        this.attach();
-       
-    }
+  constructor() {
+    super('admin-app');
+    this.hostEl.innerHTML = this.component;
+    this.loginFormEl = document.getElementById('admin-login-form') as HTMLFormElement;
+    this.formValidator('admin-login-form');
+    this.attach();
+  }
 
-    get component() {
-        return templateHTML;
-    }
+  get component() {
+    return templateHTML;
+  }
 
-    attach() {
-        this.loginFormEl.addEventListener("submit", this.loginHandler);
-    }
+  attach() {
+    this.loginFormEl.addEventListener('submit', this.loginHandler);
+  }
 
-    @autobind
-    loginHandler(e: Event) {
-        e.preventDefault();
-        const formEl = e.target as HTMLFormElement;
-        const formEls = formEl.elements as unknown as { [key: string]: HTMLFormElement };
-        console.log(formEls);
+  @autobind
+  loginHandler(e: Event) {
+    e.preventDefault();
+    const formEl = e.target as HTMLFormElement;
+    const formEls = formEl.elements as unknown as { [key: string]: HTMLFormElement };
+    console.log(formEls);
 
-        const email = formEls["email"].value;
-        const password = formEls["password"].value;
-    
-        const user = {
-            email,
-            password,
-        };
+    const email = formEls['email'].value;
+    const password = formEls['password'].value;
 
-        if(!this.validator.isValid) return;
+    const user = {
+      email,
+      password,
+    };
 
-        (async() => {
-            try {
-             
-                const authResponse = await AuthApi.adminLogin(user);
-                const {token, userId } = authResponse.data;
-                const expiryDate = Date.now() + 60 * 60 * 1000;
-                
-                localStorage.setItem("adminId", userId);
-                localStorage.setItem("adminToken", token);
-                localStorage.setItem("adminExpiryDate", expiryDate.toString());
-                history.pushState(null, "", '/admin');
-                // new AdminRouter();
-                location.reload();
-            } 
-                catch (error) {                 
-                console.log(error);
-                const errorMessage = (error as any).response.data.message;
-                alert(errorMessage);
-                
-            }
+    if (!this.validator.isValid) return;
 
-            // alert("Login successfully!, navigate after 3s");
-            // const timeOutId = setTimeout(() => {
-            //     clearTimeout(timeOutId);
-            // }, 3000);
+    (async () => {
+      try {
+        const authResponse = await AuthApi.adminLogin(user);
+        const { token, userId } = authResponse.data;
+        const expiryDate = Date.now() + 60 * 60 * 1000;
 
-        })()
-    }
+        localStorage.setItem('adminId', userId);
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminExpiryDate', expiryDate.toString());
+        history.pushState(null, '', '/admin');
+        // new AdminRouter();
+        location.reload();
+      } catch (error) {
+        console.log(error);
+        const errorMessage = (error as any).response.data.message;
+        alert(errorMessage);
+      }
 
-    formValidator(formId: string) {
+      // alert("Login successfully!, navigate after 3s");
+      // const timeOutId = setTimeout(() => {
+      //     clearTimeout(timeOutId);
+      // }, 3000);
+    })();
+  }
 
-        this.validator = new JustValidate(`#${formId}`, {
-            validateBeforeSubmitting: true,
-        })
+  formValidator(formId: string) {
+    this.validator = new JustValidate(`#${formId}`, {
+      validateBeforeSubmitting: true,
+    });
 
-        this.validator
-            .addField("#email", [
-                {
-                    rule: "required",
-                },
-                 {
-                    rule: "email",
-                 }
-            ])
-            .addField("#password", [
-                {
-                    rule: "required",
-                }
-                , 
-                {
-                    rule: "minLength",
-                    value: 6
-                }
-            ])
-    }
-
+    this.validator
+      .addField('#email', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'email',
+        },
+      ])
+      .addField('#password', [
+        {
+          rule: 'required',
+        },
+        {
+          rule: 'minLength',
+          value: 6,
+        },
+      ]);
+  }
 }

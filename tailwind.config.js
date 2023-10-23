@@ -22,6 +22,8 @@ export default {
         'quaternary-color': '#95d5b2',
         'impress-color': '#BF968F',
         'impress-bold-color': '#6B362D',
+        'text-color-1': '#473933',
+        'text-color-2': '#33473D',
       },
     },
     variants: {

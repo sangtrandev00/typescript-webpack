@@ -6,7 +6,7 @@ export default class Filter {
         <div class="shop-content__sidebar hidden md:w-1/4 md:block ">
 
             <div action="#" method="get" id="shop-content__filter-bar" class="w-full h-40rem max-w-xs p-4 overflow-y-auto bg-white dark:bg-gray-800 border shadow">
-                <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
+                <h5 id="drawer-label" class="inline-flex items-center mb-4 text-base font-semibold text-impress-bold-color uppercase dark:text-gray-400">
                     Apply filters
                 </h5>
                 <button type="button" data-drawer-dismiss="shop-content__filter-bar" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -37,7 +37,7 @@ export default class Filter {
                                         From
                                     </label>
         
-                                    <input type="number" id="price-from" value="47.84" min="1" max="10000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:bg-slate-600 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:bg-slate-600 dark:focus:border-primary-500" placeholder="" required="">
+                                    <input type="number" id="price-from" value="47.84" min="1" max="10000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:bg-secondary-color focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:bg-secondary-color dark:focus:border-primary-500" placeholder="" required="">
                                 </div>
         
                                 <div class="w-full">
@@ -45,7 +45,7 @@ export default class Filter {
                                         To
                                     </label>
         
-                                    <input type="number" id="price-to" value="1140" min="1" max="10000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:bg-slate-600 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:bg-slate-600 dark:focus:border-primary-500" placeholder="" required="">
+                                    <input type="number" id="price-to" value="1140" min="1" max="10000" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:bg-secondary-color focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:bg-secondary-color dark:focus:border-primary-500" placeholder="" required="">
                                 </div>
                             </div>
                         </div>

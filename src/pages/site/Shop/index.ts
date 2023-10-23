@@ -61,7 +61,7 @@ const templateHTML = `
                         <!-- Single products!!! -->
                         <div class="lg:w-1/3 md:w-1/2 p-4 w-full card-product">
                             <a href="detail-product.html"
-                                class="group relative block overflow-hidden border pt-2 card-product__link">
+                                class="group relative block overflow-hidden border pt-2 card-product__link shadow-lg">
                                 <button
                                     class="card-product__wishlist absolute end-4 top-4 z-4 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
                                     <span class="sr-only">Wishlist</span>
@@ -170,7 +170,7 @@ const templateHTML = `
                                 </div>
                                 <div class="relative border border-gray-100 bg-white p-6">
                                     <span
-                                        class="whitespace-nowrap bg-slate-300 px-3 py-1.5 text-xs font-medium">
+                                        class="whitespace-nowrap bg-impress-color px-3 py-1.5 text-xs font-medium">
                                         New
                                     </span>
 
@@ -1049,7 +1049,7 @@ export default class Shop extends Component<HTMLDivElement> {
 
   showBySort(resultEl: HTMLDivElement, sortValue: string) {
     resultEl.innerHTML = `
-        Lọc sản phẩm: <i class="fa-solid fa-filter-circle-xmark"></i> ${sortValue}
+        Filter Products: <i class="fa-solid fa-filter-circle-xmark"></i> ${sortValue}
         `;
     resultEl.classList.remove('hidden');
   }
