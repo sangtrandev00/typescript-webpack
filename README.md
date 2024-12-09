@@ -23,3 +23,6 @@
 + Authentication: Login (JWT), Signup, Reset password, Google Login.
 
 + If you want to look thoroughly for more detail just download the source and run for your own.
+
+## Author: 
+https://trannhatsang.com
